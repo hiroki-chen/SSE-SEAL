@@ -27,7 +27,17 @@ namespace SEAL
 
         T *get(const int &id);
 
+        T *get();
+
         T *put(const int &id, const T *const item);
+
+        int update_pos(const int &root_id);
+
+        void clear();
+
+        void pop();
+
+        bool empty();
     };
 
     template <typename T>
@@ -56,6 +66,12 @@ namespace SEAL
             lru_table.push_front(item_id);
             return &(iter->second);
         }
+    }
+
+    template <typename T>
+    T *SEAL::Cache<T>::get()
+    {
+        return &(cache_items.begin()->second);
     }
 
     template <typename T>
@@ -110,6 +126,54 @@ namespace SEAL
         }
 
         return nullptr;
+    }
+
+    template <typename T>
+    int SEAL::Cache<T>::update_pos(const int &root_id)
+    {
+        std::map<int, int> position_tag;
+        for (auto iter = cache_items.begin(); iter != cache_items.end(); iter++)
+        {
+            ODict::Node *node = &(iter->second);
+            // Generate a random position tag.
+            position_tag[node->id] = oramAccessController->random_new_pos();
+
+            if (node->old_tag == 0)
+            {
+                node->old_tag = position_tag[node->id];
+            }
+
+            node->pos_tag = position_tag[node->id];
+        }
+
+        for (auto iter = cache_items.begin(); iter != cache_items.end(); iter++)
+        {
+            ODict::Node *node = &(iter->second);
+            // Reallocate the position tag for each child node.
+            node->childrenPos[0].pos_tag = position_tag[node->left_id];
+            node->childrenPos[1].pos_tag = position_tag[node->right_id];
+        }
+
+        return position_tag[root_id];
+    }
+
+    template <typename T>
+    void SEAL::Cache<T>::clear()
+    {
+        cache_items.clear();
+        lru_table.clear();
+    }
+
+    template <typename T>
+    void SEAL::Cache<T>::pop()
+    {
+        cache_items.erase(cache_items.begin());
+    }
+
+    template <typename T>
+    bool SEAL::Cache<T>::empty()
+    {
+        return cache_items.empty();
     }
 
 } // namespace SEAL

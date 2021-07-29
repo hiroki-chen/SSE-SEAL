@@ -97,7 +97,6 @@ void SEAL::Client::ODS_access(ODict::Operation &op)
         return;
     }
 
-    // TODO.
     case ORAM_ACCESS_DELETE:
     {
         PLOG(plog::info) << "Delete node " << node->id << " from Oblivious Data Structure";
@@ -105,7 +104,6 @@ void SEAL::Client::ODS_access(ODict::Operation &op)
         if (ret != nullptr)
         {
             PLOG(plog::info) << "Found node in cache: " << ret->id;
-            // clientCache.erase(iter);
         }
         else
         {
@@ -120,7 +118,6 @@ void SEAL::Client::ODS_access(ODict::Operation &op)
     {
         PLOG(plog::info) << "Insert a new node " << node->id << " into cache";
         cache->put(node->id, node);
-        // clientCache.push_back(node);
 
         return;
     }
@@ -138,7 +135,7 @@ void SEAL::Client::cache_helper(const int &id, ODict::Node *const ret)
 
 void SEAL::Client::ODS_start()
 {
-    clientCache.clear();
+    cache->clear();
 }
 
 void SEAL::Client::ODS_access(std::vector<ODict::Operation> &ops)
@@ -151,31 +148,8 @@ void SEAL::Client::ODS_access(std::vector<ODict::Operation> &ops)
 
 void SEAL::Client::ODS_finalize(const int &pad_val)
 {
-    // Initialize a random device for randomly generating the postion tag for each node in the cache.
-    std::map<int, int> position_tag;
-    for (auto node : clientCache)
-    {
-        // Generate a random position tag.
-        position_tag[node->id] = oramAccessController.get()->random_new_pos();
-
-        if (node->old_tag == 0)
-        {
-            node->old_tag = position_tag[node->id];
-        }
-
-        node->pos_tag = position_tag[node->id];
-        // std::cout << "created pos tag " << node->pos_tag << " for node " << node->id;
-    }
-
-    for (auto node : clientCache)
-    {
-        // Reallocate the position tag for each child node.
-        node->childrenPos[0].pos_tag = position_tag[node->left_id];
-        node->childrenPos[1].pos_tag = position_tag[node->right_id];
-    }
-
-    // Update rootPos based on rootId.
-    root_pos = position_tag[root_id];
+    // Update rootPos based on rootId / generate new position tags.
+    root_pos = cache->update_pos(root_id);;
 
     // Pad the operation_cache.
 
@@ -187,15 +161,14 @@ void SEAL::Client::ODS_finalize(const int &pad_val)
     }
 
     // Evict the cache
-    while (!clientCache.empty())
+    while (!cache->empty())
     {
-        ODict::Node *node = clientCache.back();
-        clientCache.pop_back();
-
+        ODict::Node *node = cache->get();
         // We store a node as a char array.
         unsigned char *buffer = new unsigned char[block_size];
         memcpy(buffer, node, block_size);
         oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_WRITE, buffer);
+        cache->pop();
     }
 
     // Pad add to padVal.
