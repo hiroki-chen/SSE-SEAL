@@ -12,7 +12,7 @@
 
 OramAccessController::OramAccessController(const int &bucket_size, const int &block_number, const int &block_size)
 {
-    plog::init(plog::info, "log/log.txt");
+    plog::init(plog::debug, "log/log.txt");
     PLOG(plog::info) << "Warming up OramAccessController...\n";
     Bucket::setMaxSize(bucket_size);
     this->block_size = block_size;

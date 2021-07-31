@@ -26,23 +26,27 @@ int SEAL::Client::find_pos_by_id(const int &id)
 {
     PLOG(plog::info) << "Finding position_tag for " << id;
 
-    int pos_tag = -1;
+    if (id == root_id)
+    {
+        return root_pos;
+    }
+
     for (auto node : clientCache)
     {
         if (node->left_id == id)
         {
-            pos_tag = node->childrenPos[0].pos_tag;
-            break;
+            return node->childrenPos[0].pos_tag;
         }
         else if (node->right_id == id)
         {
-            pos_tag = node->childrenPos[1].pos_tag;
-            break;
+            return node->childrenPos[1].pos_tag;
         }
     }
 
-    PLOG(plog::info) << "Found position tag " << (pos_tag != -1 ? pos_tag : root_pos);
-    return root_pos;
+    // Find from the oram.
+    unsigned char *buffer = new unsigned char[block_size];
+    oramAccessController.get()->oblivious_access(ORAM_ACCESS_READ, id, buffer);
+    return transform<ODict::Node, unsigned char>(buffer)->pos_tag;
 }
 
 void SEAL::Client::ODS_access(ODict::Operation &op)
@@ -68,7 +72,15 @@ void SEAL::Client::ODS_access(ODict::Operation &op)
             PLOG(plog::info) << "Node not found in cache! Fetch from ORAM";
             cache_helper(id, node);
             node->old_tag = node->pos_tag;
-            cache->put(id, node);
+
+            ODict::Node *evicted = cache->put(id, node);
+            if (evicted != nullptr)
+            {
+                evicted->pos_tag = oramAccessController.get()->random_new_pos();
+                unsigned char *buffer = new unsigned char[block_size];
+                memcpy(buffer, evicted, block_size);
+                oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_WRITE, buffer);
+            }
         }
 
         return;
@@ -91,7 +103,15 @@ void SEAL::Client::ODS_access(ODict::Operation &op)
             ODict::Node *tmp = new ODict::Node();
             cache_helper(id, tmp);
             memcpy(tmp, node, block_size);
-            cache->put(id, tmp);
+
+            ODict::Node *evicted = cache->put(id, node);
+            if (evicted != nullptr)
+            {
+                evicted->pos_tag = oramAccessController.get()->random_new_pos();
+                unsigned char *buffer = new unsigned char[block_size];
+                memcpy(buffer, evicted, block_size);
+                oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_WRITE, buffer);
+            }
         }
 
         return;
@@ -117,7 +137,17 @@ void SEAL::Client::ODS_access(ODict::Operation &op)
     case ORAM_ACCESS_INSERT:
     {
         PLOG(plog::info) << "Insert a new node " << node->id << " into cache";
-        cache->put(node->id, node);
+
+        ODict::Node *evicted = cache->put(id, node);
+        if (evicted != nullptr)
+        {
+            PLOG(plog::debug) << "evicted: insert";
+            PLOG(plog::debug) << evicted->data;
+            evicted->pos_tag = oramAccessController.get()->random_new_pos();
+            unsigned char *buffer = new unsigned char[block_size];
+            memcpy(buffer, evicted, block_size);
+            oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_WRITE, buffer);
+        }
 
         return;
     }
@@ -149,7 +179,7 @@ void SEAL::Client::ODS_access(std::vector<ODict::Operation> &ops)
 void SEAL::Client::ODS_finalize(const int &pad_val)
 {
     // Update rootPos based on rootId / generate new position tags.
-    root_pos = cache->update_pos(root_id);;
+    root_pos = cache->update_pos(root_id);
 
     // Pad the operation_cache.
 
@@ -164,6 +194,7 @@ void SEAL::Client::ODS_finalize(const int &pad_val)
     while (!cache->empty())
     {
         ODict::Node *node = cache->get();
+        PLOG(plog::debug) << "evicting " << node->id;
         // We store a node as a char array.
         unsigned char *buffer = new unsigned char[block_size];
         memcpy(buffer, node, block_size);

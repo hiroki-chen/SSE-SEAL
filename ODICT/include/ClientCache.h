@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <deque>
 #include <unordered_map>
+#include <iostream>
 
 #include <plog/Log.h>
 #include <OramAccessController.h>
@@ -91,36 +92,38 @@ namespace SEAL
         cache_items[id] = *item;
 
         // evict the item
-        if (lru_table.size() > max_size)
+        if (cache_items.size() > max_size)
         {
             int back = lru_table.back();
             lru_table.pop_back();
             iter = cache_items.find(back);
 
-            T *ret = &iter->second;
+            T *ret = new T();
+            memcpy(ret, &(iter->second), sizeof(T));
             cache_items.erase(iter);
 
+            PLOG(plog::info) << "Cache is full! Evict one element " << back << " to ORAM server";
+
             // Write to the oram.
-            if (std::is_same_v<T, ODict::Node>)
+            /*ret->pos_tag = oramAccessController->random_new_pos();
+
+            std::cout << "ret->id " << ret->id << std::endl;
+
+            for (auto it = cache_items.begin(); it != cache_items.end(); it++)
             {
-                ret->pos_tag = oramAccessController->random_new_pos();
-
-                for (auto iter = cache_items.begin(); iter != cache_items.end(); iter++)
+                if (it->second.left_id == ret->id)
                 {
-                    if (iter->second.left_id == ret->id)
-                    {
-                        iter->second.childrenPos[0].pos_tag = ret->pos_tag;
-                    }
-                    else if (iter->second.right_id == ret->id)
-                    {
-                        iter->second.childrenPos[1].pos_tag = ret->pos_tag;
-                    }
+                    it->second.childrenPos[0].pos_tag = ret->pos_tag;
                 }
-
-                unsigned char *buffer = new unsigned char[sizeof(T)];
-                memcpy(buffer, ret, sizeof(T));
-                oramAccessController->oblivious_access_direct(ORAM_ACCESS_WRITE, buffer);
+                else if (it->second.right_id == ret->id)
+                {
+                    it->second.childrenPos[1].pos_tag = ret->pos_tag;
+                }
             }
+
+            unsigned char *buffer = new unsigned char[sizeof(T)];
+            memcpy(buffer, ret, sizeof(T));
+            oramAccessController->oblivious_access_direct(ORAM_ACCESS_WRITE, buffer);*/
 
             return ret;
         }
