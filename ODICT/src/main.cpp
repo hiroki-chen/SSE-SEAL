@@ -16,7 +16,7 @@ int main(int argc, const char **args)
     std::cin >> number;
     SEAL::Client * client = new SEAL::Client(256, 256, sizeof(ODict::Node), 1024, INT_MAX, 5, 4);
 
-    client->test_adj("./input/test.txt");
+    client->test_adj("./input/tests.txt");
 
     return 0;
 }

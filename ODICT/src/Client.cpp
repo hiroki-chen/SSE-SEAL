@@ -542,16 +542,16 @@ void SEAL::Client::adj_padding(std::vector<std::string> &document, const unsigne
 
 void SEAL::Client::adj_data_in(const std::string &file_path)
 {
-    std::fstream file(file_path, std::ios::in);
-
     try
     {
+        std::ifstream file;
+        file.open(file_path, std::ios::in);
+
         if (!file.is_open())
         {
-            PLOG(plog::error) << "The file " << file_path << " is not found on the disk";
-            throw std::runtime_error("File not found! Check the directory again.\n");
+            throw std::invalid_argument("Not an invalid file on disk!\n");
         }
-
+        
         std::vector<std::pair<std::string, unsigned int>> memory;
         // Read the file by lines.
         while (!file.eof())
@@ -581,7 +581,10 @@ void SEAL::Client::adj_data_in(const std::string &file_path)
         std::sort(memory.begin(),
                   memory.end(),
                   lambda_cmp);
-        for (auto item : memory) { std::cout << item.first << std::endl; }
+        for (auto item : memory)
+        {
+            std::cout << item.first << std::endl;
+        }
 
         std::map<std::string, unsigned int> first_occurrence;
         std::map<std::string, unsigned int> count;
@@ -595,9 +598,12 @@ void SEAL::Client::adj_data_in(const std::string &file_path)
         }
 
         adj_insert(memory, first_occurrence, count);
+
+        file.close();
     }
-    catch (std::runtime_error e)
+    catch (const std::invalid_argument &e)
     {
+        PLOG(plog::error) << "The file " << file_path << " is not found on the disk";
         std::cerr << e.what();
     }
 }
@@ -658,5 +664,5 @@ void SEAL::Client::test_adj(const std::string &file_path)
 {
     adj_data_in(file_path);
 
-    PLOG(plog::info) << "trying to fetch keyword beautiful: " << find("beautiful"s)->data; 
+    PLOG(plog::info) << "trying to fetch keyword beautiful: " << find("beautiful"s)->data;
 }
