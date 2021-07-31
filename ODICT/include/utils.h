@@ -36,4 +36,6 @@ int get_height(const ODict::Node *const node);
 
 std::string random_string(const int &length);
 
+std::vector<std::string> split(const std::string& input, const std::string& regex);
+
 #endif

@@ -6,6 +6,7 @@
 #include <iostream>
 #include <random>
 #include <sstream>
+#include <fstream>
 #include <stdexcept>
 
 #include <cstring>
@@ -213,7 +214,7 @@ void SEAL::Client::ODS_finalize(const int &pad_val)
     write_count = read_count = 0;
 }
 
-ODict::Node *SEAL::Client::find(const int &key)
+ODict::Node *SEAL::Client::find(const std::string &key)
 {
     ODS_start();
     ODict::Node *node = find_priv(key, root_id);
@@ -222,7 +223,7 @@ ODict::Node *SEAL::Client::find(const int &key)
     return node;
 }
 
-std::map<int, ODict::Node *> SEAL::Client::find(const std::vector<int> &keys)
+std::map<int, ODict::Node *> SEAL::Client::find(const std::vector<std::string> &keys)
 {
     ODS_start();
 
@@ -230,7 +231,7 @@ std::map<int, ODict::Node *> SEAL::Client::find(const std::vector<int> &keys)
     for (unsigned int i = 0; i < keys.size(); i++)
     {
         ODict::Node *node = find_priv(keys[i], root_id);
-        ans[keys[i]] = node;
+        ans[stoi(keys[i])] = node;
     }
 
     ODS_finalize(int(3 * 1.44 * log(node_count)));
@@ -238,7 +239,7 @@ std::map<int, ODict::Node *> SEAL::Client::find(const std::vector<int> &keys)
     return ans;
 }
 
-ODict::Node *SEAL::Client::find_priv(const int &key, const int &root_id)
+ODict::Node *SEAL::Client::find_priv(const std::string &key, const int &root_id)
 {
     ODict::Node *root = nullptr;
     if (root_id == 0)
@@ -497,10 +498,10 @@ const char *SEAL::Client::add_node(const int &number)
 {
     insert(create_test_cases(number));
 
-    std::vector<int> keys;
+    std::vector<std::string> keys;
     for (int i = 0; i < number; i++)
     {
-        keys.push_back(i % 2 == 0 ? i : number - i);
+        keys.push_back(std::to_string(i % 2 == 0 ? i : number - i));
     }
 
     auto begin = std::chrono::high_resolution_clock::now();
@@ -527,6 +528,101 @@ const char *SEAL::Client::add_node(const int &number)
     return "ok";
 }
 
+void SEAL::Client::adj_padding(std::vector<std::string> &document, const unsigned int &x)
+{
+    unsigned int power = std::ceil((log((double)document.size()) / log((double)x)));
+    unsigned int size = (unsigned int)pow(x, power);
+
+    // Pad the document
+    for (unsigned int i = document.size(); i <= size; i++)
+    {
+        document.push_back(random_string(16));
+    }
+}
+
+void SEAL::Client::adj_data_in(const std::string &file_path)
+{
+    std::fstream file(file_path, std::ios::in);
+
+    try
+    {
+        if (!file.is_open())
+        {
+            PLOG(plog::error) << "The file " << file_path << " is not found on the disk";
+            throw std::runtime_error("File not found! Check the directory again.\n");
+        }
+
+        std::vector<std::pair<std::string, unsigned int>> memory;
+        // Read the file by lines.
+        while (!file.eof())
+        {
+            std::string line;
+            std::getline(file, line);
+            // Split the string by coma.
+            std::vector<std::string> tokens = split(line, "(\\s*),(\\s*)");
+            adj_padding(tokens, x);
+
+            unsigned int id = std::stoul(tokens[0]);
+
+            // build (keyword, id) tuples.
+            for (unsigned int i = 1; i < tokens.size(); i++)
+            {
+                std::pair<std::string, unsigned int> tuple = std::make_pair(tokens[i], id);
+                memory.push_back(tuple);
+            }
+        }
+
+        // Sort the keyword in lexicographical order.
+        auto lambda_cmp = [](const std::pair<std::string, unsigned int> &lhs,
+                             const std::pair<std::string, unsigned int> &rhs) -> bool
+        {
+            return lhs.first < rhs.first;
+        };
+        std::sort(memory.begin(),
+                  memory.end(),
+                  lambda_cmp);
+        for (auto item : memory) { std::cout << item.first << std::endl; }
+
+        std::map<std::string, unsigned int> first_occurrence;
+        std::map<std::string, unsigned int> count;
+        for (unsigned int i = 0; i < memory.size(); i++)
+        {
+            if (first_occurrence.count(memory[i].first) == 0)
+            {
+                first_occurrence[memory[i].first] = i;
+            }
+            count[memory[i].first]++;
+        }
+
+        adj_insert(memory, first_occurrence, count);
+    }
+    catch (std::runtime_error e)
+    {
+        std::cerr << e.what();
+    }
+}
+
+void SEAL::Client::adj_insert(const std::vector<std::pair<std::string, unsigned int>> &memory,
+                              const std::map<std::string, unsigned int> &first_occurrence,
+                              const std::map<std::string, unsigned int> &count)
+{
+    std::vector<ODict::Node *> nodes;
+    for (unsigned int i = 0; i < memory.size(); i++)
+    {
+        ODict::Node *const node = new ODict::Node();
+        const unsigned int iw = first_occurrence.at(memory[i].first);
+        const unsigned int cntw = count.at(memory[i].first);
+        const std::string data = std::to_string(iw).append('_' + std::to_string(cntw));
+        node->id = node_count++;
+        node->key = memory[i].first;
+        node->data = new char[data.size() + 1];
+        strcpy(node->data, data.c_str());
+        nodes.push_back(node);
+    }
+
+    insert(nodes);
+}
+
 std::vector<ODict::Node *> SEAL::Client::create_test_cases(const int &number)
 {
     std::vector<ODict::Node *> vec;
@@ -536,7 +632,7 @@ std::vector<ODict::Node *> SEAL::Client::create_test_cases(const int &number)
         const std::string information = random_string(16);
         ODict::Node *const test_root = new ODict::Node();
         test_root->id = node_count++;
-        test_root->key = (i % 2 == 0 ? test_root->id : number - test_root->id);
+        test_root->key = std::to_string(i % 2 == 0 ? test_root->id : number - test_root->id);
         test_root->data = new char[information.size() + 1];
         strcpy(test_root->data, information.c_str());
         vec.push_back(test_root);
@@ -545,11 +641,22 @@ std::vector<ODict::Node *> SEAL::Client::create_test_cases(const int &number)
     return vec;
 }
 
-SEAL::Client::Client(const int &bucket_size, const int &block_number, const int &block_size, const int &odict_size, const size_t &max_size)
+SEAL::Client::Client(const int &bucket_size, const int &block_number,
+                     const int &block_size, const int &odict_size,
+                     const size_t &max_size, const unsigned int &alpha,
+                     const unsigned int &x)
     : block_size(block_size), odict_size(odict_size), block_number(block_number),
       root_id(0), root_pos(-1),
       oramAccessController(std::unique_ptr<OramAccessController>(new OramAccessController(bucket_size, block_number, block_size))),
-      node_count(1), read_count(0), write_count(0), cache(new Cache<ODict::Node>(max_size, oramAccessController.get()))
+      node_count(1), read_count(0), write_count(0), cache(new Cache<ODict::Node>(max_size, oramAccessController.get())),
+      alpha(alpha), x(x)
 {
     init_dummy_data();
+}
+
+void SEAL::Client::test_adj(const std::string &file_path)
+{
+    adj_data_in(file_path);
+
+    PLOG(plog::info) << "trying to fetch keyword beautiful: " << find("beautiful"s)->data; 
 }

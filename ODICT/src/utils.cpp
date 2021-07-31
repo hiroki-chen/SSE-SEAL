@@ -2,6 +2,7 @@
 
 #include <cstring>
 #include <random>
+#include <regex>
 #include <stdexcept>
 
 void copy(ODict::Node *const dst, const ODict::Node *const src)
@@ -42,12 +43,23 @@ std::string random_string(const int &len)
 
 OramInterface::Operation deduct_operation(OramAccessOp op)
 {
-    switch(op) {
-        case ORAM_ACCESS_READ:
-            return OramInterface::Operation::READ;
-        case ORAM_ACCESS_WRITE:
-            return OramInterface::Operation::WRITE;
-        default:
-            throw std::runtime_error("This operation is not supported!");
+    switch (op)
+    {
+    case ORAM_ACCESS_READ:
+        return OramInterface::Operation::READ;
+    case ORAM_ACCESS_WRITE:
+        return OramInterface::Operation::WRITE;
+    default:
+        throw std::runtime_error("This operation is not supported!");
     }
+}
+
+std::vector<std::string> split(const std::string &input, const std::string &regex)
+{
+    // passing -1 as the submatch index parameter performs splitting
+    std::regex re(regex);
+    std::sregex_token_iterator
+        first{input.begin(), input.end(), re, -1},
+        last;
+    return {first, last};
 }

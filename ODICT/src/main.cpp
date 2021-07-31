@@ -14,9 +14,9 @@ int main(int argc, const char **args)
     std::cout << "test case num: " << std::endl;
     int number;
     std::cin >> number;
-    SEAL::Client * client = new SEAL::Client(256, 256, sizeof(ODict::Node), 1024, INT_MAX);
+    SEAL::Client * client = new SEAL::Client(256, 256, sizeof(ODict::Node), 1024, INT_MAX, 5, 4);
 
-    std::cout << client->add_node(number) << std::endl;
+    client->test_adj("./input/test.txt");
 
     return 0;
 }

@@ -21,13 +21,15 @@ BUILD_FILES = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRC_FILES))
 
 RUN = run
 
-all: clean make_log $(RUN)
+all: clean make_dir $(RUN)
 
-.PHONY: clean make_log
+.PHONY: clean make_dir
 clean:
 	$(RM) $(BUILD_DIR)/*.o *~ $(RUN)
+	$(RM) $(LOG_DIR)/*
 
-make_log:
+make_dir:
+	mkdir -p $(BUILD_DIR)
 	mkdir -p $(LOG_DIR)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp

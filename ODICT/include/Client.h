@@ -21,7 +21,6 @@
 
 /**
  * To-do list.
- * TODO 1. implement batch read (use cache); 2. create a cache pool.
  */
 
 namespace SEAL
@@ -32,11 +31,12 @@ namespace SEAL
     class Client
     {
     private:
-        size_t block_size;
+        /* ================= Oblivious Data Structure ======================*/
+        const size_t block_size;
 
-        size_t odict_size;
+        const size_t odict_size;
 
-        size_t block_number;
+        const size_t block_number;
 
         int root_id;
 
@@ -54,6 +54,14 @@ namespace SEAL
 
         Cache<ODict::Node> *cache;
 
+        /*===================== Adjustable Oram Block For SEAL Model =====================*/
+        const unsigned int alpha; // leakage-alpha
+
+        const unsigned int x; // for padding
+
+        std::vector<std::unique_ptr<OramAccessController>> adj_oramAccessControllers;
+
+        /*==================== Functions =====================*/
         /**
          * @brief Initialize the client cache.
          * 
@@ -126,7 +134,7 @@ namespace SEAL
          * @param key
          * @return the node (nullptr = not found)
          */
-        ODict::Node *find(const int &key);
+        ODict::Node *find(const std::string &key);
 
         /**
          * @brief Batch find to better utiltize the client cache.
@@ -134,12 +142,12 @@ namespace SEAL
          * @param keys
          * @return mapping between keys and nodes.
          */
-        std::map<int, ODict::Node *> find(const std::vector<int> &keys);
+        std::map<int, ODict::Node *> find(const std::vector<std::string> &keys);
 
         /**
          * @brief Actual function for find. Recursive function.
          */
-        ODict::Node *find_priv(const int &key, const int &cur_root_id);
+        ODict::Node *find_priv(const std::string &key, const int &cur_root_id);
 
         /**
          * @brief Insert a node into the AVL Tree. It is a wrapper function.
@@ -188,6 +196,41 @@ namespace SEAL
          */
         std::vector<ODict::Node *> create_test_cases(const int &number);
 
+        /**
+         * @brief Adjustable Padding for any document to the nearest power of x.
+         * 
+         * @param document a set of keywords
+         * @param x the given parameter as base number
+         */
+        void adj_padding(std::vector<std::string> &document, const unsigned int &x);
+
+        /**
+         * @brief Load the dataset from the file, and also analyze the document input.
+         * 
+         * @param file_path the path of the input file. Fomrat: [id]: [keyword1, keyword2, ...].
+         */
+        void adj_data_in(const std::string &file_path);
+
+        /**
+         * @brief Initialize the oram block by block.
+         * 
+         * @param memory
+         * @param alpha
+         */
+        void adj_oram_init(const std::vector<std::pair<std::string, unsigned int>> &memory,
+                           const double &alpha);
+
+        /**
+         * @brief Build the secret index on input documents.
+         * 
+         * @param memory the plain memory denoted as (keyword, id) pairs in lexicographical order.
+         * @param first_occurrence stores the position where a keyword w first appears in memory.
+         * @param count the count table.
+         */
+        void adj_insert(const std::vector<std::pair<std::string, unsigned int>> &memory,
+                        const std::map<std::string, unsigned int> &first_occurrence,
+                        const std::map<std::string, unsigned int> &count);
+
     public:
         /**
          * @brief the construtor of the class Client.
@@ -198,13 +241,22 @@ namespace SEAL
          * @param odict_size the approximate size of the obilivious data structure.
          * @param max_size the maximum size of the client cache.
          */
-        Client(const int &bucket_size, const int &block_number, const int &block_size,
-               const int &odict_size, const size_t &max_size);
+        Client(const int &bucket_size, const int &block_number,
+               const int &block_size, const int &odict_size,
+               const size_t &max_size, const unsigned int &alpha,
+               const unsigned int &x);
 
         /**
          * @brief A test function.
          */
         const char *add_node(const int &number);
+
+        /**
+         * @brief Test the functionality of SEAL.
+         * 
+         * @param file_path the input dataset
+         */
+        void test_adj(const std::string &file_path);
     };
 }
 

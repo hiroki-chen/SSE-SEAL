@@ -2,6 +2,7 @@
 #define OBJECTS_H_
 
 #include <map>
+#include <string>
 
 #include <PathORAM.h>
 
@@ -26,7 +27,7 @@ namespace ODict
         int pos_tag;
         int old_tag = -1;
 
-        int key;
+        std::string key;
 
         int left_height;  // The height of the left sub-tree. Not sure if this is needed.
         int right_height; // The height of the right sub-tree.
