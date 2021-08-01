@@ -1,5 +1,6 @@
 #include <utils.h>
 
+#include <sodium.h>
 #include <cstring>
 #include <random>
 #include <regex>
@@ -68,13 +69,13 @@ std::map<unsigned int, unsigned int> pseudo_random_permutation(const size_t &val
                                                                const size_t &array_size,
                                                                std::string_view secret_key)
 {
-    std::seed_seq seed(secret_key.begin(), secret_key.end());
-    std::mt19937 gen(seed);
-    std::uniform_int_distribution<int> dist(0, value_size + 1);
-
+    unsigned int permutation[value_size];
     std::map<unsigned int, unsigned int> ans;
+    
+    randombytes_buf_deterministic(permutation, sizeof(permutation), (unsigned char *)secret_key.data());
+
     for (unsigned int i = 0; i < value_size; i++) {
-        ans[i] = dist(gen) % array_size;
+        ans[i] = permutation[i] % array_size;
     }
 
     return ans;
