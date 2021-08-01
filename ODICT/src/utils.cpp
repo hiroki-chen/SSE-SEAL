@@ -21,7 +21,7 @@ void copy(ODict::Node *const dst, const ODict::Node *const src)
 
 int get_height(const ODict::Node *const node)
 {
-    return MAX(node->left_height, node->right_height) + 1;
+    return node == nullptr ? 0 : MAX(node->left_height, node->right_height) + 1;
 }
 
 std::string random_string(const int &len)
@@ -62,4 +62,20 @@ std::vector<std::string> split(const std::string &input, const std::string &rege
         first{input.begin(), input.end(), re, -1},
         last;
     return {first, last};
+}
+
+std::map<unsigned int, unsigned int> pseudo_random_permutation(const size_t &value_size,
+                                                               const size_t &array_size,
+                                                               std::string_view secret_key)
+{
+    std::seed_seq seed(secret_key.begin(), secret_key.end());
+    std::mt19937 gen(seed);
+    std::uniform_int_distribution<int> dist(0, value_size + 1);
+
+    std::map<unsigned int, unsigned int> ans;
+    for (unsigned int i = 0; i < value_size; i++) {
+        ans[i] = dist(gen) % array_size;
+    }
+
+    return ans;
 }

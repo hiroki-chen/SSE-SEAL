@@ -4,6 +4,7 @@
 #include <memory>
 #include <algorithm>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -59,7 +60,10 @@ namespace SEAL
 
         const unsigned int x; // for padding
 
+        std::string secret_key; // for pseudo-random permutation
+
         std::vector<std::unique_ptr<OramAccessController>> adj_oramAccessControllers;
+
 
         /*==================== Functions =====================*/
         /**
@@ -70,9 +74,14 @@ namespace SEAL
         void init_cache(const size_t &max_size);
 
         /**
+         * @brief Init the secret key
+         */ 
+        void init_key(std::string_view password);
+
+        /**
          * For padding. ORAM does not allow access to address that does not exist.
          */
-        void init_dummy_data();
+        void init_dummy_data(void);
 
         /**
          * @param op contains
@@ -88,12 +97,12 @@ namespace SEAL
         /**
          * @brief To avoid volumn pattern leakage, we pad every sequence of ODict accesses to a fixed length.
          */
-        void pad_dummy_access();
+        void pad_dummy_access(void);
 
         /**
          * @brief Tell the client to start ODS
          */
-        void ODS_start();
+        void ODS_start(void);
 
         /**
          * @param ops a sequence of ODS accesses.
@@ -134,7 +143,7 @@ namespace SEAL
          * @param key
          * @return the node (nullptr = not found)
          */
-        ODict::Node *find(const std::string &key);
+        ODict::Node *find(std::string_view key);
 
         /**
          * @brief Batch find to better utiltize the client cache.
@@ -147,7 +156,12 @@ namespace SEAL
         /**
          * @brief Actual function for find. Recursive function.
          */
-        ODict::Node *find_priv(const std::string &key, const int &cur_root_id);
+        ODict::Node *find_priv(std::string_view key, const int &cur_root_id);
+
+        /**
+         * @brief Find the minimum node to be the root for deletion.
+         */ 
+        ODict::Node *find_min(const int &cur_root_id);
 
         /**
          * @brief Insert a node into the AVL Tree. It is a wrapper function.
@@ -165,6 +179,28 @@ namespace SEAL
          * @brief Actural function for insert.
          */
         ODict::Node *insert_priv(ODict::Node *node, const int &cur_root_id);
+
+        /**
+         * @brief Batch remove the nodes from the AVL Tree.
+         * 
+         * @param keys
+         */
+        void remove(const std::vector<std::string> &keys);
+
+        /**
+         * @brief Remove a node from the AVL Tree.
+         * 
+         * @param key 
+         */
+        void remove(std::string_view key);
+
+        /**
+         * @brief Actual remove function.
+         * 
+         * @param key
+         * @param cur_root_id the current root id.
+         */ 
+        ODict::Node *remove_priv(std::string_view key, const int &cur_root_id);
 
         /**
          * @brief Rebalance the AVL Tree because of the insertion.
@@ -202,23 +238,21 @@ namespace SEAL
          * @param document a set of keywords
          * @param x the given parameter as base number
          */
-        void adj_padding(std::vector<std::string> &document, const unsigned int &x);
+        void adj_padding(std::vector<std::string> &document);
 
         /**
          * @brief Load the dataset from the file, and also analyze the document input.
          * 
          * @param file_path the path of the input file. Fomrat: [id]: [keyword1, keyword2, ...].
          */
-        void adj_data_in(const std::string &file_path);
+        void adj_data_in(std::string_view file_path);
 
         /**
          * @brief Initialize the oram block by block.
          * 
          * @param memory
-         * @param alpha
          */
-        void adj_oram_init(const std::vector<std::pair<std::string, unsigned int>> &memory,
-                           const double &alpha);
+        void adj_oram_init(const std::vector<std::pair<std::string, unsigned int>> &memory);
 
         /**
          * @brief Build the secret index on input documents.
@@ -240,11 +274,12 @@ namespace SEAL
          * @param block_size the length of one block. @note Should set to sizeof(ODict::node)
          * @param odict_size the approximate size of the obilivious data structure.
          * @param max_size the maximum size of the client cache.
+         * @param password the password for encryption / decryption
          */
         Client(const int &bucket_size, const int &block_number,
                const int &block_size, const int &odict_size,
                const size_t &max_size, const unsigned int &alpha,
-               const unsigned int &x);
+               const unsigned int &x, std::string_view password);
 
         /**
          * @brief A test function.
@@ -256,7 +291,7 @@ namespace SEAL
          * 
          * @param file_path the input dataset
          */
-        void test_adj(const std::string &file_path);
+        void test_adj(std::string_view file_path);
     };
 }
 

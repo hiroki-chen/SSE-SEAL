@@ -8,6 +8,8 @@
 #include <sstream>
 #include <fstream>
 #include <stdexcept>
+#include <sys/stat.h>
+#include <sodium.h>
 
 #include <cstring>
 #include <cassert>
@@ -21,6 +23,36 @@ void SEAL::Client::init_dummy_data()
     ODict::Node *test_root = new ODict::Node(0, -1);
     unsigned char *data = transform<unsigned char, ODict::Node>(test_root);
     oramAccessController.get()->oblivious_access(ORAM_ACCESS_WRITE, 0, data);
+}
+
+void SEAL::Client::init_key(std::string_view password)
+{
+    try
+    {
+        PLOG(plog::info) << "Initializing secret key...";
+        if (sodium_init() < 0)
+        {
+            throw std::runtime_error("Crypto Library cannot be initialized!\n");
+        }
+
+        unsigned char key[crypto_box_SEEDBYTES];
+        unsigned char salt[crypto_pwhash_SALTBYTES];
+        randombytes_buf(salt, sizeof(salt));
+        if (crypto_pwhash(key, sizeof key, password.data(), strlen(password.data()), salt,
+                          crypto_pwhash_OPSLIMIT_INTERACTIVE, crypto_pwhash_MEMLIMIT_INTERACTIVE,
+                          crypto_pwhash_ALG_DEFAULT) != 0)
+        {
+            throw std::runtime_error("Out of memory!");
+        }
+
+        secret_key = (char *)key;
+        PLOG(plog::info) << "Key sampled: " << secret_key;
+    }
+    catch (const std::runtime_error &e)
+    {
+        PLOG(plog::error) << e.what();
+        std::cout << e.what();
+    }
 }
 
 int SEAL::Client::find_pos_by_id(const int &id)
@@ -214,7 +246,7 @@ void SEAL::Client::ODS_finalize(const int &pad_val)
     write_count = read_count = 0;
 }
 
-ODict::Node *SEAL::Client::find(const std::string &key)
+ODict::Node *SEAL::Client::find(std::string_view key)
 {
     ODS_start();
     ODict::Node *node = find_priv(key, root_id);
@@ -239,7 +271,7 @@ std::map<int, ODict::Node *> SEAL::Client::find(const std::vector<std::string> &
     return ans;
 }
 
-ODict::Node *SEAL::Client::find_priv(const std::string &key, const int &root_id)
+ODict::Node *SEAL::Client::find_priv(std::string_view key, const int &root_id)
 {
     ODict::Node *root = nullptr;
     if (root_id == 0)
@@ -491,6 +523,170 @@ ODict::Node *SEAL::Client::right_left_rotate(const int &root_id)
     return left_rotate(root_id);
 }
 
+ODict::Node *SEAL::Client::remove_priv(std::string_view key, const int &cur_root_id)
+{
+    if (cur_root_id == 0)
+    {
+        return nullptr;
+    }
+
+    // Read the current root node.
+    char *data = new char[block_size];
+    ODict::Operation *const op = new ODict::Operation(cur_root_id, data, ORAM_ACCESS_READ);
+    ODS_access(*op);
+    ODict::Node *root = transform<ODict::Node, char>(data);
+
+    if (root->key > key)
+    {
+        ODict::Node *left = remove_priv(key, root->left_id);
+        root->left_id = left == nullptr ? 0 : left->id;
+        root->left_height = get_height(left);
+
+        char *buffer = transform<char, ODict::Node>(root);
+        ODict::Operation *const op2 = new ODict::Operation(cur_root_id, buffer, ORAM_ACCESS_WRITE);
+        ODS_access(*op2);
+    }
+    else if (root->key < key)
+    {
+        ODict::Node *right = remove_priv(key, root->right_id);
+        root->right_id = right == nullptr ? 0 : right->id;
+        root->right_height = right->right_height;
+
+        char *buffer = transform<char, ODict::Node>(root);
+        ODict::Operation *const op2 = new ODict::Operation(cur_root_id, buffer, ORAM_ACCESS_WRITE);
+        ODS_access(*op2);
+    }
+    else
+    {
+        // case 1: a leaf node.
+        if (root->left_id == 0 && root->right_id == 0)
+        {
+            char *data = new char[block_size];
+            ODict::Operation *const op3 = new ODict::Operation(cur_root_id, data, ORAM_ACCESS_DELETE);
+            ODS_access(*op3);
+        }
+        // case 2: root has one child.
+        else if (root->left_id != 0 && root->right_id == 0)
+        {
+            char *data = new char[block_size];
+            ODict::Operation *const op3 = new ODict::Operation(root->left_id, data, ORAM_ACCESS_READ);
+            ODS_access(*op3);
+
+            ODict::Node *left = transform<ODict::Node, char>(data);
+            memcpy(root, left, block_size);
+            root->id = cur_root_id;
+
+            char *data2 = new char[block_size];
+            ODict::Operation *const op4 = new ODict::Operation(cur_root_id, data2, ORAM_ACCESS_WRITE);
+            ODS_access(*op4);
+
+            op3->op = ORAM_ACCESS_DELETE;
+            ODS_access(*op3);
+        }
+        else if (root->right_id != 0 && root->left_id == 0)
+        {
+            char *data = new char[block_size];
+            ODict::Operation *const op3 = new ODict::Operation(root->right_id, data, ORAM_ACCESS_READ);
+            ODS_access(*op3);
+
+            ODict::Node *right = transform<ODict::Node, char>(data);
+            memcpy(root, right, block_size);
+            root->id = cur_root_id;
+
+            char *data2 = new char[block_size];
+            ODict::Operation *const op4 = new ODict::Operation(cur_root_id, data2, ORAM_ACCESS_WRITE);
+            ODS_access(*op4);
+
+            op3->op = ORAM_ACCESS_DELETE;
+            ODS_access(*op3);
+        }
+        // case 3: root has two children.
+        else
+        {
+            ODict::Node *min = find_min(root->right_id);
+            memcpy(root, min, block_size);
+            root->id = cur_root_id;
+            ODict::Node *right = remove_priv(root->key, root->right_id);
+            root->right_id = right->id;
+            root->right_height = right->right_height;
+
+            char *data = new char[block_size];
+            ODict::Operation *const op = new ODict::Operation(cur_root_id, data, ORAM_ACCESS_WRITE);
+            ODS_access(*op);
+        }
+    }
+
+    int left_height = root->left_height, right_height = root->right_height;
+
+    // LL / LR
+    if (left_height - right_height > 1)
+    {
+        op->id = root->left_id;
+        ODS_access(*op);
+        ODict::Node *left = transform<ODict::Node, char>(op->data);
+        // case 1: LL. Single Rotation. RightRotate.
+        if (left->left_height >= left->right_height)
+        {
+            return right_rotate(root_id);
+        }
+        // case 2: LR. Double Rotation. LeftAndRightRotate.
+        else
+        {
+            return left_right_rotate(root_id);
+        }
+    }
+    else if (right_height - left_height > 1)
+    {
+        op->id = root->right_id;
+        ODS_access(*op);
+        ODict::Node *right = transform<ODict::Node, char>(op->data);
+        // case 3: RR. Single Rotation. LeftRotate
+        if (right->right_height >= right->left_height)
+        {
+            return left_rotate(root_id);
+        }
+        // case 4: RL. Double Rotation. RightAndLeftRotate.
+        else
+        {
+            return right_left_rotate(root_id);
+        }
+    }
+
+    return root;
+}
+
+ODict::Node *SEAL::Client::find_min(const int &cur_root_id)
+{
+    if (cur_root_id == 0)
+    {
+        return nullptr;
+    }
+
+    char *data = new char[block_size];
+    ODict::Operation *const op = new ODict::Operation(cur_root_id, data, ORAM_ACCESS_READ);
+    ODS_access(*op);
+    ODict::Node *root = transform<ODict::Node, char>(data);
+
+    return root->left_id == 0 ? root : find_min(root->left_id);
+}
+
+void SEAL::Client::remove(std::string_view key)
+{
+    remove_priv(key, root_id);
+}
+
+void SEAL::Client::remove(const std::vector<std::string> &keys)
+{
+    ODS_start();
+
+    for (unsigned int i = 0; i < keys.size(); i++)
+    {
+        remove(keys[i]);
+    }
+
+    ODS_finalize((int)3 * 1.44 * log(node_count));
+}
+
 /**
  * @brief A test function, you can add whatever you like.
  */
@@ -528,7 +724,7 @@ const char *SEAL::Client::add_node(const int &number)
     return "ok";
 }
 
-void SEAL::Client::adj_padding(std::vector<std::string> &document, const unsigned int &x)
+void SEAL::Client::adj_padding(std::vector<std::string> &document)
 {
     unsigned int power = std::ceil((log((double)document.size()) / log((double)x)));
     unsigned int size = (unsigned int)pow(x, power);
@@ -540,18 +736,16 @@ void SEAL::Client::adj_padding(std::vector<std::string> &document, const unsigne
     }
 }
 
-void SEAL::Client::adj_data_in(const std::string &file_path)
+void SEAL::Client::adj_data_in(std::string_view file_path)
 {
     try
     {
-        std::ifstream file;
-        file.open(file_path, std::ios::in);
-
-        if (!file.is_open())
+        if (stat(file_path.data(), NULL) == 0)
         {
-            throw std::invalid_argument("Not an invalid file on disk!\n");
+            throw std::invalid_argument("Not an invalid file on disk or not a valid relative file path!\n");
         }
-        
+        std::ifstream file(file_path.data(), std::ios::in);
+
         std::vector<std::pair<std::string, unsigned int>> memory;
         // Read the file by lines.
         while (!file.eof())
@@ -560,7 +754,7 @@ void SEAL::Client::adj_data_in(const std::string &file_path)
             std::getline(file, line);
             // Split the string by coma.
             std::vector<std::string> tokens = split(line, "(\\s*),(\\s*)");
-            adj_padding(tokens, x);
+            adj_padding(tokens);
 
             unsigned int id = std::stoul(tokens[0]);
 
@@ -572,6 +766,12 @@ void SEAL::Client::adj_data_in(const std::string &file_path)
             }
         }
 
+        size_t memory_size = memory.size();
+        for (unsigned int i = memory_size; i <= x * memory_size; i++)
+        {
+            memory.push_back(std::make_pair(random_string(16), -1));
+        }
+
         // Sort the keyword in lexicographical order.
         auto lambda_cmp = [](const std::pair<std::string, unsigned int> &lhs,
                              const std::pair<std::string, unsigned int> &rhs) -> bool
@@ -581,10 +781,6 @@ void SEAL::Client::adj_data_in(const std::string &file_path)
         std::sort(memory.begin(),
                   memory.end(),
                   lambda_cmp);
-        for (auto item : memory)
-        {
-            std::cout << item.first << std::endl;
-        }
 
         std::map<std::string, unsigned int> first_occurrence;
         std::map<std::string, unsigned int> count;
@@ -625,8 +821,20 @@ void SEAL::Client::adj_insert(const std::vector<std::pair<std::string, unsigned 
         strcpy(node->data, data.c_str());
         nodes.push_back(node);
     }
-
     insert(nodes);
+
+    adj_oram_init(memory);
+}
+
+void SEAL::Client::adj_oram_init(const std::vector<std::pair<std::string, unsigned int>> &memory)
+{
+    size_t memory_size = memory.size();
+    size_t array_size = std::ceil(memory_size / pow(2, alpha));
+    std::map<unsigned int, unsigned int> prp = pseudo_random_permutation(memory_size, array_size, secret_key);
+
+    for (auto iter = prp.begin(); iter != prp.end(); iter++) {
+        std::cout << iter->first << ", " << iter->second << std::endl;
+    }
 }
 
 std::vector<ODict::Node *> SEAL::Client::create_test_cases(const int &number)
@@ -650,17 +858,18 @@ std::vector<ODict::Node *> SEAL::Client::create_test_cases(const int &number)
 SEAL::Client::Client(const int &bucket_size, const int &block_number,
                      const int &block_size, const int &odict_size,
                      const size_t &max_size, const unsigned int &alpha,
-                     const unsigned int &x)
+                     const unsigned int &x, std::string_view password)
     : block_size(block_size), odict_size(odict_size), block_number(block_number),
       root_id(0), root_pos(-1),
       oramAccessController(std::unique_ptr<OramAccessController>(new OramAccessController(bucket_size, block_number, block_size))),
       node_count(1), read_count(0), write_count(0), cache(new Cache<ODict::Node>(max_size, oramAccessController.get())),
       alpha(alpha), x(x)
 {
+    init_key(password);
     init_dummy_data();
 }
 
-void SEAL::Client::test_adj(const std::string &file_path)
+void SEAL::Client::test_adj(std::string_view file_path)
 {
     adj_data_in(file_path);
 
