@@ -1,8 +1,8 @@
 #include <Bucket.h>
 
 #include <iostream>
-#include <string>
 #include <sstream>
+#include <string>
 
 using namespace std;
 
@@ -11,23 +11,20 @@ int Bucket::max_size = -1;
 
 Bucket::Bucket()
 {
-    if (!is_init)
-    {
+    if (!is_init) {
         throw new runtime_error("Please set bucket size before creating a bucket");
     }
     blocks = vector<Block>();
 }
 
 //Copy constructor
-Bucket::Bucket(Bucket *other)
+Bucket::Bucket(Bucket* other)
 {
-    if (other == NULL)
-    {
+    if (other == NULL) {
         throw new runtime_error("the other bucket is not malloced.");
     }
     blocks = vector<Block>(max_size);
-    for (int i = 0; i < max_size; i++)
-    {
+    for (int i = 0; i < max_size; i++) {
         blocks[i] = Block(other->blocks[i]);
     }
 }
@@ -35,11 +32,9 @@ Bucket::Bucket(Bucket *other)
 //Get block object with matching index
 Block Bucket::getBlockByIndex(int index)
 {
-    Block *copy_block = NULL;
-    for (Block b : blocks)
-    {
-        if (b.index == index)
-        {
+    Block* copy_block = NULL;
+    for (Block b : blocks) {
+        if (b.index == index) {
             copy_block = new Block(b);
             break;
         }
@@ -49,8 +44,7 @@ Block Bucket::getBlockByIndex(int index)
 
 void Bucket::addBlock(Block new_blk)
 {
-    if (blocks.size() < (unsigned)max_size)
-    {
+    if (blocks.size() < (unsigned)max_size) {
         Block toAdd = Block(new_blk);
         blocks.push_back(toAdd);
     }
@@ -59,10 +53,8 @@ void Bucket::addBlock(Block new_blk)
 bool Bucket::removeBlock(Block rm_blk)
 {
     bool removed = false;
-    for (unsigned int i = 0; i < blocks.size(); i++)
-    {
-        if (blocks[i].index == rm_blk.index)
-        {
+    for (unsigned int i = 0; i < blocks.size(); i++) {
+        if (blocks[i].index == rm_blk.index) {
             blocks.erase(blocks.begin() + i);
             removed = true;
             break;
@@ -79,8 +71,7 @@ vector<Block> Bucket::getBlocks()
 
 void Bucket::setMaxSize(int maximumSize)
 {
-    if (is_init == true)
-    {
+    if (is_init == true) {
         throw new runtime_error("Max Bucket Size was already set");
     }
     max_size = maximumSize;
@@ -99,8 +90,7 @@ void Bucket::resetState()
 
 void Bucket::printBlocks()
 {
-    for (Block b : blocks)
-    {
+    for (Block b : blocks) {
         b.printBlock();
     }
 }

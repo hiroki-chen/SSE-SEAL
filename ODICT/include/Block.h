@@ -5,13 +5,12 @@
 
 using namespace std;
 
-class Block
-{
+class Block {
 public:
     static const int BLOCK_SIZE = 2;
     int leaf_id;
     int index;
-    int *data;
+    int* data;
 
     Block();
     Block(int leaf_id, int index, int data[]);

@@ -1,19 +1,18 @@
 #ifndef PORAM_BUCKET_H
 #define PORAM_BUCKET_H
 
-#include <vector>
 #include <stdexcept>
+#include <vector>
 
 #include <Block.h>
 
 using namespace std;
 
-class Bucket
-{
+class Bucket {
 
 public:
     Bucket();
-    Bucket(Bucket *other);
+    Bucket(Bucket* other);
     Block getBlockByIndex(int index);
     void addBlock(Block new_blk);
     bool removeBlock(Block rm_blk);

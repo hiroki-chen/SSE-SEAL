@@ -1,15 +1,15 @@
 #include <OramDeterministic.h>
 
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <cmath>
 #include <bitset>
+#include <cmath>
+#include <iostream>
+#include <sstream>
+#include <string>
 
 using namespace std;
 
-OramDeterministic::OramDeterministic(UntrustedStorageInterface *storage, RandForOramInterface *rand_gen,
-                                     int bucket_size, int num_blocks)
+OramDeterministic::OramDeterministic(UntrustedStorageInterface* storage, RandForOramInterface* rand_gen,
+    int bucket_size, int num_blocks)
 {
     this->G = 0;
     this->storage = storage;
@@ -30,42 +30,34 @@ OramDeterministic::OramDeterministic(UntrustedStorageInterface *storage, RandFor
     this->storage->setCapacity(num_buckets);
     this->position_map = new int[this->num_blocks];
     this->stash = vector<Block>();
-    for (int i = 0; i < this->num_blocks; i++)
-    {
+    for (int i = 0; i < this->num_blocks; i++) {
         position_map[i] = rand_gen->getRandomLeaf();
     }
 
     // Initialize all blocks in all buckets as empty.
-    for (int i = 0; i < num_buckets; i++)
-    {
+    for (int i = 0; i < num_buckets; i++) {
 
         Bucket init_bkt = Bucket();
-        for (int j = 0; j < bucket_size; j++)
-        {
+        for (int j = 0; j < bucket_size; j++) {
             init_bkt.addBlock(Block());
         }
         storage->WriteBucket(i, Bucket(init_bkt));
     }
 }
 
-int *OramDeterministic::access(Operation op, int blockIndex, int *newdata)
+int* OramDeterministic::access(Operation op, int blockIndex, int* newdata)
 {
-    int *data = new int[Block::BLOCK_SIZE];
+    int* data = new int[Block::BLOCK_SIZE];
     int oldLeaf = position_map[blockIndex];
     position_map[blockIndex] = rand_gen->getRandomLeaf();
-    Block *targetBlock = NULL;
-    for (int i = 0; i < num_levels; i++)
-    {
+    Block* targetBlock = NULL;
+    for (int i = 0; i < num_levels; i++) {
         vector<Block> blocks = storage->ReadBucket(P(oldLeaf, i)).getBlocks();
         Bucket write_back = Bucket();
-        for (Block b : blocks)
-        {
-            if (b.index != blockIndex)
-            {
+        for (Block b : blocks) {
+            if (b.index != blockIndex) {
                 write_back.addBlock(Block(b));
-            }
-            else
-            {
+            } else {
                 targetBlock = new Block(b);
                 write_back.addBlock(Block());
             }
@@ -73,33 +65,22 @@ int *OramDeterministic::access(Operation op, int blockIndex, int *newdata)
         storage->WriteBucket(P(oldLeaf, i), &write_back);
     }
 
-    if (op == Operation::WRITE)
-    {
+    if (op == Operation::WRITE) {
 
-        if (targetBlock == NULL)
-        {
+        if (targetBlock == NULL) {
             Block newBlock = Block(position_map[blockIndex], blockIndex, newdata);
             stash.push_back(newBlock);
-        }
-        else
-        {
-            for (int i = 0; i < Block::BLOCK_SIZE; i++)
-            {
+        } else {
+            for (int i = 0; i < Block::BLOCK_SIZE; i++) {
                 targetBlock->data[i] = newdata[i];
             }
             stash.push_back(Block(*targetBlock));
         }
-    }
-    else
-    {
-        if (targetBlock == NULL)
-        {
+    } else {
+        if (targetBlock == NULL) {
             data = NULL;
-        }
-        else
-        {
-            for (int i = 0; i < Block::BLOCK_SIZE; i++)
-            {
+        } else {
+            for (int i = 0; i < Block::BLOCK_SIZE; i++) {
                 data[i] = targetBlock->data[i];
             }
             stash.push_back(Block(*targetBlock));
@@ -110,31 +91,24 @@ int *OramDeterministic::access(Operation op, int blockIndex, int *newdata)
     Eviction steps: Two paths will be evicted and re-written
     as determined by ReverseBits
     */
-    for (int repeat = 0; repeat < 2; repeat++)
-    {
+    for (int repeat = 0; repeat < 2; repeat++) {
 
         int g = ReverseBits(this->G, num_levels - 1);
         this->G = this->G + 1;
-        for (int l = 0; l < num_levels; l++)
-        {
+        for (int l = 0; l < num_levels; l++) {
 
             vector<Block> blocks = vector<Block>();
             /*
             Read blocks on current level in the path and write to stash
             */
-            try
-            {
+            try {
                 blocks = storage->ReadBucket(P(g, l)).getBlocks();
-            }
-            catch (exception &e)
-            {
+            } catch (exception& e) {
                 cout << e.what() << endl;
             }
 
-            for (Block b : blocks)
-            {
-                if (b.index != -1)
-                {
+            for (Block b : blocks) {
+                if (b.index != -1) {
                     stash.push_back(Block(b));
                 }
             }
@@ -143,23 +117,19 @@ int *OramDeterministic::access(Operation op, int blockIndex, int *newdata)
         /*
         Re-write blocks from the stash to current path whenever possible, starting at the deepest level
         */
-        for (int l = num_levels - 1; l >= 0; l--)
-        {
+        for (int l = num_levels - 1; l >= 0; l--) {
             vector<int> bid_evicted = vector<int>();
             Bucket bucket = Bucket();
             int Pxl = P(g, l);
             int counter = 0;
 
-            for (Block b_instash : stash)
-            {
+            for (Block b_instash : stash) {
 
-                if (counter >= bucket_size)
-                {
+                if (counter >= bucket_size) {
                     break;
                 }
                 Block be_evicted = Block(b_instash);
-                if (Pxl == P(position_map[be_evicted.index], l))
-                {
+                if (Pxl == P(position_map[be_evicted.index], l)) {
                     bucket.addBlock(be_evicted);
                     bid_evicted.push_back(be_evicted.index);
                     counter++;
@@ -167,20 +137,16 @@ int *OramDeterministic::access(Operation op, int blockIndex, int *newdata)
             }
 
             //remove from the stash
-            for (unsigned int i = 0; i < bid_evicted.size(); i++)
-            {
-                for (unsigned int j = 0; j < stash.size(); j++)
-                {
+            for (unsigned int i = 0; i < bid_evicted.size(); i++) {
+                for (unsigned int j = 0; j < stash.size(); j++) {
                     Block b_instash = stash.at(j);
-                    if (b_instash.index == bid_evicted.at(i))
-                    {
+                    if (b_instash.index == bid_evicted.at(i)) {
                         this->stash.erase(this->stash.begin() + j);
                     }
                 }
             }
 
-            while (counter < bucket_size)
-            {
+            while (counter < bucket_size) {
                 bucket.addBlock(Block()); //dummy block
                 counter++;
             }
@@ -200,8 +166,7 @@ int OramDeterministic::ReverseBits(int g, int bits_length)
     */
     int g_mod = g % num_leaves;
     int reverse = 0;
-    while (g_mod)
-    {
+    while (g_mod) {
         reverse <<= 1;
         reverse |= g_mod & 1;
         g_mod >>= 1;
@@ -228,7 +193,7 @@ INPUT: No input
 OUTPUT: Value of internal variables given in the name.
 */
 
-int *OramDeterministic::getPositionMap()
+int* OramDeterministic::getPositionMap()
 {
     return this->position_map;
 }

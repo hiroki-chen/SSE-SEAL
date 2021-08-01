@@ -1,12 +1,12 @@
 #include <utils.h>
 
-#include <sodium.h>
 #include <cstring>
 #include <random>
 #include <regex>
+#include <sodium.h>
 #include <stdexcept>
 
-void copy(ODict::Node *const dst, const ODict::Node *const src)
+void copy(ODict::Node* const dst, const ODict::Node* const src)
 {
     dst->data = new char[strlen(src->data) + 1];
     strcpy(dst->data, src->data);
@@ -20,12 +20,12 @@ void copy(ODict::Node *const dst, const ODict::Node *const src)
     dst->pos_tag = src->pos_tag;
 }
 
-int get_height(const ODict::Node *const node)
+int get_height(const ODict::Node* const node)
 {
     return node == nullptr ? 0 : MAX(node->left_height, node->right_height) + 1;
 }
 
-std::string random_string(const int &len)
+std::string random_string(const int& len)
 {
     std::string tmp_s;
     std::string alphanum = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -44,8 +44,7 @@ std::string random_string(const int &len)
 
 OramInterface::Operation deduct_operation(OramAccessOp op)
 {
-    switch (op)
-    {
+    switch (op) {
     case ORAM_ACCESS_READ:
         return OramInterface::Operation::READ;
     case ORAM_ACCESS_WRITE:
@@ -55,24 +54,31 @@ OramInterface::Operation deduct_operation(OramAccessOp op)
     }
 }
 
-std::vector<std::string> split(const std::string &input, const std::string &regex)
+std::vector<std::string> split(const std::string& input, const std::string& regex)
 {
     // passing -1 as the submatch index parameter performs splitting
     std::regex re(regex);
     std::sregex_token_iterator
-        first{input.begin(), input.end(), re, -1},
+        first { input.begin(), input.end(), re, -1 },
         last;
-    return {first, last};
+    return { first, last };
 }
 
-std::map<unsigned int, unsigned int> pseudo_random_permutation(const size_t &value_size,
-                                                               const size_t &array_size,
-                                                               std::string_view secret_key)
+/**
+ * The randombytes_buf() function fills size bytes starting at buf with an unpredictable sequence of bytes.
+ * The randombytes_buf_deterministic function stores size bytes into buf indistinguishable
+ * from random bytes without knowing seed.
+ * For a given seed, this function will always output the same sequence. size can be up to 2^38 (256 GB).
+ */
+std::map<unsigned int, unsigned int>
+pseudo_random_permutation(const size_t& value_size,
+    const size_t& array_size,
+    std::string_view secret_key)
 {
     unsigned int permutation[value_size];
     std::map<unsigned int, unsigned int> ans;
-    
-    randombytes_buf_deterministic(permutation, sizeof(permutation), (unsigned char *)secret_key.data());
+
+    randombytes_buf_deterministic(permutation, sizeof(permutation), (unsigned char*)secret_key.data());
 
     for (unsigned int i = 0; i < value_size; i++) {
         ans[i] = permutation[i] % array_size;

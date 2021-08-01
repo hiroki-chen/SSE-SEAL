@@ -1,8 +1,7 @@
 #ifndef PATHORAM_PATHORAM_H
 #define PATHORAM_PATHORAM_H
 
-typedef enum
-{
+typedef enum {
     ORAM_ACCESS_READ,
     ORAM_ACCESS_WRITE,
     ORAM_ACCESS_DELETE,

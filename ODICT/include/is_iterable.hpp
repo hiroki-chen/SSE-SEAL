@@ -7,44 +7,41 @@
 #ifndef DUTHOMHAS_IS_ITERABLE_HPP
 #define DUTHOMHAS_IS_ITERABLE_HPP
 
-namespace duthomhas
-{
+namespace duthomhas {
 
-  // The basis for this code was found at
-  // https://stackoverflow.com/a/29634934/2706707
-  using std::begin;
-  using std::end;
+// The basis for this code was found at
+// https://stackoverflow.com/a/29634934/2706707
+using std::begin;
+using std::end;
 
-  template <typename T>
-  class is_iterable
-  {
+template <typename T>
+class is_iterable {
     template <typename U>
     static constexpr auto is_iterable_impl(int)
         -> decltype(
-            begin(std::declval<U &>()) != end(std::declval<U &>()),   // begin/end and operator !=
-            void(),                                                   // Handle evil operator ,
-            ++std::declval<decltype(begin(std::declval<U &>())) &>(), // operator ++
-            void(*begin(std::declval<U &>())),                        // operator*
-            std::true_type{})
+            begin(std::declval<U&>()) != end(std::declval<U&>()), // begin/end and operator !=
+            void(), // Handle evil operator ,
+            ++std::declval<decltype(begin(std::declval<U&>()))&>(), // operator ++
+            void(*begin(std::declval<U&>())), // operator*
+            std::true_type {})
     {
-      return std::true_type{};
+        return std::true_type {};
     }
 
     template <typename U>
     static constexpr std::false_type is_iterable_impl(...)
     {
-      return std::false_type{};
+        return std::false_type {};
     }
 
     typedef decltype(is_iterable_impl<T>(0)) type;
 
-  public:
+public:
     //static constexpr bool value = type::value;
-    enum : bool
-    {
-      value = type::value
+    enum : bool {
+        value = type::value
     };
-  };
+};
 
 }
 

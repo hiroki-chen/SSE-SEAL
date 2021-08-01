@@ -5,18 +5,16 @@
 
 #include <Block.h>
 
-class OramInterface
-{
+class OramInterface {
 public:
-    enum Operation
-    {
+    enum Operation {
         READ,
         WRITE
     };
-    virtual int *access(Operation op, int blockIndex, int newdata[]) { return 0; };
-    virtual int *access_direct(Operation op, int newdata[]) { return 0; }
+    virtual int* access(Operation op, int blockIndex, int newdata[]) { return 0; };
+    virtual int* access_direct(Operation op, int newdata[]) { return 0; }
     virtual int P(int leaf, int level) { return 0; };
-    virtual int *getPositionMap() { return 0; };
+    virtual int* getPositionMap() { return 0; };
     virtual vector<Block> getStash() { return vector<Block>(); };
     virtual int getStashSize() { return 0; };
     virtual int getNumLeaves() { return 0; };

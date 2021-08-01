@@ -7,8 +7,7 @@
 #include <RandForOramInterface.h>
 #include <UntrustedStorageInterface.h>
 
-class ServerStorage : public UntrustedStorageInterface
-{
+class ServerStorage : public UntrustedStorageInterface {
 public:
     static bool is_initialized;
     static bool is_capacity_set;
@@ -18,7 +17,7 @@ public:
     ServerStorage();
     void setCapacity(int totalNumOfBuckets);
     Bucket ReadBucket(int position);
-    void WriteBucket(int position, const Bucket &bucket_to_write);
+    void WriteBucket(int position, const Bucket& bucket_to_write);
 
 private:
     int capacity;
