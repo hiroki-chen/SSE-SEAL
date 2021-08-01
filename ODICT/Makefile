@@ -15,6 +15,7 @@ CXXFLAGS = -std=c++17 -g -O3 -fPIE -Iinclude -Wall \
 		-Werror \
 		-Wmissing-prototypes \
 		-Wstrict-prototypes
+LD = -lsodium
 
 SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
 BUILD_FILES = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRC_FILES))
@@ -36,5 +37,5 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 $(RUN): $(BUILD_FILES)
-	$(CXX) -o $(BUILD_DIR)/$@ $^
+	$(CXX) -o $(BUILD_DIR)/$@ $^ $(LD)
 	$(BUILD_DIR)/$@
