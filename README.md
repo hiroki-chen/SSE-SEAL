@@ -8,6 +8,7 @@ Searchable Encryption with Adjustable Leakage
 * GCC Compiler (or equivalent compilers) version 7.3.0 or higher;
 * -std=c++17
 * mysql-connector-c++ 8.0 library
+* libsodium(github page is [here](https://github.com/jedisct1/libsodium))
 
 1. To compile the project, please first locate to the directory by
 ```shell
