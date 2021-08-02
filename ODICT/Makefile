@@ -5,6 +5,7 @@ CXX = g++
 CXXFLAGS = -std=c++17 -g -O3 -fPIE -Iinclude -Wall \
 		-Wmissing-declarations \
 		-Wextra \
+		-Wno-unknown-attributes \
 		-Wno-unused-parameter \
 		-Wno-missing-field-initializers \
 		-Wswitch \
@@ -15,7 +16,8 @@ CXXFLAGS = -std=c++17 -g -O3 -fPIE -Iinclude -Wall \
 		-Werror \
 		-Wmissing-prototypes \
 		-Wstrict-prototypes
-LD = -lsodium
+
+LD = -lsodium -lpqxx -lpq 
 
 SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp)
 BUILD_FILES = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRC_FILES))

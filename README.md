@@ -7,8 +7,20 @@ Searchable Encryption with Adjustable Leakage
 # Usage
 * GCC Compiler (or equivalent compilers) version 7.3.0 or higher;
 * -std=c++17
-* mysql-connector-c++ 8.0 library
+* <del>mysql-connector-c++ 8.0 library</del>(not used) libpqxx for PostgreSQL-based openGauss database system
+  For macOS users, you can install libpqxx by homebrew:
+  ```shell
+  brew install libpqxx
+  ```
+  which will automatically install all the required libraries and the headers in the homebrew path and link the libararies to /usr/local/lib.
+  <br>
+  For Ubuntu users, `apt-get` suffices.
+  ```shell
+  sudo apt-get install libpqxx-dev
+  ```
 * libsodium(github page is [here](https://github.com/jedisct1/libsodium))
+  <br>
+  Sodium library provides with cryptographically secure random generators, and it also gives us some public-key or private-key encryption interfaces.
 
 1. To compile the project, please first locate to the directory by
 ```shell
