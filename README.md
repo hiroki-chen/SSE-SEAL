@@ -7,7 +7,8 @@ Searchable Encryption with Adjustable Leakage
 # Usage
 * GCC Compiler (or equivalent compilers) version 7.3.0 or higher;
 * -std=c++17
-* <del>mysql-connector-c++ 8.0 library</del>(not used) libpqxx for PostgreSQL-based openGauss database system
+* <del>mysql-connector-c++ 8.0 library</del>(not used) libpqxx for PostgreSQL-based openGauss database system.
+  <br>
   For macOS users, you can install libpqxx by homebrew:
   ```shell
   brew install libpqxx
