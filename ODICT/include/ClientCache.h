@@ -4,8 +4,10 @@
 #include <cstddef>
 #include <deque>
 #include <iostream>
+#include <map>
 #include <unordered_map>
 
+#include <Objects.h>
 #include <OramAccessController.h>
 #include <plog/Log.h>
 

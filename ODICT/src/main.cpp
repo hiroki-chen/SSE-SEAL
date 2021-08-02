@@ -1,4 +1,5 @@
 #include <Client.h>
+#include <Connector.h>
 #include <utils.h>
 
 #include <cassert>
@@ -12,13 +13,14 @@
  */
 int main(int argc, const char** args)
 {
-    std::cout << "test case num: " << std::endl;
-    int number;
-    std::cin >> number;
     // Every time the client will sample a new key from the password.
-    SEAL::Client* client = new SEAL::Client(256, 256, sizeof(ODict::Node), 1024, INT_MAX, 5, 4, "123456789");
+    SEAL::Client* client = new SEAL::Client(256, 256, sizeof(ODict::Node), 1024, INT_MAX, 5, 4, "123456789", PSQL_CONNECTION_INFORMATION);
 
     client->test_adj("./input/test.txt");
-
+    
+    std::cout << "sql: " << std::endl;
+    std::string s;
+    getline(std::cin, s);
+    client->test_sql(s);
     return 0;
 }

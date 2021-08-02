@@ -176,7 +176,7 @@ void SEAL::Client::cache_helper(const int& id, ODict::Node* const ret)
     memcpy(ret, buffer, block_size);
 }
 
-void SEAL::Client::ODS_start()∏ { cache->clear(); }
+void SEAL::Client::ODS_start() { cache->clear(); }
 
 void SEAL::Client::ODS_access(std::vector<ODict::Operation>& ops)
 {
@@ -781,23 +781,25 @@ std::vector<ODict::Node*> SEAL::Client::create_test_cases(const int& number)
 SEAL::Client::Client(const int& bucket_size, const int& block_number,
     const int& block_size, const int& odict_size,
     const size_t& max_size, const unsigned int& alpha,
-    const unsigned int& x, std::string_view password)
+    const unsigned int& x, std::string_view password,
+    std::string_view connection_info)
     : block_size(block_size)
     , odict_size(odict_size)
     , block_number(block_number)
     , root_id(0)
     , root_pos(-1)
-    , oramAccessController(std::unique_ptr<OramAccessController>(
-          new OramAccessController(bucket_size, block_number, block_size)))
+    , oramAccessController(std::make_unique<OramAccessController>(bucket_size, block_number, block_size))
     , node_count(1)
     , read_count(0)
     , write_count(0)
     , cache(new Cache<ODict::Node>(max_size, oramAccessController.get()))
     , alpha(alpha)
     , x(x)
+    , connector(std::make_unique<SEAL::Connector>(connection_info))
 {
     init_key(password);
     init_dummy_data();
+    PLOG(plog::info) << "Client initialized\n";
 }
 
 void SEAL::Client::test_adj(std::string_view file_path)
@@ -806,4 +808,9 @@ void SEAL::Client::test_adj(std::string_view file_path)
 
     PLOG(plog::info) << "trying to fetch keyword beautiful: "
                      << find("beautiful"s)->data;
+}
+
+void SEAL::Client::test_sql(std::string_view sql)
+{
+    connector.get()->insert_handler(sql);
 }
