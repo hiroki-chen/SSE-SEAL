@@ -32,11 +32,13 @@ namespace SEAL {
 class Client {
 private:
     /* ================= Oblivious Data Structure ======================*/
+    const size_t bucket_size;
+
+    const size_t block_number;
+
     const size_t block_size;
 
     const size_t odict_size;
-
-    const size_t block_number;
 
     int root_id;
 
@@ -254,6 +256,14 @@ private:
      * @param memory
      */
     void adj_oram_init(const std::vector<std::pair<std::string, unsigned int>>& memory);
+
+    /**
+     * @brief Initialize each oram controller.
+     * 
+     * @param mu the number of oram blocks
+     * @param sub_array plain memory blocks
+     */
+    void adj_oram_controller_init(const unsigned int &mu, const std::vector<std::vector<unsigned int>> &sub_arrays);
 
     /**
      * @brief Build the secret index on input documents.

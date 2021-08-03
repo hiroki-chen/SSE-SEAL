@@ -664,7 +664,7 @@ void SEAL::Client::adj_padding(std::vector<std::string>& document)
 
     // Pad the document
     for (unsigned int i = document.size(); i <= size; i++) {
-        document.push_back(random_string(16));
+        document.push_back(random_string(16, secret_key));
     }
 }
 
@@ -697,7 +697,7 @@ void SEAL::Client::adj_data_in(std::string_view file_path)
 
         size_t memory_size = memory.size();
         for (unsigned int i = memory_size; i <= x * memory_size; i++) {
-            memory.push_back(std::make_pair(random_string(16), -1));
+            memory.push_back(std::make_pair(random_string(16, secret_key), UINT_MAX));
         }
 
         // Sort the keyword in lexicographical order.
@@ -734,6 +734,7 @@ void SEAL::Client::adj_insert(
 {
     std::vector<ODict::Node*> nodes;
     for (unsigned int i = 0; i < memory.size(); i++) {
+        std::cout << memory[i].first << ", " << memory[i].second << std::endl;
         ODict::Node* const node = new ODict::Node();
         const unsigned int iw = first_occurrence.at(memory[i].first);
         const unsigned int cntw = count.at(memory[i].first);
@@ -747,18 +748,51 @@ void SEAL::Client::adj_insert(
     insert(nodes);
 
     adj_oram_init(memory);
+    PLOG(plog::info) << "SUB ORAMS INITIALIZED.";
+}
+
+void SEAL::Client::adj_oram_controller_init(
+    const unsigned int& mu,
+    const std::vector<std::vector<unsigned int>>& sub_arrays)
+{
+    for (unsigned int i = 0; i < mu; i++) {
+        adj_oramAccessControllers.push_back(
+                std::make_unique<OramAccessController>(bucket_size, block_number, sizeof(unsigned int)));
+    }
+    PLOG(plog::info) << "Oram controllers all warmed up.";
+
+    for (unsigned int i = 0; i < sub_arrays.size(); i++) {
+        for (unsigned int j = 0; j < sub_arrays[i].size(); j++) {
+            adj_oramAccessControllers[i].get()->oblivious_access(
+                ORAM_ACCESS_WRITE, j, (unsigned char*)(std::to_string(sub_arrays[i][j]).c_str()));
+        }
+    }
 }
 
 void SEAL::Client::adj_oram_init(
     const std::vector<std::pair<std::string, unsigned int>>& memory)
 {
     size_t memory_size = memory.size();
-    size_t array_size = std::ceil(memory_size / pow(2, alpha));
-    std::map<unsigned int, unsigned int> prp = pseudo_random_permutation(memory_size, array_size, secret_key);
+    //size_t mu = pow(2, alpha);
+    //size_t array_size = std::ceil(memory_size / mu);
 
-    for (auto iter = prp.begin(); iter != prp.end(); iter++) {
-        std::cout << iter->first << ", " << iter->second << std::endl;
+    //std::vector<std::vector<unsigned int>> sub_arrays(mu, std::vector<unsigned int>(array_size, randombytes_uniform(UINT_MAX)));
+
+    std::map<unsigned int, unsigned int> prp = pseudo_random_permutation(memory_size, secret_key);
+    std::cout << "memory size: " << memory_size << std::endl;
+    unsigned int base = (unsigned int)std::ceil((log(memory_size) / log(2)));
+    std::cout << "base: " << base << std::endl;
+
+    for (unsigned int i = 0; i < memory.size(); i++) {
+        unsigned int value = prp[i];
+        std::cout << value << std::endl;
+        std::pair<unsigned int, unsigned int> bits = get_bits(base, value, alpha);
+
+        //sub_arrays[bits.first][bits.second] = memory[i].second;
+        PLOG(plog::info) << "ORAM BLOCK " << bits.first << ", INDEX " << bits.second << ": " << memory[i].second;
     }
+
+    //adj_oram_controller_init(mu, sub_arrays);
 }
 
 std::vector<ODict::Node*> SEAL::Client::create_test_cases(const int& number)
@@ -766,7 +800,7 @@ std::vector<ODict::Node*> SEAL::Client::create_test_cases(const int& number)
     std::vector<ODict::Node*> vec;
 
     for (int i = 0; i < number; i++) {
-        const std::string information = random_string(16);
+        const std::string information = random_string(16, secret_key);
         ODict::Node* const test_root = new ODict::Node();
         test_root->id = node_count++;
         test_root->key = std::to_string(i % 2 == 0 ? test_root->id : number - test_root->id);
@@ -783,9 +817,10 @@ SEAL::Client::Client(const int& bucket_size, const int& block_number,
     const size_t& max_size, const unsigned int& alpha,
     const unsigned int& x, std::string_view password,
     std::string_view connection_info)
-    : block_size(block_size)
-    , odict_size(odict_size)
+    : bucket_size(bucket_size)
     , block_number(block_number)
+    , block_size(block_size)
+    , odict_size(odict_size)
     , root_id(0)
     , root_pos(-1)
     , oramAccessController(std::make_unique<OramAccessController>(bucket_size, block_number, block_size))

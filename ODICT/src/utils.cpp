@@ -1,7 +1,7 @@
 #include <utils.h>
 
+#include <cmath>
 #include <cstring>
-#include <random>
 #include <regex>
 #include <sodium.h>
 #include <stdexcept>
@@ -25,19 +25,18 @@ int get_height(const ODict::Node* const node)
     return node == nullptr ? 0 : MAX(node->left_height, node->right_height) + 1;
 }
 
-std::string random_string(const int& len)
+std::string random_string(const int& len, std::string_view secret_key)
 {
     std::string tmp_s;
     std::string alphanum = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-    std::random_device rd;
-    std::mt19937 e(rd());
-    std::uniform_int_distribution<int> dist(0, alphanum.size() - 1);
+    unsigned int random_value[len];
+    randombytes_buf_deterministic(random_value, sizeof(random_value), (unsigned char*)std::to_string(randombytes_random()).c_str());
 
     tmp_s.reserve(len);
 
     for (int i = 0; i < len; ++i)
-        tmp_s += alphanum[dist(e)];
+        tmp_s += alphanum[random_value[i] % alphanum.size()];
 
     return tmp_s;
 }
@@ -72,17 +71,29 @@ std::vector<std::string> split(const std::string& input, const std::string& rege
  */
 std::map<unsigned int, unsigned int>
 pseudo_random_permutation(const size_t& value_size,
-    const size_t& array_size,
     std::string_view secret_key)
 {
     unsigned int permutation[value_size];
     std::map<unsigned int, unsigned int> ans;
+    for (unsigned int i = 0; i < value_size; i++) {
+        ans[i] = i;
+    }
 
     randombytes_buf_deterministic(permutation, sizeof(permutation), (unsigned char*)secret_key.data());
 
-    for (unsigned int i = 0; i < value_size; i++) {
-        ans[i] = permutation[i] % array_size;
+    for (unsigned int i = 0; i < value_size - 1; i++) {
+        // j := random integer such that i ≤ j < n
+        unsigned int j = i + permutation[i] % (value_size - i);
+        std::swap(ans[i], ans[j]);
     }
 
     return ans;
+}
+
+std::pair<unsigned int, unsigned int> get_bits(const unsigned int& base, const unsigned int& number, const unsigned int& alpha)
+{
+    unsigned int most = number >> (base - alpha);
+    unsigned int rest = number & (unsigned int)(pow(2, base - alpha) - 1);
+    std::cout << most << "," << rest << std::endl;
+    return { most, rest };
 }
