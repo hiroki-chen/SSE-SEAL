@@ -23,6 +23,14 @@ Searchable Encryption with Adjustable Leakage
   <br>
   Sodium library provides with cryptographically secure random generators, and it also gives us some public-key or private-key encryption interfaces.
 
+* gRPC for remote process call. This is for the communication with the remote database. (We first issue request to remote processes rather than the remote database directly.)
+  ```shell
+  brew install grpc
+  ```
+  ```shell
+  sudo apt-get install libgrpc-dev
+  ```
+
 1. To compile the project, please first locate to the directory by
 ```shell
 cd <path/to/SEAL/directory>;
