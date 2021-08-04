@@ -54,18 +54,18 @@ struct TableStruct_seal_2eproto {
   static const ::PROTOBUF_NAMESPACE_ID::uint32 offsets[];
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_seal_2eproto;
-class InsertMessage;
-struct InsertMessageDefaultTypeInternal;
-extern InsertMessageDefaultTypeInternal _InsertMessage_default_instance_;
-class InsertResponse;
-struct InsertResponseDefaultTypeInternal;
-extern InsertResponseDefaultTypeInternal _InsertResponse_default_instance_;
+class OdictInitMessage;
+struct OdictInitMessageDefaultTypeInternal;
+extern OdictInitMessageDefaultTypeInternal _OdictInitMessage_default_instance_;
 class OramAccessMessage;
 struct OramAccessMessageDefaultTypeInternal;
 extern OramAccessMessageDefaultTypeInternal _OramAccessMessage_default_instance_;
 class OramAccessResponse;
 struct OramAccessResponseDefaultTypeInternal;
 extern OramAccessResponseDefaultTypeInternal _OramAccessResponse_default_instance_;
+class OramInitMessage;
+struct OramInitMessageDefaultTypeInternal;
+extern OramInitMessageDefaultTypeInternal _OramInitMessage_default_instance_;
 class SearchMessage;
 struct SearchMessageDefaultTypeInternal;
 extern SearchMessageDefaultTypeInternal _SearchMessage_default_instance_;
@@ -76,10 +76,10 @@ class SetupMessage;
 struct SetupMessageDefaultTypeInternal;
 extern SetupMessageDefaultTypeInternal _SetupMessage_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
-template<> ::InsertMessage* Arena::CreateMaybeMessage<::InsertMessage>(Arena*);
-template<> ::InsertResponse* Arena::CreateMaybeMessage<::InsertResponse>(Arena*);
+template<> ::OdictInitMessage* Arena::CreateMaybeMessage<::OdictInitMessage>(Arena*);
 template<> ::OramAccessMessage* Arena::CreateMaybeMessage<::OramAccessMessage>(Arena*);
 template<> ::OramAccessResponse* Arena::CreateMaybeMessage<::OramAccessResponse>(Arena*);
+template<> ::OramInitMessage* Arena::CreateMaybeMessage<::OramInitMessage>(Arena*);
 template<> ::SearchMessage* Arena::CreateMaybeMessage<::SearchMessage>(Arena*);
 template<> ::SearchResponse* Arena::CreateMaybeMessage<::SearchResponse>(Arena*);
 template<> ::SetupMessage* Arena::CreateMaybeMessage<::SetupMessage>(Arena*);
@@ -202,21 +202,12 @@ class SetupMessage final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kOramNumberFieldNumber = 1,
-    kBucketSizeFieldNumber = 2,
-    kBlockNumberFieldNumber = 3,
-    kBlockSizeFieldNumber = 4,
+    kBucketSizeFieldNumber = 1,
+    kBlockNumberFieldNumber = 2,
+    kBlockSizeFieldNumber = 3,
+    kOramBlockSizeFieldNumber = 4,
   };
-  // int32 oram_number = 1;
-  void clear_oram_number();
-  ::PROTOBUF_NAMESPACE_ID::int32 oram_number() const;
-  void set_oram_number(::PROTOBUF_NAMESPACE_ID::int32 value);
-  private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_oram_number() const;
-  void _internal_set_oram_number(::PROTOBUF_NAMESPACE_ID::int32 value);
-  public:
-
-  // int32 bucket_size = 2;
+  // int32 bucket_size = 1;
   void clear_bucket_size();
   ::PROTOBUF_NAMESPACE_ID::int32 bucket_size() const;
   void set_bucket_size(::PROTOBUF_NAMESPACE_ID::int32 value);
@@ -225,7 +216,7 @@ class SetupMessage final :
   void _internal_set_bucket_size(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // int32 block_number = 3;
+  // int32 block_number = 2;
   void clear_block_number();
   ::PROTOBUF_NAMESPACE_ID::int32 block_number() const;
   void set_block_number(::PROTOBUF_NAMESPACE_ID::int32 value);
@@ -234,13 +225,22 @@ class SetupMessage final :
   void _internal_set_block_number(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // int32 block_size = 4;
+  // int32 block_size = 3;
   void clear_block_size();
   ::PROTOBUF_NAMESPACE_ID::int32 block_size() const;
   void set_block_size(::PROTOBUF_NAMESPACE_ID::int32 value);
   private:
   ::PROTOBUF_NAMESPACE_ID::int32 _internal_block_size() const;
   void _internal_set_block_size(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 oram_block_size = 4;
+  void clear_oram_block_size();
+  ::PROTOBUF_NAMESPACE_ID::int32 oram_block_size() const;
+  void set_oram_block_size(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_oram_block_size() const;
+  void _internal_set_oram_block_size(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
   // @@protoc_insertion_point(class_scope:SetupMessage)
@@ -250,10 +250,10 @@ class SetupMessage final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::int32 oram_number_;
   ::PROTOBUF_NAMESPACE_ID::int32 bucket_size_;
   ::PROTOBUF_NAMESPACE_ID::int32 block_number_;
   ::PROTOBUF_NAMESPACE_ID::int32 block_size_;
+  ::PROTOBUF_NAMESPACE_ID::int32 oram_block_size_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_seal_2eproto;
 };
@@ -567,258 +567,6 @@ class SearchResponse final :
 };
 // -------------------------------------------------------------------
 
-class InsertMessage final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:InsertMessage) */ {
- public:
-  inline InsertMessage() : InsertMessage(nullptr) {}
-  ~InsertMessage() override;
-  explicit constexpr InsertMessage(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
-
-  InsertMessage(const InsertMessage& from);
-  InsertMessage(InsertMessage&& from) noexcept
-    : InsertMessage() {
-    *this = ::std::move(from);
-  }
-
-  inline InsertMessage& operator=(const InsertMessage& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline InsertMessage& operator=(InsertMessage&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetOwningArena() == from.GetOwningArena()) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const InsertMessage& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const InsertMessage* internal_default_instance() {
-    return reinterpret_cast<const InsertMessage*>(
-               &_InsertMessage_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    3;
-
-  friend void swap(InsertMessage& a, InsertMessage& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(InsertMessage* other) {
-    if (other == this) return;
-    if (GetOwningArena() == other->GetOwningArena()) {
-      InternalSwap(other);
-    } else {
-      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(InsertMessage* other) {
-    if (other == this) return;
-    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  inline InsertMessage* New() const final {
-    return new InsertMessage();
-  }
-
-  InsertMessage* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<InsertMessage>(arena);
-  }
-  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-  void CopyFrom(const InsertMessage& from);
-  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-  void MergeFrom(const InsertMessage& from);
-  private:
-  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
-  public:
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
-  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
-      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const final { return _cached_size_.Get(); }
-
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const final;
-  void InternalSwap(InsertMessage* other);
-  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
-  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "InsertMessage";
-  }
-  protected:
-  explicit InsertMessage(::PROTOBUF_NAMESPACE_ID::Arena* arena,
-                       bool is_message_owned = false);
-  private:
-  static void ArenaDtor(void* object);
-  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
-  public:
-
-  static const ClassData _class_data_;
-  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
-
-  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // @@protoc_insertion_point(class_scope:InsertMessage)
- private:
-  class _Internal;
-
-  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
-  typedef void InternalArenaConstructable_;
-  typedef void DestructorSkippable_;
-  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
-  friend struct ::TableStruct_seal_2eproto;
-};
-// -------------------------------------------------------------------
-
-class InsertResponse final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:InsertResponse) */ {
- public:
-  inline InsertResponse() : InsertResponse(nullptr) {}
-  ~InsertResponse() override;
-  explicit constexpr InsertResponse(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
-
-  InsertResponse(const InsertResponse& from);
-  InsertResponse(InsertResponse&& from) noexcept
-    : InsertResponse() {
-    *this = ::std::move(from);
-  }
-
-  inline InsertResponse& operator=(const InsertResponse& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline InsertResponse& operator=(InsertResponse&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetOwningArena() == from.GetOwningArena()) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const InsertResponse& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const InsertResponse* internal_default_instance() {
-    return reinterpret_cast<const InsertResponse*>(
-               &_InsertResponse_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    4;
-
-  friend void swap(InsertResponse& a, InsertResponse& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(InsertResponse* other) {
-    if (other == this) return;
-    if (GetOwningArena() == other->GetOwningArena()) {
-      InternalSwap(other);
-    } else {
-      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(InsertResponse* other) {
-    if (other == this) return;
-    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  inline InsertResponse* New() const final {
-    return new InsertResponse();
-  }
-
-  InsertResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<InsertResponse>(arena);
-  }
-  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-  void CopyFrom(const InsertResponse& from);
-  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-  void MergeFrom(const InsertResponse& from);
-  private:
-  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
-  public:
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
-  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
-      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const final { return _cached_size_.Get(); }
-
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const final;
-  void InternalSwap(InsertResponse* other);
-  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
-  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "InsertResponse";
-  }
-  protected:
-  explicit InsertResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
-                       bool is_message_owned = false);
-  private:
-  static void ArenaDtor(void* object);
-  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
-  public:
-
-  static const ClassData _class_data_;
-  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
-
-  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // @@protoc_insertion_point(class_scope:InsertResponse)
- private:
-  class _Internal;
-
-  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
-  typedef void InternalArenaConstructable_;
-  typedef void DestructorSkippable_;
-  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
-  friend struct ::TableStruct_seal_2eproto;
-};
-// -------------------------------------------------------------------
-
 class OramAccessMessage final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:OramAccessMessage) */ {
  public:
@@ -863,7 +611,7 @@ class OramAccessMessage final :
                &_OramAccessMessage_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    3;
 
   friend void swap(OramAccessMessage& a, OramAccessMessage& b) {
     a.Swap(&b);
@@ -934,10 +682,12 @@ class OramAccessMessage final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kBufferFieldNumber = 2,
+    kBufferFieldNumber = 3,
     kOperationFieldNumber = 1,
+    kIsOdictFieldNumber = 2,
+    kOramIdFieldNumber = 4,
   };
-  // repeated bytes buffer = 2;
+  // repeated bytes buffer = 3;
   int buffer_size() const;
   private:
   int _internal_buffer_size() const;
@@ -970,6 +720,24 @@ class OramAccessMessage final :
   void _internal_set_operation(bool value);
   public:
 
+  // bool is_odict = 2;
+  void clear_is_odict();
+  bool is_odict() const;
+  void set_is_odict(bool value);
+  private:
+  bool _internal_is_odict() const;
+  void _internal_set_is_odict(bool value);
+  public:
+
+  // int32 oram_id = 4;
+  void clear_oram_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 oram_id() const;
+  void set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_oram_id() const;
+  void _internal_set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
   // @@protoc_insertion_point(class_scope:OramAccessMessage)
  private:
   class _Internal;
@@ -979,6 +747,8 @@ class OramAccessMessage final :
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> buffer_;
   bool operation_;
+  bool is_odict_;
+  ::PROTOBUF_NAMESPACE_ID::int32 oram_id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_seal_2eproto;
 };
@@ -1028,7 +798,7 @@ class OramAccessResponse final :
                &_OramAccessResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    4;
 
   friend void swap(OramAccessResponse& a, OramAccessResponse& b) {
     a.Swap(&b);
@@ -1136,6 +906,295 @@ class OramAccessResponse final :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_seal_2eproto;
 };
+// -------------------------------------------------------------------
+
+class OramInitMessage final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:OramInitMessage) */ {
+ public:
+  inline OramInitMessage() : OramInitMessage(nullptr) {}
+  ~OramInitMessage() override;
+  explicit constexpr OramInitMessage(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  OramInitMessage(const OramInitMessage& from);
+  OramInitMessage(OramInitMessage&& from) noexcept
+    : OramInitMessage() {
+    *this = ::std::move(from);
+  }
+
+  inline OramInitMessage& operator=(const OramInitMessage& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline OramInitMessage& operator=(OramInitMessage&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const OramInitMessage& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const OramInitMessage* internal_default_instance() {
+    return reinterpret_cast<const OramInitMessage*>(
+               &_OramInitMessage_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    5;
+
+  friend void swap(OramInitMessage& a, OramInitMessage& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(OramInitMessage* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(OramInitMessage* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline OramInitMessage* New() const final {
+    return new OramInitMessage();
+  }
+
+  OramInitMessage* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<OramInitMessage>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const OramInitMessage& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const OramInitMessage& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(OramInitMessage* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "OramInitMessage";
+  }
+  protected:
+  explicit OramInitMessage(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kOramIdFieldNumber = 1,
+    kBlockSizeFieldNumber = 2,
+  };
+  // int32 oram_id = 1;
+  void clear_oram_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 oram_id() const;
+  void set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_oram_id() const;
+  void _internal_set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 block_size = 2;
+  void clear_block_size();
+  ::PROTOBUF_NAMESPACE_ID::int32 block_size() const;
+  void set_block_size(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_block_size() const;
+  void _internal_set_block_size(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:OramInitMessage)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::int32 oram_id_;
+  ::PROTOBUF_NAMESPACE_ID::int32 block_size_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_seal_2eproto;
+};
+// -------------------------------------------------------------------
+
+class OdictInitMessage final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:OdictInitMessage) */ {
+ public:
+  inline OdictInitMessage() : OdictInitMessage(nullptr) {}
+  ~OdictInitMessage() override;
+  explicit constexpr OdictInitMessage(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  OdictInitMessage(const OdictInitMessage& from);
+  OdictInitMessage(OdictInitMessage&& from) noexcept
+    : OdictInitMessage() {
+    *this = ::std::move(from);
+  }
+
+  inline OdictInitMessage& operator=(const OdictInitMessage& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline OdictInitMessage& operator=(OdictInitMessage&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const OdictInitMessage& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const OdictInitMessage* internal_default_instance() {
+    return reinterpret_cast<const OdictInitMessage*>(
+               &_OdictInitMessage_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    6;
+
+  friend void swap(OdictInitMessage& a, OdictInitMessage& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(OdictInitMessage* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(OdictInitMessage* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline OdictInitMessage* New() const final {
+    return new OdictInitMessage();
+  }
+
+  OdictInitMessage* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<OdictInitMessage>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const OdictInitMessage& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const OdictInitMessage& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(OdictInitMessage* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "OdictInitMessage";
+  }
+  protected:
+  explicit OdictInitMessage(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kBlockSizeFieldNumber = 1,
+  };
+  // int32 block_size = 1;
+  void clear_block_size();
+  ::PROTOBUF_NAMESPACE_ID::int32 block_size() const;
+  void set_block_size(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_block_size() const;
+  void _internal_set_block_size(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:OdictInitMessage)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::int32 block_size_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_seal_2eproto;
+};
 // ===================================================================
 
 
@@ -1147,27 +1206,7 @@ class OramAccessResponse final :
 #endif  // __GNUC__
 // SetupMessage
 
-// int32 oram_number = 1;
-inline void SetupMessage::clear_oram_number() {
-  oram_number_ = 0;
-}
-inline ::PROTOBUF_NAMESPACE_ID::int32 SetupMessage::_internal_oram_number() const {
-  return oram_number_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::int32 SetupMessage::oram_number() const {
-  // @@protoc_insertion_point(field_get:SetupMessage.oram_number)
-  return _internal_oram_number();
-}
-inline void SetupMessage::_internal_set_oram_number(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  
-  oram_number_ = value;
-}
-inline void SetupMessage::set_oram_number(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  _internal_set_oram_number(value);
-  // @@protoc_insertion_point(field_set:SetupMessage.oram_number)
-}
-
-// int32 bucket_size = 2;
+// int32 bucket_size = 1;
 inline void SetupMessage::clear_bucket_size() {
   bucket_size_ = 0;
 }
@@ -1187,7 +1226,7 @@ inline void SetupMessage::set_bucket_size(::PROTOBUF_NAMESPACE_ID::int32 value) 
   // @@protoc_insertion_point(field_set:SetupMessage.bucket_size)
 }
 
-// int32 block_number = 3;
+// int32 block_number = 2;
 inline void SetupMessage::clear_block_number() {
   block_number_ = 0;
 }
@@ -1207,7 +1246,7 @@ inline void SetupMessage::set_block_number(::PROTOBUF_NAMESPACE_ID::int32 value)
   // @@protoc_insertion_point(field_set:SetupMessage.block_number)
 }
 
-// int32 block_size = 4;
+// int32 block_size = 3;
 inline void SetupMessage::clear_block_size() {
   block_size_ = 0;
 }
@@ -1225,6 +1264,26 @@ inline void SetupMessage::_internal_set_block_size(::PROTOBUF_NAMESPACE_ID::int3
 inline void SetupMessage::set_block_size(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_block_size(value);
   // @@protoc_insertion_point(field_set:SetupMessage.block_size)
+}
+
+// int32 oram_block_size = 4;
+inline void SetupMessage::clear_oram_block_size() {
+  oram_block_size_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 SetupMessage::_internal_oram_block_size() const {
+  return oram_block_size_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 SetupMessage::oram_block_size() const {
+  // @@protoc_insertion_point(field_get:SetupMessage.oram_block_size)
+  return _internal_oram_block_size();
+}
+inline void SetupMessage::_internal_set_oram_block_size(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  oram_block_size_ = value;
+}
+inline void SetupMessage::set_oram_block_size(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_oram_block_size(value);
+  // @@protoc_insertion_point(field_set:SetupMessage.oram_block_size)
 }
 
 // -------------------------------------------------------------------
@@ -1387,14 +1446,6 @@ SearchResponse::mutable_buffer() {
 
 // -------------------------------------------------------------------
 
-// InsertMessage
-
-// -------------------------------------------------------------------
-
-// InsertResponse
-
-// -------------------------------------------------------------------
-
 // OramAccessMessage
 
 // bool operation = 1;
@@ -1417,7 +1468,27 @@ inline void OramAccessMessage::set_operation(bool value) {
   // @@protoc_insertion_point(field_set:OramAccessMessage.operation)
 }
 
-// repeated bytes buffer = 2;
+// bool is_odict = 2;
+inline void OramAccessMessage::clear_is_odict() {
+  is_odict_ = false;
+}
+inline bool OramAccessMessage::_internal_is_odict() const {
+  return is_odict_;
+}
+inline bool OramAccessMessage::is_odict() const {
+  // @@protoc_insertion_point(field_get:OramAccessMessage.is_odict)
+  return _internal_is_odict();
+}
+inline void OramAccessMessage::_internal_set_is_odict(bool value) {
+  
+  is_odict_ = value;
+}
+inline void OramAccessMessage::set_is_odict(bool value) {
+  _internal_set_is_odict(value);
+  // @@protoc_insertion_point(field_set:OramAccessMessage.is_odict)
+}
+
+// repeated bytes buffer = 3;
 inline int OramAccessMessage::_internal_buffer_size() const {
   return buffer_.size();
 }
@@ -1490,6 +1561,26 @@ inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
 OramAccessMessage::mutable_buffer() {
   // @@protoc_insertion_point(field_mutable_list:OramAccessMessage.buffer)
   return &buffer_;
+}
+
+// int32 oram_id = 4;
+inline void OramAccessMessage::clear_oram_id() {
+  oram_id_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 OramAccessMessage::_internal_oram_id() const {
+  return oram_id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 OramAccessMessage::oram_id() const {
+  // @@protoc_insertion_point(field_get:OramAccessMessage.oram_id)
+  return _internal_oram_id();
+}
+inline void OramAccessMessage::_internal_set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  oram_id_ = value;
+}
+inline void OramAccessMessage::set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_oram_id(value);
+  // @@protoc_insertion_point(field_set:OramAccessMessage.oram_id)
 }
 
 // -------------------------------------------------------------------
@@ -1569,6 +1660,74 @@ inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
 OramAccessResponse::mutable_buffer() {
   // @@protoc_insertion_point(field_mutable_list:OramAccessResponse.buffer)
   return &buffer_;
+}
+
+// -------------------------------------------------------------------
+
+// OramInitMessage
+
+// int32 oram_id = 1;
+inline void OramInitMessage::clear_oram_id() {
+  oram_id_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 OramInitMessage::_internal_oram_id() const {
+  return oram_id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 OramInitMessage::oram_id() const {
+  // @@protoc_insertion_point(field_get:OramInitMessage.oram_id)
+  return _internal_oram_id();
+}
+inline void OramInitMessage::_internal_set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  oram_id_ = value;
+}
+inline void OramInitMessage::set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_oram_id(value);
+  // @@protoc_insertion_point(field_set:OramInitMessage.oram_id)
+}
+
+// int32 block_size = 2;
+inline void OramInitMessage::clear_block_size() {
+  block_size_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 OramInitMessage::_internal_block_size() const {
+  return block_size_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 OramInitMessage::block_size() const {
+  // @@protoc_insertion_point(field_get:OramInitMessage.block_size)
+  return _internal_block_size();
+}
+inline void OramInitMessage::_internal_set_block_size(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  block_size_ = value;
+}
+inline void OramInitMessage::set_block_size(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_block_size(value);
+  // @@protoc_insertion_point(field_set:OramInitMessage.block_size)
+}
+
+// -------------------------------------------------------------------
+
+// OdictInitMessage
+
+// int32 block_size = 1;
+inline void OdictInitMessage::clear_block_size() {
+  block_size_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 OdictInitMessage::_internal_block_size() const {
+  return block_size_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 OdictInitMessage::block_size() const {
+  // @@protoc_insertion_point(field_get:OdictInitMessage.block_size)
+  return _internal_block_size();
+}
+inline void OdictInitMessage::_internal_set_block_size(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  block_size_ = value;
+}
+inline void OdictInitMessage::set_block_size(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_block_size(value);
+  // @@protoc_insertion_point(field_set:OdictInitMessage.block_size)
 }
 
 #ifdef __GNUC__

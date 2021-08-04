@@ -758,18 +758,7 @@ void SEAL::Client::adj_oram_controller_init(
     const unsigned int& mu,
     const std::vector<std::vector<unsigned int>>& sub_arrays)
 {
-    for (unsigned int i = 0; i < mu; i++) {
-        adj_oramAccessControllers.push_back(
-                std::make_unique<OramAccessController>(bucket_size, block_number, sizeof(unsigned int)));
-    }
-    PLOG(plog::info) << "Oram controllers all warmed up.";
-
-    for (unsigned int i = 0; i < sub_arrays.size(); i++) {
-        for (unsigned int j = 0; j < sub_arrays[i].size(); j++) {
-            adj_oramAccessControllers[i].get()->oblivious_access(
-                ORAM_ACCESS_WRITE, j, (unsigned char*)(std::to_string(sub_arrays[i][j]).c_str()));
-        }
-    }
+    
 }
 
 void SEAL::Client::adj_oram_init(

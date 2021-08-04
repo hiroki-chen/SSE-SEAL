@@ -8,19 +8,19 @@ service Seal {
 
     rpc search(SearchMessage) returns (SearchResponse) {}
 
-    rpc insert(InsertMessage) returns (InsertResponse) {}
-
+    // Access to oram block.
     rpc oram_access(OramAccessMessage) returns (OramAccessResponse) {}
 
+    // Init the oram block.
+    rpc oram_init(OramInitMessage) returns (google.protobuf.Empty) {}
 }
 
 message SetupMessage
 {
-    // How many oram blocks should be initialized.
-    int32 oram_number = 1;
-    int32 bucket_size = 2;
-    int32 block_number = 3;
-    int32 block_size = 4;
+    int32 bucket_size = 1;
+    int32 block_number = 2;
+    int32 block_size = 3;
+    int32 oram_block_size = 4;
 }
 
 message SearchMessage
@@ -33,23 +33,26 @@ message SearchResponse
     repeated bytes buffer = 1;
 }
 
-message InsertMessage
-{
-
-}
-
-message InsertResponse
-{
-
-}
-
 message OramAccessMessage
 {
     bool operation = 1;
-    repeated bytes buffer = 2;
+    bool is_odict = 2;
+    repeated bytes buffer = 3;
+    int32 oram_id = 4;
 }
 
 message OramAccessResponse
 {
     repeated bytes buffer = 1;
+}
+
+message OramInitMessage
+{
+    int32 oram_id = 1;
+    int32 block_size = 2;
+}
+
+message OdictInitMessage
+{
+    int32 block_size = 1;
 }

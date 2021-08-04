@@ -2,7 +2,7 @@
 #define ORAM_ACCESS_CONTROLLER_H_
 
 #include <oram/OramInterface.h>
-#include <oram/PathORAM.h》
+#include <oram/PathORAM.h>
 #include <oram/RandForOramInterface.h>
 #include <oram/UntrustedStorageInterface.h>
 
@@ -18,6 +18,7 @@ private:
 
 public:
     /**
+     * @deprecated
      * @brief The normal way to access the PathORAM.
      * 
      * @param op the operation: READ / WRITE. INSERT / DELETE are not used in this interface.
@@ -28,6 +29,7 @@ public:
     oblivious_access(OramAccessOp op, const int& address, unsigned char* data);
 
     /**
+     * @deprecated
      * @brief The special way to access the PathORAM. For oblviious data structures.
      * 
      * @param op the operation: READ/ WRITE. INSERT / DELETE are not used in this interface either.

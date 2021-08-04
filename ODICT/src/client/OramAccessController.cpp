@@ -1,4 +1,4 @@
-#include <oram/OramAccessController.h>
+#include <client/OramAccessController.h>
 #include <oram/OramDeterministic.h>
 #include <oram/OramReadPathEviction.h>
 #include <oram/RandomForOram.h>

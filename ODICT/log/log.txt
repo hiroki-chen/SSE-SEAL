@@ -6117,3 +6117,97 @@
 2021-08-04 10:57:29.419 INFO  [6407159] [SEAL::Client::adj_oram_init@792] ORAM BLOCK 2, INDEX 27: 3
 2021-08-04 10:57:29.420 INFO  [6407159] [SEAL::Client::adj_oram_init@792] ORAM BLOCK 2, INDEX 20: 2
 2021-08-04 10:57:29.420 INFO  [6407159] [SEAL::Client::adj_oram_init@792] ORAM BLOCK 3, INDEX 30: 4294967295
+2021-08-04 22:07:22.748 INFO  [7895529] [OramAccessController::OramAccessController@16] Warming up OramAccessController...
+
+2021-08-04 22:07:22.754 INFO  [7895529] [SEAL::Cache<ODict::Node>::Cache@49] Client Cache started.
+2021-08-04 22:07:22.817 INFO  [7895529] [SEAL::Connector::Connector@10] Connection to PostgreSQL established with code 1
+2021-08-04 22:07:22.817 INFO  [7895529] [SEAL::Client::init_key@30] Initializing secret key...
+2021-08-04 22:07:22.899 INFO  [7895529] [SEAL::Client::init_key@47] Key sampled: Ò†–ÉØ*‡áØÀr∏ö|#†>äªè‚Ω∞*mn.¯
+2021-08-04 22:07:22.899 INFO  [7895529] [SEAL::Client::init_dummy_data@20] Initializing dummy data!
+2021-08-04 22:14:49.898 INFO  [7913508] [OramAccessController::OramAccessController@16] Warming up OramAccessController...
+
+2021-08-04 22:14:49.904 INFO  [7913508] [SEAL::Cache<ODict::Node>::Cache@49] Client Cache started.
+2021-08-04 22:14:49.931 INFO  [7913508] [SEAL::Connector::Connector@10] Connection to PostgreSQL established with code 1
+2021-08-04 22:14:49.931 INFO  [7913508] [SEAL::Client::init_key@30] Initializing secret key...
+2021-08-04 22:14:50.015 INFO  [7913508] [SEAL::Client::init_key@47] Key sampled: yÁÔãÍ˚å–B®mÄôˇ·èzú<OnÙx“ÚÍûÖÜ‰
+2021-08-04 22:14:50.015 INFO  [7913508] [SEAL::Client::init_dummy_data@20] Initializing dummy data!
+2021-08-04 22:17:03.234 INFO  [7921088] [OramAccessController::OramAccessController@16] Warming up OramAccessController...
+
+2021-08-04 22:17:03.240 INFO  [7921088] [SEAL::Cache<ODict::Node>::Cache@49] Client Cache started.
+2021-08-04 22:17:03.442 INFO  [7921088] [SEAL::Connector::Connector@10] Connection to PostgreSQL established with code 1
+2021-08-04 22:17:03.442 INFO  [7921088] [SEAL::Client::init_key@30] Initializing secret key...
+2021-08-04 22:17:03.536 INFO  [7921088] [SEAL::Client::init_key@47] Key sampled: ë!z)óÜöZﬁøÎ€¿JB·òF&É®vπ§?‘ﬂ´@AØ<
+2021-08-04 22:17:03.536 INFO  [7921088] [SEAL::Client::init_dummy_data@20] Initializing dummy data!
+2021-08-04 22:17:03.536 INFO  [7921088] [SEAL::Client::Client@829] Client initialized
+
+2021-08-04 22:18:07.395 INFO  [7924196] [OramAccessController::OramAccessController@16] Warming up OramAccessController...
+
+2021-08-04 22:18:07.401 INFO  [7924196] [SEAL::Cache<ODict::Node>::Cache@49] Client Cache started.
+2021-08-04 22:18:07.422 INFO  [7924196] [SEAL::Connector::Connector@10] Connection to PostgreSQL established with code 1
+2021-08-04 22:18:07.422 INFO  [7924196] [SEAL::Client::init_key@30] Initializing secret key...
+2021-08-04 22:18:07.504 INFO  [7924196] [SEAL::Client::init_key@47] Key sampled: * âgUOø„∏◊˙ßA7Ñ
+2021-08-04 22:18:07.504 INFO  [7924196] [SEAL::Client::init_dummy_data@20] Initializing dummy data!
+2021-08-04 22:18:11.518 INFO  [7924661] [OramAccessController::OramAccessController@16] Warming up OramAccessController...
+
+2021-08-04 22:18:11.522 INFO  [7924661] [SEAL::Cache<ODict::Node>::Cache@49] Client Cache started.
+2021-08-04 22:18:11.527 INFO  [7924661] [SEAL::Connector::Connector@10] Connection to PostgreSQL established with code 1
+2021-08-04 22:18:11.527 INFO  [7924661] [SEAL::Client::init_key@30] Initializing secret key...
+2021-08-04 22:18:11.608 INFO  [7924661] [SEAL::Client::init_key@47] Key sampled: Ω9¸ìû&Ë»˚vâHSœî+òÛU”ÉÎø∏kAomO¨{J
+2021-08-04 22:18:11.608 INFO  [7924661] [SEAL::Client::init_dummy_data@20] Initializing dummy data!
+2021-08-04 22:18:11.608 INFO  [7924661] [SEAL::Client::Client@829] Client initialized
+
+2021-08-04 22:18:38.430 INFO  [7927282] [OramAccessController::OramAccessController@16] Warming up OramAccessController...
+
+2021-08-04 22:18:38.435 INFO  [7927282] [SEAL::Cache<ODict::Node>::Cache@49] Client Cache started.
+2021-08-04 22:18:38.457 INFO  [7927282] [SEAL::Connector::Connector@10] Connection to PostgreSQL established with code 1
+2021-08-04 22:18:38.457 INFO  [7927282] [SEAL::Client::init_key@30] Initializing secret key...
+2021-08-04 22:18:38.558 INFO  [7927282] [SEAL::Client::init_key@47] Key sampled: B‹¥îCûis©_√¶ë¸{æÁWŸM”0x[q˛¸OCõ
+2021-08-04 22:18:38.558 INFO  [7927282] [SEAL::Client::init_dummy_data@20] Initializing dummy data!
+2021-08-04 22:18:44.368 INFO  [7928042] [OramAccessController::OramAccessController@16] Warming up OramAccessController...
+
+2021-08-04 22:18:44.373 INFO  [7928042] [SEAL::Cache<ODict::Node>::Cache@49] Client Cache started.
+2021-08-04 22:18:44.378 INFO  [7928042] [SEAL::Connector::Connector@10] Connection to PostgreSQL established with code 1
+2021-08-04 22:18:44.379 INFO  [7928042] [SEAL::Client::init_key@30] Initializing secret key...
+2021-08-04 22:18:44.466 INFO  [7928042] [SEAL::Client::init_key@47] Key sampled: Ω~Ï÷`eQq.Ú"A
+2021-08-04 22:18:44.466 INFO  [7928042] [SEAL::Client::init_dummy_data@20] Initializing dummy data!
+2021-08-04 22:18:50.808 INFO  [7928809] [OramAccessController::OramAccessController@16] Warming up OramAccessController...
+
+2021-08-04 22:18:50.813 INFO  [7928809] [SEAL::Cache<ODict::Node>::Cache@49] Client Cache started.
+2021-08-04 22:18:50.817 INFO  [7928809] [SEAL::Connector::Connector@10] Connection to PostgreSQL established with code 1
+2021-08-04 22:18:50.817 INFO  [7928809] [SEAL::Client::init_key@30] Initializing secret key...
+2021-08-04 22:18:50.898 INFO  [7928809] [SEAL::Client::init_key@47] Key sampled: vÖœ+ª‡GYçQ£q[c ìzO5;5RÎÀuî8Ñ±ê
+2021-08-04 22:18:50.898 INFO  [7928809] [SEAL::Client::init_dummy_data@20] Initializing dummy data!
+2021-08-04 22:20:09.385 INFO  [7932744] [OramAccessController::OramAccessController@16] Warming up OramAccessController...
+
+2021-08-04 22:20:09.390 INFO  [7932744] [SEAL::Cache<ODict::Node>::Cache@49] Client Cache started.
+2021-08-04 22:20:09.410 INFO  [7932744] [SEAL::Connector::Connector@10] Connection to PostgreSQL established with code 1
+2021-08-04 22:20:09.410 INFO  [7932744] [SEAL::Client::init_key@30] Initializing secret key...
+2021-08-04 22:20:09.493 INFO  [7932744] [SEAL::Client::init_key@47] Key sampled: VXs
+P˜ÛNÕxUR¸†?®í?
+Tˆ‡#Ó«ŸΩÏ»E
+2021-08-04 22:20:09.493 INFO  [7932744] [SEAL::Client::init_dummy_data@20] Initializing dummy data!
+2021-08-04 22:20:09.493 INFO  [7932744] [SEAL::Client::Client@829] Client initialized
+
+2021-08-04 22:24:25.197 INFO  [7944165] [OramAccessController::OramAccessController@16] Warming up OramAccessController...
+
+2021-08-04 22:24:25.204 INFO  [7944165] [SEAL::Cache<ODict::Node>::Cache@49] Client Cache started.
+2021-08-04 22:24:25.228 INFO  [7944165] [SEAL::Connector::Connector@10] Connection to PostgreSQL established with code 1
+2021-08-04 22:24:25.228 INFO  [7944165] [SEAL::Client::init_key@30] Initializing secret key...
+2021-08-04 22:24:25.317 INFO  [7944165] [SEAL::Client::init_key@47] Key sampled: x®‹∂\;>ΩïÃh–òPs¥«≠ƒ˛—}OEÄæ˛
+2021-08-04 22:24:25.317 INFO  [7944165] [SEAL::Client::init_dummy_data@20] Initializing dummy data!
+2021-08-04 22:24:29.986 INFO  [7944687] [OramAccessController::OramAccessController@16] Warming up OramAccessController...
+
+2021-08-04 22:24:29.992 INFO  [7944687] [SEAL::Cache<ODict::Node>::Cache@49] Client Cache started.
+2021-08-04 22:24:29.996 INFO  [7944687] [SEAL::Connector::Connector@10] Connection to PostgreSQL established with code 1
+2021-08-04 22:24:29.996 INFO  [7944687] [SEAL::Client::init_key@30] Initializing secret key...
+2021-08-04 22:24:30.076 INFO  [7944687] [SEAL::Client::init_key@47] Key sampled: Ÿï]Õ√«X‚=•µ¸1Ü“84Ä˛–ˆ|8†ÀôW≈ò˙
+2021-08-04 22:24:30.076 INFO  [7944687] [SEAL::Client::init_dummy_data@20] Initializing dummy data!
+2021-08-04 22:24:34.018 INFO  [7945114] [OramAccessController::OramAccessController@16] Warming up OramAccessController...
+
+2021-08-04 22:24:34.024 INFO  [7945114] [SEAL::Cache<ODict::Node>::Cache@49] Client Cache started.
+2021-08-04 22:24:34.028 INFO  [7945114] [SEAL::Connector::Connector@10] Connection to PostgreSQL established with code 1
+2021-08-04 22:24:34.028 INFO  [7945114] [SEAL::Client::init_key@30] Initializing secret key...
+2021-08-04 22:24:34.107 INFO  [7945114] [SEAL::Client::init_key@47] Key sampled: …ôÅ{◊0zZ‘„˚ xÓ√äsôüJY7»Y
+2021-08-04 22:24:34.107 INFO  [7945114] [SEAL::Client::init_dummy_data@20] Initializing dummy data!
+2021-08-04 22:24:34.107 INFO  [7945114] [SEAL::Client::Client@829] Client initialized
+

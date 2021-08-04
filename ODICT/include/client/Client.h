@@ -11,7 +11,7 @@
 #include "ClientCache.h"
 #include "Connector.h"
 #include "Objects.h"
-#include <oram/OramAccessController.h>
+#include "OramAccessController.h"
 
 /**
  * Some notes:
@@ -63,7 +63,7 @@ private:
 
     std::string secret_key; // for pseudo-random permutation
 
-    std::vector<std::unique_ptr<OramAccessController>> adj_oramAccessControllers;
+    // std::vector<std::unique_ptr<OramAccessController>> adj_oramAccessControllers; Use an ID instead. Build this on server.
 
     /*==================== Connection to Relational Database (PostgreSQL based openGauss) =====================*/
     std::unique_ptr<SEAL::Connector> connector;

@@ -6,9 +6,6 @@
 
 #include <Connector.h>
 #include <oram/OramStruct.h>
-#include <oram/OramReadPathEviction.h>
-#include <oram/RandomForOram.h>
-#include <oram/UntrustedStorageInterface.h>
 #include <proto/seal.grpc.pb.h>
 #include <proto/seal.pb.h>
 
@@ -29,9 +26,9 @@ private:
      */
     std::vector<std::unique_ptr<OramStruct>> oram_blocks;
 
-    size_t block_size_odict;
+    size_t block_size;
 
-    size_t block_size_oram;
+    size_t oram_block_size;
 
     /**
      * TODO: Construct several ORAM Blocks.
@@ -43,7 +40,7 @@ public:
 
     grpc::Status setup(grpc::ServerContext* context, const SetupMessage* request, google::protobuf::Empty* e);
 
-    grpc::Status search(grpc::ServerContext* context, const SearchMessage* request, SearchResponse* response);
+    // grpc::Status search(grpc::ServerContext* context, const SearchMessage* request, SearchResponse* response);
 };
 
 #endif

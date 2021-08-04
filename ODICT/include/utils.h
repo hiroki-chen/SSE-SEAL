@@ -9,8 +9,8 @@
 #include <iostream>
 #include <string>
 
-#include <Objects.h>
-#include <OramInterface.h>
+#include <client/Objects.h>
+#include <oram/OramInterface.h>
 
 /**
  * @brief The template will provide us with a function equivalent to

@@ -8,7 +8,7 @@
 #include <unordered_map>
 
 #include "Objects.h"
-#include <oram/OramAccessController.h>
+#include "OramAccessController.h"
 #include <plog/Log.h>
 
 namespace SEAL {

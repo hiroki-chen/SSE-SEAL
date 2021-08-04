@@ -20,22 +20,13 @@ CXXFLAGS = -std=c++17 -g -O3 -fPIE -Iinclude -Wall \
 		-Wmissing-prototypes \
 		-Wstrict-prototypes
 
-# Be sure export PKG_CONFIG_PATH=/PATH/TO/OPENSSL/PKGCONFIG/PATH
-ifeq ($(SYSTEM),Darwin)
-LD += -L/usr/local/lib `pkg-config --libs protobuf grpc++`\
+LD = -L/usr/local/lib `pkg-config --libs protobuf grpc++`\
            -pthread\
            -lgrpc++_reflection\
            -ldl\
 		   -lpqxx\
-		   -lpq
-else
-LD += -L/usr/local/lib `pkg-config --libs protobuf grpc++`\
-           -pthread\
-           -Wl,--no-as-needed -lgrpc++_reflection -Wl,--as-needed\
-           -ldl\
-		   -lpqxx\
-		   -lpq
-endif
+		   -lpq\
+		   -lsodium
 
 SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp $(SRC_DIR)/server/*.cpp $(SRC_DIR)/client/*.cpp $(SRC_DIR)/oram/*.cpp)
 BUILD_FILES = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRC_FILES))
@@ -50,7 +41,7 @@ RUN = run
 
 all: clean make_dir make_protos $(RUN)
 
-.PHONY: clean make_dir make_protos
+.PHONY: clean make_dir make_protos test
 clean:
 	$(RM) $(BUILD_DIR)/*.o *~ $(RUN)
 	$(RM) $(LOG_DIR)/*
@@ -69,3 +60,11 @@ $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 $(RUN): $(BUILD_FILES)
 	$(CXX) -o $(BUILD_DIR)/$@ $^ $(LD)
 	$(BUILD_DIR)/$@
+
+test:
+	rm -rf *.o
+	clang++ -std=c++17 -c -O2 -fPIE -Iinclude src/server/*.cpp src/Connector.cpp src/oram/*.cpp src/*.cpp test/test_server.cpp
+	clang++ -o test_server *.o $(LD)
+	rm -rf test_server.o
+	clang++ -c test/test_client.cpp src/client/*.cpp -std=c++17 -O2 -fPIE -Iinclude
+	clang++ -o test_client *.o $(LD)
