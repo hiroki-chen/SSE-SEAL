@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+service Seal {
+    // Setup the remote server by initializing the oram blocks.
+    rpc setup (SetupMessage) returns (google.protobuf.Empty) {}
+
+    rpc search(SearchMessage) returns (SearchResponse) {}
+
+    rpc insert(InsertMessage) returns (InsertResponse) {}
+
+    rpc oram_access(OramAccessMessage) returns (OramAccessResponse) {}
+
+}
+
+message SetupMessage
+{
+    // How many oram blocks should be initialized.
+    int32 oram_number = 1;
+    int32 bucket_size = 2;
+    int32 block_number = 3;
+    int32 block_size = 4;
+}
+
+message SearchMessage
+{
+    repeated bytes buffer = 1;
+}
+
+message SearchResponse
+{
+    repeated bytes buffer = 1;
+}
+
+message InsertMessage
+{
+
+}
+
+message InsertResponse
+{
+
+}
+
+message OramAccessMessage
+{
+    bool operation = 1;
+    repeated bytes buffer = 2;
+}
+
+message OramAccessResponse
+{
+    repeated bytes buffer = 1;
+}

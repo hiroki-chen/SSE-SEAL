@@ -44,7 +44,7 @@ split(const std::string& input, const std::string& regex);
 /**
  * @brief A secure PRP.
  */
-std::map<unsigned int, unsigned int> pseudo_random_permutation(const size_t& value_size,std::string_view secret_key);
+std::vector<unsigned int> pseudo_random_permutation(const size_t& value_size,std::string_view secret_key);
 
 std::pair<unsigned int, unsigned int> get_bits(const unsigned int &base, const unsigned int& number, const unsigned int& alpha);
 

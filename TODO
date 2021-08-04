@@ -2,3 +2,8 @@
 2. Modify the interfaces provided by the OramAccessController to communicate with the remote server;
 3. For SSE-search, use RPC (Remote Process Call, e.g., Gooels' GRPC C++ library) to complete the process and to communicate with the database;
 4. (maybe) Implement oram in UDF (but openGauss may not support UDFs).
+
+---------- For gRPC ----------
+1. Wrap the client with the clientRunner class.
+2. Implement server-side ORAM scheme.
+3. Rewrite interfaces in OramAccessController.

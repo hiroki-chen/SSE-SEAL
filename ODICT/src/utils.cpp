@@ -69,21 +69,24 @@ std::vector<std::string> split(const std::string& input, const std::string& rege
  * from random bytes without knowing seed.
  * For a given seed, this function will always output the same sequence. size can be up to 2^38 (256 GB).
  */
-std::map<unsigned int, unsigned int>
+std::vector<unsigned int>
 pseudo_random_permutation(const size_t& value_size,
     std::string_view secret_key)
 {
-    unsigned int permutation[value_size];
-    std::map<unsigned int, unsigned int> ans;
-    for (unsigned int i = 0; i < value_size; i++) {
-        ans[i] = i;
+    /* Calculate the base digit number. log2 n */
+    unsigned int base = std::ceil(log(value_size) / log(2));
+    unsigned int interval = (unsigned int)(pow(2, base));
+    unsigned int permutation[interval];
+    std::vector<unsigned int> ans;
+    for (unsigned int i = 0; i < interval; i++) {
+        ans.push_back(i);
     }
 
     randombytes_buf_deterministic(permutation, sizeof(permutation), (unsigned char*)secret_key.data());
 
-    for (unsigned int i = 0; i < value_size - 1; i++) {
+    for (unsigned int i = 0; i < interval - 1; i++) {
         // j := random integer such that i ≤ j < n
-        unsigned int j = i + permutation[i] % (value_size - i);
+        unsigned int j = i + permutation[i] % (interval - i);
         std::swap(ans[i], ans[j]);
     }
 
