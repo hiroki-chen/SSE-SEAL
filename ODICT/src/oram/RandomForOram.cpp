@@ -4,10 +4,20 @@
 
 bool RandomForOram::is_initialized = false;
 int RandomForOram::bound = -1;
+RandomForOram* RandomForOram::random = nullptr;
+
+RandomForOram* RandomForOram::get_instance()
+{
+    if (!RandomForOram::is_initialized) {
+        random = new RandomForOram();
+        return random;
+    } else {
+        return random;
+    }
+}
 
 RandomForOram::RandomForOram()
 {
-
     if (this->is_initialized) {
         throw new runtime_error("ONLY ONE RANDOM INSTANCE CAN BE USED AT A TIME");
     }

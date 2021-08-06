@@ -13,6 +13,8 @@ private:
 
     std::unique_ptr<SEAL::Client> client;
 
+    using Seal::Service::setup;
+
     void setup(const int& bucket_size, const int& block_number, const int& block_size, const int& oram_block_size);
 
 public:
@@ -29,6 +31,14 @@ public:
         const char* address = "127.0.0.1:4567");
 
     ~ClientRunner();
+
+    void test_add_node(const unsigned int& number);
+
+    void test_adj(std::string_view file_path);
+
+    using Seal::Service::search;
+    
+    std::string search(std::string_view keyword);
 };
 
 #endif

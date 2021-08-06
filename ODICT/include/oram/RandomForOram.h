@@ -13,6 +13,7 @@ using namespace std;
 
 class RandomForOram : public RandForOramInterface {
 public:
+    static RandomForOram* random;
     static bool is_initialized;
     static int bound;
     vector<int> rand_history;
@@ -25,6 +26,8 @@ public:
     void setBound(int totalNumOfLeaves);
     void resetState();
     void clearHistory();
+
+    static RandomForOram* get_instance();
     vector<int> getHistory();
     linear_congruential_engine<unsigned long, 25214903917, 11, 281474976710656> rnd_generator;
     std::mt19937 mt_generator;

@@ -202,11 +202,26 @@ class SetupMessage final :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kRandomEngineFieldNumber = 5,
     kBucketSizeFieldNumber = 1,
     kBlockNumberFieldNumber = 2,
     kBlockSizeFieldNumber = 3,
     kOramBlockSizeFieldNumber = 4,
   };
+  // bytes random_engine = 5;
+  void clear_random_engine();
+  const std::string& random_engine() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_random_engine(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_random_engine();
+  PROTOBUF_MUST_USE_RESULT std::string* release_random_engine();
+  void set_allocated_random_engine(std::string* random_engine);
+  private:
+  const std::string& _internal_random_engine() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_random_engine(const std::string& value);
+  std::string* _internal_mutable_random_engine();
+  public:
+
   // int32 bucket_size = 1;
   void clear_bucket_size();
   ::PROTOBUF_NAMESPACE_ID::int32 bucket_size() const;
@@ -250,6 +265,7 @@ class SetupMessage final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr random_engine_;
   ::PROTOBUF_NAMESPACE_ID::int32 bucket_size_;
   ::PROTOBUF_NAMESPACE_ID::int32 block_number_;
   ::PROTOBUF_NAMESPACE_ID::int32 block_size_;
@@ -376,28 +392,18 @@ class SearchMessage final :
   enum : int {
     kBufferFieldNumber = 1,
   };
-  // repeated bytes buffer = 1;
-  int buffer_size() const;
-  private:
-  int _internal_buffer_size() const;
-  public:
+  // bytes buffer = 1;
   void clear_buffer();
-  const std::string& buffer(int index) const;
-  std::string* mutable_buffer(int index);
-  void set_buffer(int index, const std::string& value);
-  void set_buffer(int index, std::string&& value);
-  void set_buffer(int index, const char* value);
-  void set_buffer(int index, const void* value, size_t size);
-  std::string* add_buffer();
-  void add_buffer(const std::string& value);
-  void add_buffer(std::string&& value);
-  void add_buffer(const char* value);
-  void add_buffer(const void* value, size_t size);
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& buffer() const;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_buffer();
+  const std::string& buffer() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_buffer(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_buffer();
+  PROTOBUF_MUST_USE_RESULT std::string* release_buffer();
+  void set_allocated_buffer(std::string* buffer);
   private:
-  const std::string& _internal_buffer(int index) const;
-  std::string* _internal_add_buffer();
+  const std::string& _internal_buffer() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_buffer(const std::string& value);
+  std::string* _internal_mutable_buffer();
   public:
 
   // @@protoc_insertion_point(class_scope:SearchMessage)
@@ -407,7 +413,7 @@ class SearchMessage final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> buffer_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr buffer_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_seal_2eproto;
 };
@@ -530,28 +536,18 @@ class SearchResponse final :
   enum : int {
     kBufferFieldNumber = 1,
   };
-  // repeated bytes buffer = 1;
-  int buffer_size() const;
-  private:
-  int _internal_buffer_size() const;
-  public:
+  // bytes buffer = 1;
   void clear_buffer();
-  const std::string& buffer(int index) const;
-  std::string* mutable_buffer(int index);
-  void set_buffer(int index, const std::string& value);
-  void set_buffer(int index, std::string&& value);
-  void set_buffer(int index, const char* value);
-  void set_buffer(int index, const void* value, size_t size);
-  std::string* add_buffer();
-  void add_buffer(const std::string& value);
-  void add_buffer(std::string&& value);
-  void add_buffer(const char* value);
-  void add_buffer(const void* value, size_t size);
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& buffer() const;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_buffer();
+  const std::string& buffer() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_buffer(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_buffer();
+  PROTOBUF_MUST_USE_RESULT std::string* release_buffer();
+  void set_allocated_buffer(std::string* buffer);
   private:
-  const std::string& _internal_buffer(int index) const;
-  std::string* _internal_add_buffer();
+  const std::string& _internal_buffer() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_buffer(const std::string& value);
+  std::string* _internal_mutable_buffer();
   public:
 
   // @@protoc_insertion_point(class_scope:SearchResponse)
@@ -561,7 +557,7 @@ class SearchResponse final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> buffer_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr buffer_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_seal_2eproto;
 };
@@ -686,29 +682,20 @@ class OramAccessMessage final :
     kOperationFieldNumber = 1,
     kIsOdictFieldNumber = 2,
     kOramIdFieldNumber = 4,
+    kIdFieldNumber = 5,
   };
-  // repeated bytes buffer = 3;
-  int buffer_size() const;
-  private:
-  int _internal_buffer_size() const;
-  public:
+  // bytes buffer = 3;
   void clear_buffer();
-  const std::string& buffer(int index) const;
-  std::string* mutable_buffer(int index);
-  void set_buffer(int index, const std::string& value);
-  void set_buffer(int index, std::string&& value);
-  void set_buffer(int index, const char* value);
-  void set_buffer(int index, const void* value, size_t size);
-  std::string* add_buffer();
-  void add_buffer(const std::string& value);
-  void add_buffer(std::string&& value);
-  void add_buffer(const char* value);
-  void add_buffer(const void* value, size_t size);
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& buffer() const;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_buffer();
+  const std::string& buffer() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_buffer(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_buffer();
+  PROTOBUF_MUST_USE_RESULT std::string* release_buffer();
+  void set_allocated_buffer(std::string* buffer);
   private:
-  const std::string& _internal_buffer(int index) const;
-  std::string* _internal_add_buffer();
+  const std::string& _internal_buffer() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_buffer(const std::string& value);
+  std::string* _internal_mutable_buffer();
   public:
 
   // bool operation = 1;
@@ -738,6 +725,15 @@ class OramAccessMessage final :
   void _internal_set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
+  // int32 id = 5;
+  void clear_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 id() const;
+  void set_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_id() const;
+  void _internal_set_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
   // @@protoc_insertion_point(class_scope:OramAccessMessage)
  private:
   class _Internal;
@@ -745,10 +741,11 @@ class OramAccessMessage final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> buffer_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr buffer_;
   bool operation_;
   bool is_odict_;
   ::PROTOBUF_NAMESPACE_ID::int32 oram_id_;
+  ::PROTOBUF_NAMESPACE_ID::int32 id_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_seal_2eproto;
 };
@@ -871,28 +868,18 @@ class OramAccessResponse final :
   enum : int {
     kBufferFieldNumber = 1,
   };
-  // repeated bytes buffer = 1;
-  int buffer_size() const;
-  private:
-  int _internal_buffer_size() const;
-  public:
+  // bytes buffer = 1;
   void clear_buffer();
-  const std::string& buffer(int index) const;
-  std::string* mutable_buffer(int index);
-  void set_buffer(int index, const std::string& value);
-  void set_buffer(int index, std::string&& value);
-  void set_buffer(int index, const char* value);
-  void set_buffer(int index, const void* value, size_t size);
-  std::string* add_buffer();
-  void add_buffer(const std::string& value);
-  void add_buffer(std::string&& value);
-  void add_buffer(const char* value);
-  void add_buffer(const void* value, size_t size);
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>& buffer() const;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>* mutable_buffer();
+  const std::string& buffer() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_buffer(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_buffer();
+  PROTOBUF_MUST_USE_RESULT std::string* release_buffer();
+  void set_allocated_buffer(std::string* buffer);
   private:
-  const std::string& _internal_buffer(int index) const;
-  std::string* _internal_add_buffer();
+  const std::string& _internal_buffer() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_buffer(const std::string& value);
+  std::string* _internal_mutable_buffer();
   public:
 
   // @@protoc_insertion_point(class_scope:OramAccessResponse)
@@ -902,7 +889,7 @@ class OramAccessResponse final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string> buffer_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr buffer_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_seal_2eproto;
 };
@@ -1286,162 +1273,150 @@ inline void SetupMessage::set_oram_block_size(::PROTOBUF_NAMESPACE_ID::int32 val
   // @@protoc_insertion_point(field_set:SetupMessage.oram_block_size)
 }
 
+// bytes random_engine = 5;
+inline void SetupMessage::clear_random_engine() {
+  random_engine_.ClearToEmpty();
+}
+inline const std::string& SetupMessage::random_engine() const {
+  // @@protoc_insertion_point(field_get:SetupMessage.random_engine)
+  return _internal_random_engine();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void SetupMessage::set_random_engine(ArgT0&& arg0, ArgT... args) {
+ 
+ random_engine_.SetBytes(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:SetupMessage.random_engine)
+}
+inline std::string* SetupMessage::mutable_random_engine() {
+  std::string* _s = _internal_mutable_random_engine();
+  // @@protoc_insertion_point(field_mutable:SetupMessage.random_engine)
+  return _s;
+}
+inline const std::string& SetupMessage::_internal_random_engine() const {
+  return random_engine_.Get();
+}
+inline void SetupMessage::_internal_set_random_engine(const std::string& value) {
+  
+  random_engine_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* SetupMessage::_internal_mutable_random_engine() {
+  
+  return random_engine_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* SetupMessage::release_random_engine() {
+  // @@protoc_insertion_point(field_release:SetupMessage.random_engine)
+  return random_engine_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void SetupMessage::set_allocated_random_engine(std::string* random_engine) {
+  if (random_engine != nullptr) {
+    
+  } else {
+    
+  }
+  random_engine_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), random_engine,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:SetupMessage.random_engine)
+}
+
 // -------------------------------------------------------------------
 
 // SearchMessage
 
-// repeated bytes buffer = 1;
-inline int SearchMessage::_internal_buffer_size() const {
-  return buffer_.size();
-}
-inline int SearchMessage::buffer_size() const {
-  return _internal_buffer_size();
-}
+// bytes buffer = 1;
 inline void SearchMessage::clear_buffer() {
-  buffer_.Clear();
+  buffer_.ClearToEmpty();
 }
-inline std::string* SearchMessage::add_buffer() {
-  std::string* _s = _internal_add_buffer();
-  // @@protoc_insertion_point(field_add_mutable:SearchMessage.buffer)
+inline const std::string& SearchMessage::buffer() const {
+  // @@protoc_insertion_point(field_get:SearchMessage.buffer)
+  return _internal_buffer();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void SearchMessage::set_buffer(ArgT0&& arg0, ArgT... args) {
+ 
+ buffer_.SetBytes(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:SearchMessage.buffer)
+}
+inline std::string* SearchMessage::mutable_buffer() {
+  std::string* _s = _internal_mutable_buffer();
+  // @@protoc_insertion_point(field_mutable:SearchMessage.buffer)
   return _s;
 }
-inline const std::string& SearchMessage::_internal_buffer(int index) const {
-  return buffer_.Get(index);
+inline const std::string& SearchMessage::_internal_buffer() const {
+  return buffer_.Get();
 }
-inline const std::string& SearchMessage::buffer(int index) const {
-  // @@protoc_insertion_point(field_get:SearchMessage.buffer)
-  return _internal_buffer(index);
+inline void SearchMessage::_internal_set_buffer(const std::string& value) {
+  
+  buffer_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
 }
-inline std::string* SearchMessage::mutable_buffer(int index) {
-  // @@protoc_insertion_point(field_mutable:SearchMessage.buffer)
-  return buffer_.Mutable(index);
+inline std::string* SearchMessage::_internal_mutable_buffer() {
+  
+  return buffer_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
 }
-inline void SearchMessage::set_buffer(int index, const std::string& value) {
-  buffer_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set:SearchMessage.buffer)
+inline std::string* SearchMessage::release_buffer() {
+  // @@protoc_insertion_point(field_release:SearchMessage.buffer)
+  return buffer_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
 }
-inline void SearchMessage::set_buffer(int index, std::string&& value) {
-  buffer_.Mutable(index)->assign(std::move(value));
-  // @@protoc_insertion_point(field_set:SearchMessage.buffer)
-}
-inline void SearchMessage::set_buffer(int index, const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  buffer_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set_char:SearchMessage.buffer)
-}
-inline void SearchMessage::set_buffer(int index, const void* value, size_t size) {
-  buffer_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:SearchMessage.buffer)
-}
-inline std::string* SearchMessage::_internal_add_buffer() {
-  return buffer_.Add();
-}
-inline void SearchMessage::add_buffer(const std::string& value) {
-  buffer_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:SearchMessage.buffer)
-}
-inline void SearchMessage::add_buffer(std::string&& value) {
-  buffer_.Add(std::move(value));
-  // @@protoc_insertion_point(field_add:SearchMessage.buffer)
-}
-inline void SearchMessage::add_buffer(const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  buffer_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:SearchMessage.buffer)
-}
-inline void SearchMessage::add_buffer(const void* value, size_t size) {
-  buffer_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:SearchMessage.buffer)
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
-SearchMessage::buffer() const {
-  // @@protoc_insertion_point(field_list:SearchMessage.buffer)
-  return buffer_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
-SearchMessage::mutable_buffer() {
-  // @@protoc_insertion_point(field_mutable_list:SearchMessage.buffer)
-  return &buffer_;
+inline void SearchMessage::set_allocated_buffer(std::string* buffer) {
+  if (buffer != nullptr) {
+    
+  } else {
+    
+  }
+  buffer_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), buffer,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:SearchMessage.buffer)
 }
 
 // -------------------------------------------------------------------
 
 // SearchResponse
 
-// repeated bytes buffer = 1;
-inline int SearchResponse::_internal_buffer_size() const {
-  return buffer_.size();
-}
-inline int SearchResponse::buffer_size() const {
-  return _internal_buffer_size();
-}
+// bytes buffer = 1;
 inline void SearchResponse::clear_buffer() {
-  buffer_.Clear();
+  buffer_.ClearToEmpty();
 }
-inline std::string* SearchResponse::add_buffer() {
-  std::string* _s = _internal_add_buffer();
-  // @@protoc_insertion_point(field_add_mutable:SearchResponse.buffer)
+inline const std::string& SearchResponse::buffer() const {
+  // @@protoc_insertion_point(field_get:SearchResponse.buffer)
+  return _internal_buffer();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void SearchResponse::set_buffer(ArgT0&& arg0, ArgT... args) {
+ 
+ buffer_.SetBytes(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:SearchResponse.buffer)
+}
+inline std::string* SearchResponse::mutable_buffer() {
+  std::string* _s = _internal_mutable_buffer();
+  // @@protoc_insertion_point(field_mutable:SearchResponse.buffer)
   return _s;
 }
-inline const std::string& SearchResponse::_internal_buffer(int index) const {
-  return buffer_.Get(index);
+inline const std::string& SearchResponse::_internal_buffer() const {
+  return buffer_.Get();
 }
-inline const std::string& SearchResponse::buffer(int index) const {
-  // @@protoc_insertion_point(field_get:SearchResponse.buffer)
-  return _internal_buffer(index);
+inline void SearchResponse::_internal_set_buffer(const std::string& value) {
+  
+  buffer_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
 }
-inline std::string* SearchResponse::mutable_buffer(int index) {
-  // @@protoc_insertion_point(field_mutable:SearchResponse.buffer)
-  return buffer_.Mutable(index);
+inline std::string* SearchResponse::_internal_mutable_buffer() {
+  
+  return buffer_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
 }
-inline void SearchResponse::set_buffer(int index, const std::string& value) {
-  buffer_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set:SearchResponse.buffer)
+inline std::string* SearchResponse::release_buffer() {
+  // @@protoc_insertion_point(field_release:SearchResponse.buffer)
+  return buffer_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
 }
-inline void SearchResponse::set_buffer(int index, std::string&& value) {
-  buffer_.Mutable(index)->assign(std::move(value));
-  // @@protoc_insertion_point(field_set:SearchResponse.buffer)
-}
-inline void SearchResponse::set_buffer(int index, const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  buffer_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set_char:SearchResponse.buffer)
-}
-inline void SearchResponse::set_buffer(int index, const void* value, size_t size) {
-  buffer_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:SearchResponse.buffer)
-}
-inline std::string* SearchResponse::_internal_add_buffer() {
-  return buffer_.Add();
-}
-inline void SearchResponse::add_buffer(const std::string& value) {
-  buffer_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:SearchResponse.buffer)
-}
-inline void SearchResponse::add_buffer(std::string&& value) {
-  buffer_.Add(std::move(value));
-  // @@protoc_insertion_point(field_add:SearchResponse.buffer)
-}
-inline void SearchResponse::add_buffer(const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  buffer_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:SearchResponse.buffer)
-}
-inline void SearchResponse::add_buffer(const void* value, size_t size) {
-  buffer_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:SearchResponse.buffer)
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
-SearchResponse::buffer() const {
-  // @@protoc_insertion_point(field_list:SearchResponse.buffer)
-  return buffer_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
-SearchResponse::mutable_buffer() {
-  // @@protoc_insertion_point(field_mutable_list:SearchResponse.buffer)
-  return &buffer_;
+inline void SearchResponse::set_allocated_buffer(std::string* buffer) {
+  if (buffer != nullptr) {
+    
+  } else {
+    
+  }
+  buffer_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), buffer,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:SearchResponse.buffer)
 }
 
 // -------------------------------------------------------------------
@@ -1488,79 +1463,50 @@ inline void OramAccessMessage::set_is_odict(bool value) {
   // @@protoc_insertion_point(field_set:OramAccessMessage.is_odict)
 }
 
-// repeated bytes buffer = 3;
-inline int OramAccessMessage::_internal_buffer_size() const {
-  return buffer_.size();
-}
-inline int OramAccessMessage::buffer_size() const {
-  return _internal_buffer_size();
-}
+// bytes buffer = 3;
 inline void OramAccessMessage::clear_buffer() {
-  buffer_.Clear();
+  buffer_.ClearToEmpty();
 }
-inline std::string* OramAccessMessage::add_buffer() {
-  std::string* _s = _internal_add_buffer();
-  // @@protoc_insertion_point(field_add_mutable:OramAccessMessage.buffer)
+inline const std::string& OramAccessMessage::buffer() const {
+  // @@protoc_insertion_point(field_get:OramAccessMessage.buffer)
+  return _internal_buffer();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void OramAccessMessage::set_buffer(ArgT0&& arg0, ArgT... args) {
+ 
+ buffer_.SetBytes(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:OramAccessMessage.buffer)
+}
+inline std::string* OramAccessMessage::mutable_buffer() {
+  std::string* _s = _internal_mutable_buffer();
+  // @@protoc_insertion_point(field_mutable:OramAccessMessage.buffer)
   return _s;
 }
-inline const std::string& OramAccessMessage::_internal_buffer(int index) const {
-  return buffer_.Get(index);
+inline const std::string& OramAccessMessage::_internal_buffer() const {
+  return buffer_.Get();
 }
-inline const std::string& OramAccessMessage::buffer(int index) const {
-  // @@protoc_insertion_point(field_get:OramAccessMessage.buffer)
-  return _internal_buffer(index);
+inline void OramAccessMessage::_internal_set_buffer(const std::string& value) {
+  
+  buffer_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
 }
-inline std::string* OramAccessMessage::mutable_buffer(int index) {
-  // @@protoc_insertion_point(field_mutable:OramAccessMessage.buffer)
-  return buffer_.Mutable(index);
+inline std::string* OramAccessMessage::_internal_mutable_buffer() {
+  
+  return buffer_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
 }
-inline void OramAccessMessage::set_buffer(int index, const std::string& value) {
-  buffer_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set:OramAccessMessage.buffer)
+inline std::string* OramAccessMessage::release_buffer() {
+  // @@protoc_insertion_point(field_release:OramAccessMessage.buffer)
+  return buffer_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
 }
-inline void OramAccessMessage::set_buffer(int index, std::string&& value) {
-  buffer_.Mutable(index)->assign(std::move(value));
-  // @@protoc_insertion_point(field_set:OramAccessMessage.buffer)
-}
-inline void OramAccessMessage::set_buffer(int index, const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  buffer_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set_char:OramAccessMessage.buffer)
-}
-inline void OramAccessMessage::set_buffer(int index, const void* value, size_t size) {
-  buffer_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:OramAccessMessage.buffer)
-}
-inline std::string* OramAccessMessage::_internal_add_buffer() {
-  return buffer_.Add();
-}
-inline void OramAccessMessage::add_buffer(const std::string& value) {
-  buffer_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:OramAccessMessage.buffer)
-}
-inline void OramAccessMessage::add_buffer(std::string&& value) {
-  buffer_.Add(std::move(value));
-  // @@protoc_insertion_point(field_add:OramAccessMessage.buffer)
-}
-inline void OramAccessMessage::add_buffer(const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  buffer_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:OramAccessMessage.buffer)
-}
-inline void OramAccessMessage::add_buffer(const void* value, size_t size) {
-  buffer_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:OramAccessMessage.buffer)
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
-OramAccessMessage::buffer() const {
-  // @@protoc_insertion_point(field_list:OramAccessMessage.buffer)
-  return buffer_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
-OramAccessMessage::mutable_buffer() {
-  // @@protoc_insertion_point(field_mutable_list:OramAccessMessage.buffer)
-  return &buffer_;
+inline void OramAccessMessage::set_allocated_buffer(std::string* buffer) {
+  if (buffer != nullptr) {
+    
+  } else {
+    
+  }
+  buffer_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), buffer,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:OramAccessMessage.buffer)
 }
 
 // int32 oram_id = 4;
@@ -1583,83 +1529,74 @@ inline void OramAccessMessage::set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value)
   // @@protoc_insertion_point(field_set:OramAccessMessage.oram_id)
 }
 
+// int32 id = 5;
+inline void OramAccessMessage::clear_id() {
+  id_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 OramAccessMessage::_internal_id() const {
+  return id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 OramAccessMessage::id() const {
+  // @@protoc_insertion_point(field_get:OramAccessMessage.id)
+  return _internal_id();
+}
+inline void OramAccessMessage::_internal_set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  id_ = value;
+}
+inline void OramAccessMessage::set_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_id(value);
+  // @@protoc_insertion_point(field_set:OramAccessMessage.id)
+}
+
 // -------------------------------------------------------------------
 
 // OramAccessResponse
 
-// repeated bytes buffer = 1;
-inline int OramAccessResponse::_internal_buffer_size() const {
-  return buffer_.size();
-}
-inline int OramAccessResponse::buffer_size() const {
-  return _internal_buffer_size();
-}
+// bytes buffer = 1;
 inline void OramAccessResponse::clear_buffer() {
-  buffer_.Clear();
+  buffer_.ClearToEmpty();
 }
-inline std::string* OramAccessResponse::add_buffer() {
-  std::string* _s = _internal_add_buffer();
-  // @@protoc_insertion_point(field_add_mutable:OramAccessResponse.buffer)
+inline const std::string& OramAccessResponse::buffer() const {
+  // @@protoc_insertion_point(field_get:OramAccessResponse.buffer)
+  return _internal_buffer();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void OramAccessResponse::set_buffer(ArgT0&& arg0, ArgT... args) {
+ 
+ buffer_.SetBytes(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:OramAccessResponse.buffer)
+}
+inline std::string* OramAccessResponse::mutable_buffer() {
+  std::string* _s = _internal_mutable_buffer();
+  // @@protoc_insertion_point(field_mutable:OramAccessResponse.buffer)
   return _s;
 }
-inline const std::string& OramAccessResponse::_internal_buffer(int index) const {
-  return buffer_.Get(index);
+inline const std::string& OramAccessResponse::_internal_buffer() const {
+  return buffer_.Get();
 }
-inline const std::string& OramAccessResponse::buffer(int index) const {
-  // @@protoc_insertion_point(field_get:OramAccessResponse.buffer)
-  return _internal_buffer(index);
+inline void OramAccessResponse::_internal_set_buffer(const std::string& value) {
+  
+  buffer_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
 }
-inline std::string* OramAccessResponse::mutable_buffer(int index) {
-  // @@protoc_insertion_point(field_mutable:OramAccessResponse.buffer)
-  return buffer_.Mutable(index);
+inline std::string* OramAccessResponse::_internal_mutable_buffer() {
+  
+  return buffer_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
 }
-inline void OramAccessResponse::set_buffer(int index, const std::string& value) {
-  buffer_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set:OramAccessResponse.buffer)
+inline std::string* OramAccessResponse::release_buffer() {
+  // @@protoc_insertion_point(field_release:OramAccessResponse.buffer)
+  return buffer_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
 }
-inline void OramAccessResponse::set_buffer(int index, std::string&& value) {
-  buffer_.Mutable(index)->assign(std::move(value));
-  // @@protoc_insertion_point(field_set:OramAccessResponse.buffer)
-}
-inline void OramAccessResponse::set_buffer(int index, const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  buffer_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set_char:OramAccessResponse.buffer)
-}
-inline void OramAccessResponse::set_buffer(int index, const void* value, size_t size) {
-  buffer_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:OramAccessResponse.buffer)
-}
-inline std::string* OramAccessResponse::_internal_add_buffer() {
-  return buffer_.Add();
-}
-inline void OramAccessResponse::add_buffer(const std::string& value) {
-  buffer_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:OramAccessResponse.buffer)
-}
-inline void OramAccessResponse::add_buffer(std::string&& value) {
-  buffer_.Add(std::move(value));
-  // @@protoc_insertion_point(field_add:OramAccessResponse.buffer)
-}
-inline void OramAccessResponse::add_buffer(const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  buffer_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:OramAccessResponse.buffer)
-}
-inline void OramAccessResponse::add_buffer(const void* value, size_t size) {
-  buffer_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:OramAccessResponse.buffer)
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>&
-OramAccessResponse::buffer() const {
-  // @@protoc_insertion_point(field_list:OramAccessResponse.buffer)
-  return buffer_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField<std::string>*
-OramAccessResponse::mutable_buffer() {
-  // @@protoc_insertion_point(field_mutable_list:OramAccessResponse.buffer)
-  return &buffer_;
+inline void OramAccessResponse::set_allocated_buffer(std::string* buffer) {
+  if (buffer != nullptr) {
+    
+  } else {
+    
+  }
+  buffer_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), buffer,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:OramAccessResponse.buffer)
 }
 
 // -------------------------------------------------------------------

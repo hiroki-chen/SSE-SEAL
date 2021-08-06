@@ -1,8 +1,10 @@
 #include <client/Client.h>
 #include <plog/Log.h>
+#include <crypto/sm4.h>
+#include <utils.h>
+
 #include <sodium.h>
 #include <sys/stat.h>
-#include <utils.h>
 
 #include <cassert>
 #include <chrono>
@@ -21,7 +23,8 @@ void SEAL::Client::init_dummy_data()
 
     ODict::Node* test_root = new ODict::Node(0, -1);
     unsigned char* data = transform<unsigned char, ODict::Node>(test_root);
-    oramAccessController.get()->oblivious_access(ORAM_ACCESS_WRITE, 0, data);
+    // oramAccessController.get()->oblivious_access(ORAM_ACCESS_WRITE, 0, data);
+    oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_WRITE, data, stub_);
 }
 
 void SEAL::Client::init_key(std::string_view password)
@@ -43,7 +46,7 @@ void SEAL::Client::init_key(std::string_view password)
             throw std::runtime_error("Out of memory!");
         }
 
-        secret_key = (char*)key;
+        secret_key = std::string((char*)key, crypto_box_SEEDBYTES);
         PLOG(plog::info) << "Key sampled: " << secret_key;
     } catch (const std::runtime_error& e) {
         PLOG(plog::error) << e.what();
@@ -59,18 +62,14 @@ int SEAL::Client::find_pos_by_id(const int& id)
         return root_pos;
     }
 
-    for (auto node : clientCache) {
-        if (node->left_id == id) {
-            return node->childrenPos[0].pos_tag;
-        } else if (node->right_id == id) {
-            return node->childrenPos[1].pos_tag;
-        }
-    }
+    return cache->find_pos_by_id(id);
 
-    // Find from the oram.
+    /*
+    // Find from the oram. Never Used though.
     unsigned char* buffer = new unsigned char[block_size];
     oramAccessController.get()->oblivious_access(ORAM_ACCESS_READ, id, buffer);
     return transform<ODict::Node, unsigned char>(buffer)->pos_tag;
+    */
 }
 
 void SEAL::Client::ODS_access(ODict::Operation& op)
@@ -99,7 +98,7 @@ void SEAL::Client::ODS_access(ODict::Operation& op)
                 unsigned char* buffer = new unsigned char[block_size];
                 memcpy(buffer, evicted, block_size);
                 oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_WRITE,
-                    buffer);
+                    buffer, stub_);
             }
         }
 
@@ -127,7 +126,7 @@ void SEAL::Client::ODS_access(ODict::Operation& op)
                 unsigned char* buffer = new unsigned char[block_size];
                 memcpy(buffer, evicted, block_size);
                 oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_WRITE,
-                    buffer);
+                    buffer, stub_);
             }
         }
 
@@ -159,7 +158,7 @@ void SEAL::Client::ODS_access(ODict::Operation& op)
             unsigned char* buffer = new unsigned char[block_size];
             memcpy(buffer, evicted, block_size);
             oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_WRITE,
-                buffer);
+                buffer, stub_);
         }
 
         return;
@@ -172,8 +171,12 @@ void SEAL::Client::cache_helper(const int& id, ODict::Node* const ret)
     int pos = find_pos_by_id(id);
     unsigned char* buffer = new unsigned char[block_size];
     memcpy(buffer, new ODict::Node(id, pos), block_size);
-    oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_READ, buffer);
+    oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_READ, buffer, stub_);
     memcpy(ret, buffer, block_size);
+    const std::string plaintext = decrypt_SM4_EBC(ret->data, secret_key);
+    ret->data = new char[plaintext.size()];
+    memcpy(ret->data, plaintext.c_str(), plaintext.size());
+    std::cout << ret->data << std::endl;
 }
 
 void SEAL::Client::ODS_start() { cache->clear(); }
@@ -195,18 +198,23 @@ void SEAL::Client::ODS_finalize(const int& pad_val)
     for (int i = pad_val - read_count; i <= pad_val; i++) {
         // dummy operation.
         unsigned char* data = new unsigned char[block_size];
-        oramAccessController.get()->oblivious_access(ORAM_ACCESS_READ, 0, data);
+        ODict::Node* node = new ODict::Node(0, -1);
+        memcpy(data, node, block_size);
+        oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_READ, data, stub_);
     }
 
     // Evict the cache
     while (!cache->empty()) {
         ODict::Node* node = cache->get();
-        PLOG(plog::debug) << "evicting " << node->id;
         // We store a node as a char array.
+        const std::string ciphertext = encrypt_SM4_EBC(node->data, secret_key);
+        node->data = new char[ciphertext.size()];
+        strcpy(node->data, ciphertext.c_str());
         unsigned char* buffer = new unsigned char[block_size];
         memcpy(buffer, node, block_size);
+        PLOG(plog::debug) << "evicting " << node->id << "with data " << node->data;
         oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_WRITE,
-            buffer);
+            buffer, stub_);
         cache->pop();
     }
 
@@ -214,7 +222,9 @@ void SEAL::Client::ODS_finalize(const int& pad_val)
     for (int i = pad_val - write_count; i <= pad_val; i++) {
         // dummy operation.
         unsigned char* data = new unsigned char[block_size];
-        oramAccessController.get()->oblivious_access(ORAM_ACCESS_WRITE, 0, data);
+        ODict::Node* node = new ODict::Node(0, -1);
+        memcpy(data, node, block_size);
+        oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_WRITE, data, stub_);
     }
 
     write_count = read_count = 0;
@@ -754,11 +764,36 @@ void SEAL::Client::adj_insert(
 /**
  * TODO: Simultaneously initialize the oram on the server side by remote process call.
  */
-void SEAL::Client::adj_oram_controller_init(
-    const unsigned int& mu,
+void SEAL::Client::adj_oram_init_helper(
     const std::vector<std::vector<unsigned int>>& sub_arrays)
 {
-    
+    try {
+        for (unsigned int i = 0; i < sub_arrays.size(); i++) {
+            /* Initialize local oram access controllers */
+            std::cout << 1 << std::endl;
+            adj_oramAccessControllers.emplace_back(
+                new OramAccessController(bucket_size, block_number, sizeof(unsigned int)));
+            std::cout << 2 << std::endl;
+
+            grpc::ClientContext context;
+            OramInitMessage message;
+            google::protobuf::Empty e;
+            message.set_block_size(sizeof(unsigned int));
+            message.set_oram_id(i);
+            grpc::Status status = stub_->oram_init(&context, message, &e);
+
+            if (!status.ok()) {
+                throw std::runtime_error("There may be problems when initializing the remote oram blocks!");
+            }
+
+            for (unsigned int j = 0; j < sub_arrays[i].size(); j++) {
+                adj_oramAccessControllers[i].get()->oblivious_access(
+                    OramAccessOp::ORAM_ACCESS_WRITE, j, (unsigned char*)(&(sub_arrays[i][j])), i, stub_);
+            }
+        }
+    } catch (const std::runtime_error& e) {
+        PLOG(plog::error) << e.what();
+    }
 }
 
 void SEAL::Client::adj_oram_init(
@@ -766,25 +801,25 @@ void SEAL::Client::adj_oram_init(
 {
     size_t memory_size = memory.size();
     size_t mu = pow(2, alpha);
-    size_t array_size = std::ceil(memory_size / mu);
+    size_t base = std::ceil((log(memory_size) / log(2)));
+    size_t array_size = std::ceil(pow(2, base) / mu);
 
-    std::vector<std::vector<unsigned int>> sub_arrays(mu, std::vector<unsigned int>(array_size, randombytes_uniform(UINT_MAX)));
+    std::vector<std::vector<unsigned int>> sub_arrays(
+        mu, std::vector<unsigned int>(array_size, randombytes_uniform(UINT_MAX)));
 
     std::vector<unsigned int> prp = pseudo_random_permutation(memory_size, secret_key);
-    std::cout << "memory size: " << memory_size << std::endl;
-    unsigned int base = (unsigned int)std::ceil((log(memory_size) / log(2)));
-    std::cout << "base: " << base << std::endl;
 
     for (unsigned int i = 0; i < memory.size(); i++) {
         unsigned int value = prp[i];
         std::cout << value << std::endl;
         std::pair<unsigned int, unsigned int> bits = get_bits(base, value, alpha);
 
-        sub_arrays[bits.first][bits.second] = memory[i].second;
         PLOG(plog::info) << "ORAM BLOCK " << bits.first << ", INDEX " << bits.second << ": " << memory[i].second;
+        sub_arrays[bits.first][bits.second] = memory[i].second;
     }
 
-    adj_oram_controller_init(mu, sub_arrays);
+    std::cout << "OK" << std::endl;
+    adj_oram_init_helper(sub_arrays);
 }
 
 std::vector<ODict::Node*> SEAL::Client::create_test_cases(const int& number)
@@ -802,6 +837,11 @@ std::vector<ODict::Node*> SEAL::Client::create_test_cases(const int& number)
     }
 
     return vec;
+}
+
+OramAccessController* SEAL::Client::get_oram_controller()
+{
+    return oramAccessController.get();
 }
 
 SEAL::Client::Client(const int& bucket_size, const int& block_number,
@@ -825,7 +865,6 @@ SEAL::Client::Client(const int& bucket_size, const int& block_number,
     , connector(std::make_unique<SEAL::Connector>(connection_info))
 {
     init_key(password);
-    init_dummy_data();
     PLOG(plog::info) << "Client initialized\n";
 }
 
@@ -840,4 +879,9 @@ void SEAL::Client::test_adj(std::string_view file_path)
 void SEAL::Client::test_sql(std::string_view sql)
 {
     connector.get()->insert_handler(sql);
+}
+
+void SEAL::Client::set_stub(const std::unique_ptr<Seal::Stub>& stub)
+{
+    stub_ = stub.get();
 }

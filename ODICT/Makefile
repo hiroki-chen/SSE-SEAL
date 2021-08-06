@@ -15,9 +15,9 @@ CXXFLAGS = -std=c++17 -g -O3 -fPIE -Iinclude -Wall \
 		-Wsign-compare \
 		-Wformat \
 		-Wtype-limits \
-		-Wundef \
+		-Wno-undef \
 		-Werror \
-		-Wmissing-prototypes \
+		-Wno-missing-prototypes \
 		-Wstrict-prototypes
 
 LD = -L/usr/local/lib `pkg-config --libs protobuf grpc++`\
@@ -28,7 +28,7 @@ LD = -L/usr/local/lib `pkg-config --libs protobuf grpc++`\
 		   -lpq\
 		   -lsodium
 
-SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp $(SRC_DIR)/server/*.cpp $(SRC_DIR)/client/*.cpp $(SRC_DIR)/oram/*.cpp)
+SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp $(SRC_DIR)/server/*.cpp $(SRC_DIR)/client/*.cpp $(SRC_DIR)/oram/*.cpp $(SRC_DIR)/test/main.cpp $(SRC_DIR)/crypto/*.cpp)
 BUILD_FILES = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRC_FILES))
 PROTO_FILES = $(wildcard $(PROTO_DIR)/*.proto)
 
@@ -51,7 +51,11 @@ make_protos:
 	$(PROTOC) $(PROTO_GRPC_FLAGS) $(PROTO_FILES)
 	mv $(PROTO_DIR)/*.cc $(SRC_DIR)/protos
 make_dir:
-	mkdir -p $(BUILD_DIR)
+	mkdir -p $(BUILD_DIR)/server
+	mkdir -p $(BUILD_DIR)/client
+	mkdir -p $(BUILD_DIR)/test
+	mkdir -p $(BUILD_DIR)/oram
+	mkdir -p $(BUILD_DIR)/crypto
 	mkdir -p $(LOG_DIR)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
@@ -63,8 +67,10 @@ $(RUN): $(BUILD_FILES)
 
 test:
 	rm -rf *.o
-	clang++ -std=c++17 -c -O2 -fPIE -Iinclude src/server/*.cpp src/Connector.cpp src/oram/*.cpp src/*.cpp test/test_server.cpp
+	clang++ -std=c++17 -c -O2 -fPIE -Iinclude src/server/*.cpp src/Connector.cpp src/oram/*.cpp src/*.cpp src/test/test_server.cpp
 	clang++ -o test_server *.o $(LD)
+
+none:
 	rm -rf test_server.o
 	clang++ -c test/test_client.cpp src/client/*.cpp -std=c++17 -O2 -fPIE -Iinclude
 	clang++ -o test_client *.o $(LD)

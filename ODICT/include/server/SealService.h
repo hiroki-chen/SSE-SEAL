@@ -30,6 +30,10 @@ private:
 
     size_t oram_block_size;
 
+    size_t block_number;
+    
+    size_t bucket_size;
+
     /**
      * TODO: Construct several ORAM Blocks.
      */
@@ -38,8 +42,11 @@ public:
 
     virtual ~SealService();
 
-    grpc::Status setup(grpc::ServerContext* context, const SetupMessage* request, google::protobuf::Empty* e);
+    grpc::Status setup(grpc::ServerContext* context, const SetupMessage* request, google::protobuf::Empty* e) override;
 
+    grpc::Status oram_access(grpc::ServerContext* context, const OramAccessMessage* message, OramAccessResponse* response) override;
+
+    grpc::Status oram_init(grpc::ServerContext* context, const OramInitMessage* message, google::protobuf::Empty* reponse) override;
     // grpc::Status search(grpc::ServerContext* context, const SearchMessage* request, SearchResponse* response);
 };
 

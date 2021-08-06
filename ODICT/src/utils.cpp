@@ -100,3 +100,32 @@ std::pair<unsigned int, unsigned int> get_bits(const unsigned int& base, const u
     std::cout << most << "," << rest << std::endl;
     return { most, rest };
 }
+
+/*
+std::string encrypt_message(std::string_view key,
+    std::string_view message,
+    const unsigned char* nonce)
+{
+    unsigned int ciphertext_length = crypto_secretbox_MACBYTES + message.size();
+    unsigned char ciphertext[ciphertext_length];
+    crypto_secretbox_easy(
+        ciphertext, (unsigned char*)message.data(), message.size(), nonce, (unsigned char*)key.data());
+
+    return std::string((char*)(ciphertext), ciphertext_length);
+}
+
+std::string decrypt_message(
+    std::string_view key,
+    std::string_view ciphertext,
+    const unsigned char* nonce,
+    const size_t& raw_length)
+{
+        unsigned int ciphertext_length = crypto_secretbox_MACBYTES + message.size();
+        unsigned char nonce[crypto_secretbox_NONCEBYTES];
+        unsigned char plaintext[raw_length];
+        crypto_secretbox_easy(
+            plaintext, (unsigned char*)ciphertext.data(), ciphertext.size(), nonce, (unsigned char*)key.data());
+
+        return std::string((char*)(plaintext), raw_length);
+}
+*/

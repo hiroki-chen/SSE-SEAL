@@ -10,6 +10,7 @@
 #include "Objects.h"
 #include "OramAccessController.h"
 #include <plog/Log.h>
+#include <utils.h>
 
 namespace SEAL {
 template <typename T>
@@ -31,6 +32,8 @@ public:
     T* get();
 
     T* put(const int& id, const T* const item);
+
+    int find_pos_by_id(const int& id);
 
     int update_pos(const int& root_id);
 
@@ -149,6 +152,21 @@ int SEAL::Cache<T>::update_pos(const int& root_id)
     }
 
     return position_tag[root_id];
+}
+
+template <typename T>
+int SEAL::Cache<T>::find_pos_by_id(const int& id)
+{
+    for (auto iter = cache_items.begin(); iter != cache_items.end(); iter++) {
+        auto node = transform<ODict::Node, T>(&(iter->second));
+        if (node->left_id == id) {
+            return node->childrenPos[0].pos_tag;
+        } else if (node->right_id == id) {
+            return node->childrenPos[1].pos_tag;
+        }
+    }
+
+    return -1;
 }
 
 template <typename T>

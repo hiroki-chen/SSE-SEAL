@@ -12,6 +12,8 @@
 #include "Connector.h"
 #include "Objects.h"
 #include "OramAccessController.h"
+#include <proto/seal.grpc.pb.h>
+#include <proto/seal.pb.h>
 
 /**
  * Some notes:
@@ -63,7 +65,9 @@ private:
 
     std::string secret_key; // for pseudo-random permutation
 
-    // std::vector<std::unique_ptr<OramAccessController>> adj_oramAccessControllers; Use an ID instead. Build this on server.
+    std::vector<std::unique_ptr<OramAccessController>> adj_oramAccessControllers;
+
+    Seal::Stub* stub_;
 
     /*==================== Connection to Relational Database (PostgreSQL based openGauss) =====================*/
     std::unique_ptr<SEAL::Connector> connector;
@@ -80,11 +84,6 @@ private:
      * @brief Init the secret key
      */
     void init_key(std::string_view password);
-
-    /**
-     * For padding. ORAM does not allow access to address that does not exist.
-     */
-    void init_dummy_data(void);
 
     /**
      * @param op contains
@@ -260,10 +259,9 @@ private:
     /**
      * @brief Initialize each oram controller.
      * 
-     * @param mu the number of oram blocks
      * @param sub_array plain memory blocks
      */
-    void adj_oram_controller_init(const unsigned int &mu, const std::vector<std::vector<unsigned int>> &sub_arrays);
+    void adj_oram_init_helper(const std::vector<std::vector<unsigned int>> &sub_arrays);
 
     /**
      * @brief Build the secret index on input documents.
@@ -300,6 +298,11 @@ public:
     const char* add_node(const int& number);
 
     /**
+     * For padding. ORAM does not allow access to address that does not exist.
+     */
+    void init_dummy_data(void);
+
+    /**
      * @brief Test the functionality of SEAL.
      * 
      * @param file_path the input dataset
@@ -312,6 +315,15 @@ public:
      * @param sql
      */
     void test_sql(std::string_view sql);
+
+    /**
+     * @brief Get the odict controller.
+     * 
+     * @return OramAccessController
+     */
+    OramAccessController* get_oram_controller();
+
+    void set_stub(const std::unique_ptr<Seal::Stub>& stub);
 };
 }
 

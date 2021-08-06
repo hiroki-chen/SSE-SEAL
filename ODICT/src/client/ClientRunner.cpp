@@ -1,4 +1,5 @@
 #include <client/ClientRunner.h>
+#include <oram/RandomForOram.h>
 
 #include <grpc++/client_context.h>
 #include <grpc++/create_channel.h>
@@ -16,12 +17,15 @@ ClientRunner::ClientRunner(const int& bucket_size, const int& block_number,
     const unsigned int& x, std::string_view password,
     std::string_view connection_info, const int& oram_block_size,
     const char* address)
-    : //client(std::make_unique<SEAL::Client>(bucket_size, block_number, block_size,
-      //  odict_size, max_size, alpha, x,
-      //  password, connection_info))
-    stub_(Seal::NewStub(std::shared_ptr<grpc::Channel>(grpc::CreateChannel(address, grpc::InsecureChannelCredentials()))))
+    : stub_(Seal::NewStub(std::shared_ptr<grpc::Channel>(grpc::CreateChannel(address, grpc::InsecureChannelCredentials()))))
+    , client(std::make_unique<SEAL::Client>(bucket_size, block_number, block_size,
+          odict_size, max_size, alpha, x,
+          password, connection_info))
 {
+    std::cout << "In ClientRunner!" << std::endl;
     setup(bucket_size, block_number, block_size, oram_block_size);
+    client.get()->set_stub(stub_);
+    client.get()->init_dummy_data();
 }
 
 ClientRunner::~ClientRunner()
@@ -38,9 +42,19 @@ void ClientRunner::setup(const int& bucket_size, const int& block_number, const 
     message.set_oram_block_size(oram_block_size);
     google::protobuf::Empty e;
 
-    grpc::Status status = stub_->setup(&context, message, &e);
+    grpc::Status status = stub_.get()->setup(&context, message, &e);
 
     if (!status.ok()) {
         throw std::runtime_error("Cannot setup the server!");
     }
+}
+
+void ClientRunner::test_add_node(const unsigned int&number)
+{
+    client.get()->add_node(number);
+}
+
+void ClientRunner::test_adj(std::string_view file_path)
+{
+    client.get()->test_adj(file_path);
 }

@@ -1,14 +1,15 @@
-#include <Client.h>
 #include <Connector.h>
+#include <client/Client.h>
 #include <utils.h>
 
-#include <server/SealServerRunner.h>
+#include <client/ClientRunner.h>
 #include <proto/seal.pb.h>
+#include <server/SealServerRunner.h>
 
-#include <grpc/grpc.h>
 #include <grpc++/client_context.h>
 #include <grpc++/create_channel.h>
 #include <grpc++/security/credentials.h>
+#include <grpc/grpc.h>
 
 #include <cassert>
 #include <cstring>
@@ -37,7 +38,13 @@ int main(int argc, const char** args)
     //auto ans = get_bits((unsigned int)0b0, 3);
     //std::cout << ans.first << "," << ans.second << std::endl;
     */
+    try {
+        ClientRunner client(256, 256, sizeof(ODict::Node), 1024, INT_MAX, 2, 2, "123456789", PSQL_CONNECTION_INFORMATION, sizeof(unsigned int), "localhost:4567");
+        client.test_adj("input/test.txt");
+        std::cout << (long long)(&client) << std::endl;
+    } catch (const std::runtime_error& e) {
+        std::cout << e.what() << std::endl;
+    }
 
-    SEAL::SealServerRunner* runner = new SEAL::SealServerRunner("127.0.0.1:4567");
     return 0;
 }

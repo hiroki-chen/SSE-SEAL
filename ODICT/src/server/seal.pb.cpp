@@ -18,7 +18,8 @@
 PROTOBUF_PRAGMA_INIT_SEG
 constexpr SetupMessage::SetupMessage(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : bucket_size_(0)
+  : random_engine_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , bucket_size_(0)
   , block_number_(0)
   , block_size_(0)
   , oram_block_size_(0){}
@@ -33,7 +34,7 @@ struct SetupMessageDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT SetupMessageDefaultTypeInternal _SetupMessage_default_instance_;
 constexpr SearchMessage::SearchMessage(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : buffer_(){}
+  : buffer_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string){}
 struct SearchMessageDefaultTypeInternal {
   constexpr SearchMessageDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -45,7 +46,7 @@ struct SearchMessageDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT SearchMessageDefaultTypeInternal _SearchMessage_default_instance_;
 constexpr SearchResponse::SearchResponse(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : buffer_(){}
+  : buffer_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string){}
 struct SearchResponseDefaultTypeInternal {
   constexpr SearchResponseDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -57,10 +58,11 @@ struct SearchResponseDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT SearchResponseDefaultTypeInternal _SearchResponse_default_instance_;
 constexpr OramAccessMessage::OramAccessMessage(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : buffer_()
+  : buffer_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
   , operation_(false)
   , is_odict_(false)
-  , oram_id_(0){}
+  , oram_id_(0)
+  , id_(0){}
 struct OramAccessMessageDefaultTypeInternal {
   constexpr OramAccessMessageDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -72,7 +74,7 @@ struct OramAccessMessageDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT OramAccessMessageDefaultTypeInternal _OramAccessMessage_default_instance_;
 constexpr OramAccessResponse::OramAccessResponse(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : buffer_(){}
+  : buffer_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string){}
 struct OramAccessResponseDefaultTypeInternal {
   constexpr OramAccessResponseDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -121,6 +123,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_seal_2eproto::offsets[] PROTOB
   PROTOBUF_FIELD_OFFSET(::SetupMessage, block_number_),
   PROTOBUF_FIELD_OFFSET(::SetupMessage, block_size_),
   PROTOBUF_FIELD_OFFSET(::SetupMessage, oram_block_size_),
+  PROTOBUF_FIELD_OFFSET(::SetupMessage, random_engine_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::SearchMessage, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -142,6 +145,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_seal_2eproto::offsets[] PROTOB
   PROTOBUF_FIELD_OFFSET(::OramAccessMessage, is_odict_),
   PROTOBUF_FIELD_OFFSET(::OramAccessMessage, buffer_),
   PROTOBUF_FIELD_OFFSET(::OramAccessMessage, oram_id_),
+  PROTOBUF_FIELD_OFFSET(::OramAccessMessage, id_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::OramAccessResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -164,12 +168,12 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_seal_2eproto::offsets[] PROTOB
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::SetupMessage)},
-  { 9, -1, sizeof(::SearchMessage)},
-  { 15, -1, sizeof(::SearchResponse)},
-  { 21, -1, sizeof(::OramAccessMessage)},
-  { 30, -1, sizeof(::OramAccessResponse)},
-  { 36, -1, sizeof(::OramInitMessage)},
-  { 43, -1, sizeof(::OdictInitMessage)},
+  { 10, -1, sizeof(::SearchMessage)},
+  { 16, -1, sizeof(::SearchResponse)},
+  { 22, -1, sizeof(::OramAccessMessage)},
+  { 32, -1, sizeof(::OramAccessResponse)},
+  { 38, -1, sizeof(::OramInitMessage)},
+  { 45, -1, sizeof(::OdictInitMessage)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -184,29 +188,30 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 
 const char descriptor_table_protodef_seal_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
   "\n\nseal.proto\032\033google/protobuf/empty.prot"
-  "o\"f\n\014SetupMessage\022\023\n\013bucket_size\030\001 \001(\005\022\024"
+  "o\"}\n\014SetupMessage\022\023\n\013bucket_size\030\001 \001(\005\022\024"
   "\n\014block_number\030\002 \001(\005\022\022\n\nblock_size\030\003 \001(\005"
-  "\022\027\n\017oram_block_size\030\004 \001(\005\"\037\n\rSearchMessa"
-  "ge\022\016\n\006buffer\030\001 \003(\014\" \n\016SearchResponse\022\016\n\006"
-  "buffer\030\001 \003(\014\"Y\n\021OramAccessMessage\022\021\n\tope"
-  "ration\030\001 \001(\010\022\020\n\010is_odict\030\002 \001(\010\022\016\n\006buffer"
-  "\030\003 \003(\014\022\017\n\007oram_id\030\004 \001(\005\"$\n\022OramAccessRes"
-  "ponse\022\016\n\006buffer\030\001 \003(\014\"6\n\017OramInitMessage"
-  "\022\017\n\007oram_id\030\001 \001(\005\022\022\n\nblock_size\030\002 \001(\005\"&\n"
-  "\020OdictInitMessage\022\022\n\nblock_size\030\001 \001(\0052\330\001"
-  "\n\004Seal\0220\n\005setup\022\r.SetupMessage\032\026.google."
-  "protobuf.Empty\"\000\022+\n\006search\022\016.SearchMessa"
-  "ge\032\017.SearchResponse\"\000\0228\n\013oram_access\022\022.O"
-  "ramAccessMessage\032\023.OramAccessResponse\"\000\022"
-  "7\n\toram_init\022\020.OramInitMessage\032\026.google."
-  "protobuf.Empty\"\000b\006proto3"
+  "\022\027\n\017oram_block_size\030\004 \001(\005\022\025\n\rrandom_engi"
+  "ne\030\005 \001(\014\"\037\n\rSearchMessage\022\016\n\006buffer\030\001 \001("
+  "\014\" \n\016SearchResponse\022\016\n\006buffer\030\001 \001(\014\"e\n\021O"
+  "ramAccessMessage\022\021\n\toperation\030\001 \001(\010\022\020\n\010i"
+  "s_odict\030\002 \001(\010\022\016\n\006buffer\030\003 \001(\014\022\017\n\007oram_id"
+  "\030\004 \001(\005\022\n\n\002id\030\005 \001(\005\"$\n\022OramAccessResponse"
+  "\022\016\n\006buffer\030\001 \001(\014\"6\n\017OramInitMessage\022\017\n\007o"
+  "ram_id\030\001 \001(\005\022\022\n\nblock_size\030\002 \001(\005\"&\n\020Odic"
+  "tInitMessage\022\022\n\nblock_size\030\001 \001(\0052\330\001\n\004Sea"
+  "l\0220\n\005setup\022\r.SetupMessage\032\026.google.proto"
+  "buf.Empty\"\000\022+\n\006search\022\016.SearchMessage\032\017."
+  "SearchResponse\"\000\0228\n\013oram_access\022\022.OramAc"
+  "cessMessage\032\023.OramAccessResponse\"\000\0227\n\tor"
+  "am_init\022\020.OramInitMessage\032\026.google.proto"
+  "buf.Empty\"\000b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_seal_2eproto_deps[1] = {
   &::descriptor_table_google_2fprotobuf_2fempty_2eproto,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_seal_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_seal_2eproto = {
-  false, false, 664, descriptor_table_protodef_seal_2eproto, "seal.proto", 
+  false, false, 699, descriptor_table_protodef_seal_2eproto, "seal.proto", 
   &descriptor_table_seal_2eproto_once, descriptor_table_seal_2eproto_deps, 1, 7,
   schemas, file_default_instances, TableStruct_seal_2eproto::offsets,
   file_level_metadata_seal_2eproto, file_level_enum_descriptors_seal_2eproto, file_level_service_descriptors_seal_2eproto,
@@ -236,6 +241,11 @@ SetupMessage::SetupMessage(::PROTOBUF_NAMESPACE_ID::Arena* arena,
 SetupMessage::SetupMessage(const SetupMessage& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  random_engine_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_random_engine().empty()) {
+    random_engine_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_random_engine(), 
+      GetArenaForAllocation());
+  }
   ::memcpy(&bucket_size_, &from.bucket_size_,
     static_cast<size_t>(reinterpret_cast<char*>(&oram_block_size_) -
     reinterpret_cast<char*>(&bucket_size_)) + sizeof(oram_block_size_));
@@ -243,6 +253,7 @@ SetupMessage::SetupMessage(const SetupMessage& from)
 }
 
 inline void SetupMessage::SharedCtor() {
+random_engine_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&bucket_size_) - reinterpret_cast<char*>(this)),
     0, static_cast<size_t>(reinterpret_cast<char*>(&oram_block_size_) -
@@ -258,6 +269,7 @@ SetupMessage::~SetupMessage() {
 
 inline void SetupMessage::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  random_engine_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 void SetupMessage::ArenaDtor(void* object) {
@@ -276,6 +288,7 @@ void SetupMessage::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  random_engine_.ClearToEmpty();
   ::memset(&bucket_size_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&oram_block_size_) -
       reinterpret_cast<char*>(&bucket_size_)) + sizeof(oram_block_size_));
@@ -313,6 +326,14 @@ const char* SetupMessage::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_I
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 32)) {
           oram_block_size_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // bytes random_engine = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
+          auto str = _internal_mutable_random_engine();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -369,6 +390,12 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(4, this->_internal_oram_block_size(), target);
   }
 
+  // bytes random_engine = 5;
+  if (!this->_internal_random_engine().empty()) {
+    target = stream->WriteBytesMaybeAliased(
+        5, this->_internal_random_engine(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -384,6 +411,13 @@ size_t SetupMessage::ByteSizeLong() const {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
+
+  // bytes random_engine = 5;
+  if (!this->_internal_random_engine().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_random_engine());
+  }
 
   // int32 bucket_size = 1;
   if (this->_internal_bucket_size() != 0) {
@@ -441,6 +475,9 @@ void SetupMessage::MergeFrom(const SetupMessage& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  if (!from._internal_random_engine().empty()) {
+    _internal_set_random_engine(from._internal_random_engine());
+  }
   if (from._internal_bucket_size() != 0) {
     _internal_set_bucket_size(from._internal_bucket_size());
   }
@@ -470,6 +507,11 @@ bool SetupMessage::IsInitialized() const {
 void SetupMessage::InternalSwap(SetupMessage* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &random_engine_, GetArenaForAllocation(),
+      &other->random_engine_, other->GetArenaForAllocation()
+  );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
       PROTOBUF_FIELD_OFFSET(SetupMessage, oram_block_size_)
       + sizeof(SetupMessage::oram_block_size_)
@@ -492,8 +534,7 @@ class SearchMessage::_Internal {
 
 SearchMessage::SearchMessage(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
-  buffer_(arena) {
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
   if (!is_message_owned) {
     RegisterArenaDtor(arena);
@@ -501,13 +542,18 @@ SearchMessage::SearchMessage(::PROTOBUF_NAMESPACE_ID::Arena* arena,
   // @@protoc_insertion_point(arena_constructor:SearchMessage)
 }
 SearchMessage::SearchMessage(const SearchMessage& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      buffer_(from.buffer_) {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  buffer_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_buffer().empty()) {
+    buffer_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_buffer(), 
+      GetArenaForAllocation());
+  }
   // @@protoc_insertion_point(copy_constructor:SearchMessage)
 }
 
 inline void SearchMessage::SharedCtor() {
+buffer_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 SearchMessage::~SearchMessage() {
@@ -519,6 +565,7 @@ SearchMessage::~SearchMessage() {
 
 inline void SearchMessage::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  buffer_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 void SearchMessage::ArenaDtor(void* object) {
@@ -537,7 +584,7 @@ void SearchMessage::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  buffer_.Clear();
+  buffer_.ClearToEmpty();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -547,17 +594,12 @@ const char* SearchMessage::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // repeated bytes buffer = 1;
+      // bytes buffer = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
-          ptr -= 1;
-          do {
-            ptr += 1;
-            auto str = _internal_add_buffer();
-            ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-            CHK_(ptr);
-            if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<10>(ptr));
+          auto str = _internal_mutable_buffer();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
         } else goto handle_unusual;
         continue;
       default: {
@@ -589,10 +631,10 @@ failure:
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // repeated bytes buffer = 1;
-  for (int i = 0, n = this->_internal_buffer_size(); i < n; i++) {
-    const auto& s = this->_internal_buffer(i);
-    target = stream->WriteBytes(1, s, target);
+  // bytes buffer = 1;
+  if (!this->_internal_buffer().empty()) {
+    target = stream->WriteBytesMaybeAliased(
+        1, this->_internal_buffer(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -611,12 +653,11 @@ size_t SearchMessage::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated bytes buffer = 1;
-  total_size += 1 *
-      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(buffer_.size());
-  for (int i = 0, n = buffer_.size(); i < n; i++) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
-      buffer_.Get(i));
+  // bytes buffer = 1;
+  if (!this->_internal_buffer().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_buffer());
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -647,7 +688,9 @@ void SearchMessage::MergeFrom(const SearchMessage& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  buffer_.MergeFrom(from.buffer_);
+  if (!from._internal_buffer().empty()) {
+    _internal_set_buffer(from._internal_buffer());
+  }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -665,7 +708,11 @@ bool SearchMessage::IsInitialized() const {
 void SearchMessage::InternalSwap(SearchMessage* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  buffer_.InternalSwap(&other->buffer_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &buffer_, GetArenaForAllocation(),
+      &other->buffer_, other->GetArenaForAllocation()
+  );
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata SearchMessage::GetMetadata() const {
@@ -682,8 +729,7 @@ class SearchResponse::_Internal {
 
 SearchResponse::SearchResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
-  buffer_(arena) {
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
   if (!is_message_owned) {
     RegisterArenaDtor(arena);
@@ -691,13 +737,18 @@ SearchResponse::SearchResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
   // @@protoc_insertion_point(arena_constructor:SearchResponse)
 }
 SearchResponse::SearchResponse(const SearchResponse& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      buffer_(from.buffer_) {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  buffer_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_buffer().empty()) {
+    buffer_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_buffer(), 
+      GetArenaForAllocation());
+  }
   // @@protoc_insertion_point(copy_constructor:SearchResponse)
 }
 
 inline void SearchResponse::SharedCtor() {
+buffer_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 SearchResponse::~SearchResponse() {
@@ -709,6 +760,7 @@ SearchResponse::~SearchResponse() {
 
 inline void SearchResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  buffer_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 void SearchResponse::ArenaDtor(void* object) {
@@ -727,7 +779,7 @@ void SearchResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  buffer_.Clear();
+  buffer_.ClearToEmpty();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -737,17 +789,12 @@ const char* SearchResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // repeated bytes buffer = 1;
+      // bytes buffer = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
-          ptr -= 1;
-          do {
-            ptr += 1;
-            auto str = _internal_add_buffer();
-            ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-            CHK_(ptr);
-            if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<10>(ptr));
+          auto str = _internal_mutable_buffer();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
         } else goto handle_unusual;
         continue;
       default: {
@@ -779,10 +826,10 @@ failure:
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // repeated bytes buffer = 1;
-  for (int i = 0, n = this->_internal_buffer_size(); i < n; i++) {
-    const auto& s = this->_internal_buffer(i);
-    target = stream->WriteBytes(1, s, target);
+  // bytes buffer = 1;
+  if (!this->_internal_buffer().empty()) {
+    target = stream->WriteBytesMaybeAliased(
+        1, this->_internal_buffer(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -801,12 +848,11 @@ size_t SearchResponse::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated bytes buffer = 1;
-  total_size += 1 *
-      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(buffer_.size());
-  for (int i = 0, n = buffer_.size(); i < n; i++) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
-      buffer_.Get(i));
+  // bytes buffer = 1;
+  if (!this->_internal_buffer().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_buffer());
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -837,7 +883,9 @@ void SearchResponse::MergeFrom(const SearchResponse& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  buffer_.MergeFrom(from.buffer_);
+  if (!from._internal_buffer().empty()) {
+    _internal_set_buffer(from._internal_buffer());
+  }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -855,7 +903,11 @@ bool SearchResponse::IsInitialized() const {
 void SearchResponse::InternalSwap(SearchResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  buffer_.InternalSwap(&other->buffer_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &buffer_, GetArenaForAllocation(),
+      &other->buffer_, other->GetArenaForAllocation()
+  );
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata SearchResponse::GetMetadata() const {
@@ -872,8 +924,7 @@ class OramAccessMessage::_Internal {
 
 OramAccessMessage::OramAccessMessage(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
-  buffer_(arena) {
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
   if (!is_message_owned) {
     RegisterArenaDtor(arena);
@@ -881,20 +932,25 @@ OramAccessMessage::OramAccessMessage(::PROTOBUF_NAMESPACE_ID::Arena* arena,
   // @@protoc_insertion_point(arena_constructor:OramAccessMessage)
 }
 OramAccessMessage::OramAccessMessage(const OramAccessMessage& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      buffer_(from.buffer_) {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  buffer_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_buffer().empty()) {
+    buffer_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_buffer(), 
+      GetArenaForAllocation());
+  }
   ::memcpy(&operation_, &from.operation_,
-    static_cast<size_t>(reinterpret_cast<char*>(&oram_id_) -
-    reinterpret_cast<char*>(&operation_)) + sizeof(oram_id_));
+    static_cast<size_t>(reinterpret_cast<char*>(&id_) -
+    reinterpret_cast<char*>(&operation_)) + sizeof(id_));
   // @@protoc_insertion_point(copy_constructor:OramAccessMessage)
 }
 
 inline void OramAccessMessage::SharedCtor() {
+buffer_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&operation_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&oram_id_) -
-    reinterpret_cast<char*>(&operation_)) + sizeof(oram_id_));
+    0, static_cast<size_t>(reinterpret_cast<char*>(&id_) -
+    reinterpret_cast<char*>(&operation_)) + sizeof(id_));
 }
 
 OramAccessMessage::~OramAccessMessage() {
@@ -906,6 +962,7 @@ OramAccessMessage::~OramAccessMessage() {
 
 inline void OramAccessMessage::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  buffer_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 void OramAccessMessage::ArenaDtor(void* object) {
@@ -924,10 +981,10 @@ void OramAccessMessage::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  buffer_.Clear();
+  buffer_.ClearToEmpty();
   ::memset(&operation_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&oram_id_) -
-      reinterpret_cast<char*>(&operation_)) + sizeof(oram_id_));
+      reinterpret_cast<char*>(&id_) -
+      reinterpret_cast<char*>(&operation_)) + sizeof(id_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -951,23 +1008,25 @@ const char* OramAccessMessage::_InternalParse(const char* ptr, ::PROTOBUF_NAMESP
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // repeated bytes buffer = 3;
+      // bytes buffer = 3;
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
-          ptr -= 1;
-          do {
-            ptr += 1;
-            auto str = _internal_add_buffer();
-            ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-            CHK_(ptr);
-            if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<26>(ptr));
+          auto str = _internal_mutable_buffer();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
         } else goto handle_unusual;
         continue;
       // int32 oram_id = 4;
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 32)) {
           oram_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // int32 id = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 40)) {
+          id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -1012,16 +1071,22 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(2, this->_internal_is_odict(), target);
   }
 
-  // repeated bytes buffer = 3;
-  for (int i = 0, n = this->_internal_buffer_size(); i < n; i++) {
-    const auto& s = this->_internal_buffer(i);
-    target = stream->WriteBytes(3, s, target);
+  // bytes buffer = 3;
+  if (!this->_internal_buffer().empty()) {
+    target = stream->WriteBytesMaybeAliased(
+        3, this->_internal_buffer(), target);
   }
 
   // int32 oram_id = 4;
   if (this->_internal_oram_id() != 0) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(4, this->_internal_oram_id(), target);
+  }
+
+  // int32 id = 5;
+  if (this->_internal_id() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(5, this->_internal_id(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1040,12 +1105,11 @@ size_t OramAccessMessage::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated bytes buffer = 3;
-  total_size += 1 *
-      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(buffer_.size());
-  for (int i = 0, n = buffer_.size(); i < n; i++) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
-      buffer_.Get(i));
+  // bytes buffer = 3;
+  if (!this->_internal_buffer().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_buffer());
   }
 
   // bool operation = 1;
@@ -1063,6 +1127,13 @@ size_t OramAccessMessage::ByteSizeLong() const {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
         this->_internal_oram_id());
+  }
+
+  // int32 id = 5;
+  if (this->_internal_id() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_id());
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1093,7 +1164,9 @@ void OramAccessMessage::MergeFrom(const OramAccessMessage& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  buffer_.MergeFrom(from.buffer_);
+  if (!from._internal_buffer().empty()) {
+    _internal_set_buffer(from._internal_buffer());
+  }
   if (from._internal_operation() != 0) {
     _internal_set_operation(from._internal_operation());
   }
@@ -1102,6 +1175,9 @@ void OramAccessMessage::MergeFrom(const OramAccessMessage& from) {
   }
   if (from._internal_oram_id() != 0) {
     _internal_set_oram_id(from._internal_oram_id());
+  }
+  if (from._internal_id() != 0) {
+    _internal_set_id(from._internal_id());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -1120,10 +1196,14 @@ bool OramAccessMessage::IsInitialized() const {
 void OramAccessMessage::InternalSwap(OramAccessMessage* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  buffer_.InternalSwap(&other->buffer_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &buffer_, GetArenaForAllocation(),
+      &other->buffer_, other->GetArenaForAllocation()
+  );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(OramAccessMessage, oram_id_)
-      + sizeof(OramAccessMessage::oram_id_)
+      PROTOBUF_FIELD_OFFSET(OramAccessMessage, id_)
+      + sizeof(OramAccessMessage::id_)
       - PROTOBUF_FIELD_OFFSET(OramAccessMessage, operation_)>(
           reinterpret_cast<char*>(&operation_),
           reinterpret_cast<char*>(&other->operation_));
@@ -1143,8 +1223,7 @@ class OramAccessResponse::_Internal {
 
 OramAccessResponse::OramAccessResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
-  buffer_(arena) {
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
   if (!is_message_owned) {
     RegisterArenaDtor(arena);
@@ -1152,13 +1231,18 @@ OramAccessResponse::OramAccessResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
   // @@protoc_insertion_point(arena_constructor:OramAccessResponse)
 }
 OramAccessResponse::OramAccessResponse(const OramAccessResponse& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      buffer_(from.buffer_) {
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  buffer_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_buffer().empty()) {
+    buffer_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_buffer(), 
+      GetArenaForAllocation());
+  }
   // @@protoc_insertion_point(copy_constructor:OramAccessResponse)
 }
 
 inline void OramAccessResponse::SharedCtor() {
+buffer_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 OramAccessResponse::~OramAccessResponse() {
@@ -1170,6 +1254,7 @@ OramAccessResponse::~OramAccessResponse() {
 
 inline void OramAccessResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  buffer_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 void OramAccessResponse::ArenaDtor(void* object) {
@@ -1188,7 +1273,7 @@ void OramAccessResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  buffer_.Clear();
+  buffer_.ClearToEmpty();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1198,17 +1283,12 @@ const char* OramAccessResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // repeated bytes buffer = 1;
+      // bytes buffer = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
-          ptr -= 1;
-          do {
-            ptr += 1;
-            auto str = _internal_add_buffer();
-            ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-            CHK_(ptr);
-            if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<10>(ptr));
+          auto str = _internal_mutable_buffer();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
         } else goto handle_unusual;
         continue;
       default: {
@@ -1240,10 +1320,10 @@ failure:
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // repeated bytes buffer = 1;
-  for (int i = 0, n = this->_internal_buffer_size(); i < n; i++) {
-    const auto& s = this->_internal_buffer(i);
-    target = stream->WriteBytes(1, s, target);
+  // bytes buffer = 1;
+  if (!this->_internal_buffer().empty()) {
+    target = stream->WriteBytesMaybeAliased(
+        1, this->_internal_buffer(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1262,12 +1342,11 @@ size_t OramAccessResponse::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated bytes buffer = 1;
-  total_size += 1 *
-      ::PROTOBUF_NAMESPACE_ID::internal::FromIntSize(buffer_.size());
-  for (int i = 0, n = buffer_.size(); i < n; i++) {
-    total_size += ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
-      buffer_.Get(i));
+  // bytes buffer = 1;
+  if (!this->_internal_buffer().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_buffer());
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1298,7 +1377,9 @@ void OramAccessResponse::MergeFrom(const OramAccessResponse& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  buffer_.MergeFrom(from.buffer_);
+  if (!from._internal_buffer().empty()) {
+    _internal_set_buffer(from._internal_buffer());
+  }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -1316,7 +1397,11 @@ bool OramAccessResponse::IsInitialized() const {
 void OramAccessResponse::InternalSwap(OramAccessResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  buffer_.InternalSwap(&other->buffer_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &buffer_, GetArenaForAllocation(),
+      &other->buffer_, other->GetArenaForAllocation()
+  );
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata OramAccessResponse::GetMetadata() const {
