@@ -47,13 +47,25 @@ struct TableStruct_seal_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[7]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[11]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
   static const ::PROTOBUF_NAMESPACE_ID::uint32 offsets[];
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_seal_2eproto;
+class BucketReadMessage;
+struct BucketReadMessageDefaultTypeInternal;
+extern BucketReadMessageDefaultTypeInternal _BucketReadMessage_default_instance_;
+class BucketReadResponse;
+struct BucketReadResponseDefaultTypeInternal;
+extern BucketReadResponseDefaultTypeInternal _BucketReadResponse_default_instance_;
+class BucketSetMessage;
+struct BucketSetMessageDefaultTypeInternal;
+extern BucketSetMessageDefaultTypeInternal _BucketSetMessage_default_instance_;
+class BucketWriteMessage;
+struct BucketWriteMessageDefaultTypeInternal;
+extern BucketWriteMessageDefaultTypeInternal _BucketWriteMessage_default_instance_;
 class OdictInitMessage;
 struct OdictInitMessageDefaultTypeInternal;
 extern OdictInitMessageDefaultTypeInternal _OdictInitMessage_default_instance_;
@@ -76,6 +88,10 @@ class SetupMessage;
 struct SetupMessageDefaultTypeInternal;
 extern SetupMessageDefaultTypeInternal _SetupMessage_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
+template<> ::BucketReadMessage* Arena::CreateMaybeMessage<::BucketReadMessage>(Arena*);
+template<> ::BucketReadResponse* Arena::CreateMaybeMessage<::BucketReadResponse>(Arena*);
+template<> ::BucketSetMessage* Arena::CreateMaybeMessage<::BucketSetMessage>(Arena*);
+template<> ::BucketWriteMessage* Arena::CreateMaybeMessage<::BucketWriteMessage>(Arena*);
 template<> ::OdictInitMessage* Arena::CreateMaybeMessage<::OdictInitMessage>(Arena*);
 template<> ::OramAccessMessage* Arena::CreateMaybeMessage<::OramAccessMessage>(Arena*);
 template<> ::OramAccessResponse* Arena::CreateMaybeMessage<::OramAccessResponse>(Arena*);
@@ -202,26 +218,11 @@ class SetupMessage final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kRandomEngineFieldNumber = 5,
     kBucketSizeFieldNumber = 1,
     kBlockNumberFieldNumber = 2,
     kBlockSizeFieldNumber = 3,
     kOramBlockSizeFieldNumber = 4,
   };
-  // bytes random_engine = 5;
-  void clear_random_engine();
-  const std::string& random_engine() const;
-  template <typename ArgT0 = const std::string&, typename... ArgT>
-  void set_random_engine(ArgT0&& arg0, ArgT... args);
-  std::string* mutable_random_engine();
-  PROTOBUF_MUST_USE_RESULT std::string* release_random_engine();
-  void set_allocated_random_engine(std::string* random_engine);
-  private:
-  const std::string& _internal_random_engine() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_random_engine(const std::string& value);
-  std::string* _internal_mutable_random_engine();
-  public:
-
   // int32 bucket_size = 1;
   void clear_bucket_size();
   ::PROTOBUF_NAMESPACE_ID::int32 bucket_size() const;
@@ -265,7 +266,6 @@ class SetupMessage final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr random_engine_;
   ::PROTOBUF_NAMESPACE_ID::int32 bucket_size_;
   ::PROTOBUF_NAMESPACE_ID::int32 block_number_;
   ::PROTOBUF_NAMESPACE_ID::int32 block_size_;
@@ -1182,6 +1182,649 @@ class OdictInitMessage final :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_seal_2eproto;
 };
+// -------------------------------------------------------------------
+
+class BucketReadMessage final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:BucketReadMessage) */ {
+ public:
+  inline BucketReadMessage() : BucketReadMessage(nullptr) {}
+  ~BucketReadMessage() override;
+  explicit constexpr BucketReadMessage(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  BucketReadMessage(const BucketReadMessage& from);
+  BucketReadMessage(BucketReadMessage&& from) noexcept
+    : BucketReadMessage() {
+    *this = ::std::move(from);
+  }
+
+  inline BucketReadMessage& operator=(const BucketReadMessage& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline BucketReadMessage& operator=(BucketReadMessage&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const BucketReadMessage& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const BucketReadMessage* internal_default_instance() {
+    return reinterpret_cast<const BucketReadMessage*>(
+               &_BucketReadMessage_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    7;
+
+  friend void swap(BucketReadMessage& a, BucketReadMessage& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(BucketReadMessage* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(BucketReadMessage* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline BucketReadMessage* New() const final {
+    return new BucketReadMessage();
+  }
+
+  BucketReadMessage* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<BucketReadMessage>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const BucketReadMessage& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const BucketReadMessage& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(BucketReadMessage* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "BucketReadMessage";
+  }
+  protected:
+  explicit BucketReadMessage(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIsOdictFieldNumber = 1,
+    kPositionFieldNumber = 2,
+    kOramIdFieldNumber = 3,
+  };
+  // bool is_odict = 1;
+  void clear_is_odict();
+  bool is_odict() const;
+  void set_is_odict(bool value);
+  private:
+  bool _internal_is_odict() const;
+  void _internal_set_is_odict(bool value);
+  public:
+
+  // int32 position = 2;
+  void clear_position();
+  ::PROTOBUF_NAMESPACE_ID::int32 position() const;
+  void set_position(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_position() const;
+  void _internal_set_position(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 oram_id = 3;
+  void clear_oram_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 oram_id() const;
+  void set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_oram_id() const;
+  void _internal_set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:BucketReadMessage)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  bool is_odict_;
+  ::PROTOBUF_NAMESPACE_ID::int32 position_;
+  ::PROTOBUF_NAMESPACE_ID::int32 oram_id_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_seal_2eproto;
+};
+// -------------------------------------------------------------------
+
+class BucketReadResponse final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:BucketReadResponse) */ {
+ public:
+  inline BucketReadResponse() : BucketReadResponse(nullptr) {}
+  ~BucketReadResponse() override;
+  explicit constexpr BucketReadResponse(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  BucketReadResponse(const BucketReadResponse& from);
+  BucketReadResponse(BucketReadResponse&& from) noexcept
+    : BucketReadResponse() {
+    *this = ::std::move(from);
+  }
+
+  inline BucketReadResponse& operator=(const BucketReadResponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline BucketReadResponse& operator=(BucketReadResponse&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const BucketReadResponse& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const BucketReadResponse* internal_default_instance() {
+    return reinterpret_cast<const BucketReadResponse*>(
+               &_BucketReadResponse_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    8;
+
+  friend void swap(BucketReadResponse& a, BucketReadResponse& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(BucketReadResponse* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(BucketReadResponse* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline BucketReadResponse* New() const final {
+    return new BucketReadResponse();
+  }
+
+  BucketReadResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<BucketReadResponse>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const BucketReadResponse& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const BucketReadResponse& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(BucketReadResponse* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "BucketReadResponse";
+  }
+  protected:
+  explicit BucketReadResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kBufferFieldNumber = 1,
+  };
+  // bytes buffer = 1;
+  void clear_buffer();
+  const std::string& buffer() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_buffer(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_buffer();
+  PROTOBUF_MUST_USE_RESULT std::string* release_buffer();
+  void set_allocated_buffer(std::string* buffer);
+  private:
+  const std::string& _internal_buffer() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_buffer(const std::string& value);
+  std::string* _internal_mutable_buffer();
+  public:
+
+  // @@protoc_insertion_point(class_scope:BucketReadResponse)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr buffer_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_seal_2eproto;
+};
+// -------------------------------------------------------------------
+
+class BucketWriteMessage final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:BucketWriteMessage) */ {
+ public:
+  inline BucketWriteMessage() : BucketWriteMessage(nullptr) {}
+  ~BucketWriteMessage() override;
+  explicit constexpr BucketWriteMessage(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  BucketWriteMessage(const BucketWriteMessage& from);
+  BucketWriteMessage(BucketWriteMessage&& from) noexcept
+    : BucketWriteMessage() {
+    *this = ::std::move(from);
+  }
+
+  inline BucketWriteMessage& operator=(const BucketWriteMessage& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline BucketWriteMessage& operator=(BucketWriteMessage&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const BucketWriteMessage& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const BucketWriteMessage* internal_default_instance() {
+    return reinterpret_cast<const BucketWriteMessage*>(
+               &_BucketWriteMessage_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    9;
+
+  friend void swap(BucketWriteMessage& a, BucketWriteMessage& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(BucketWriteMessage* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(BucketWriteMessage* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline BucketWriteMessage* New() const final {
+    return new BucketWriteMessage();
+  }
+
+  BucketWriteMessage* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<BucketWriteMessage>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const BucketWriteMessage& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const BucketWriteMessage& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(BucketWriteMessage* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "BucketWriteMessage";
+  }
+  protected:
+  explicit BucketWriteMessage(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kBufferFieldNumber = 3,
+    kIsOdictFieldNumber = 1,
+    kPositionFieldNumber = 2,
+    kOramIdFieldNumber = 4,
+  };
+  // bytes buffer = 3;
+  void clear_buffer();
+  const std::string& buffer() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_buffer(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_buffer();
+  PROTOBUF_MUST_USE_RESULT std::string* release_buffer();
+  void set_allocated_buffer(std::string* buffer);
+  private:
+  const std::string& _internal_buffer() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_buffer(const std::string& value);
+  std::string* _internal_mutable_buffer();
+  public:
+
+  // bool is_odict = 1;
+  void clear_is_odict();
+  bool is_odict() const;
+  void set_is_odict(bool value);
+  private:
+  bool _internal_is_odict() const;
+  void _internal_set_is_odict(bool value);
+  public:
+
+  // int32 position = 2;
+  void clear_position();
+  ::PROTOBUF_NAMESPACE_ID::int32 position() const;
+  void set_position(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_position() const;
+  void _internal_set_position(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 oram_id = 4;
+  void clear_oram_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 oram_id() const;
+  void set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_oram_id() const;
+  void _internal_set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:BucketWriteMessage)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr buffer_;
+  bool is_odict_;
+  ::PROTOBUF_NAMESPACE_ID::int32 position_;
+  ::PROTOBUF_NAMESPACE_ID::int32 oram_id_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_seal_2eproto;
+};
+// -------------------------------------------------------------------
+
+class BucketSetMessage final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:BucketSetMessage) */ {
+ public:
+  inline BucketSetMessage() : BucketSetMessage(nullptr) {}
+  ~BucketSetMessage() override;
+  explicit constexpr BucketSetMessage(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  BucketSetMessage(const BucketSetMessage& from);
+  BucketSetMessage(BucketSetMessage&& from) noexcept
+    : BucketSetMessage() {
+    *this = ::std::move(from);
+  }
+
+  inline BucketSetMessage& operator=(const BucketSetMessage& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline BucketSetMessage& operator=(BucketSetMessage&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const BucketSetMessage& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const BucketSetMessage* internal_default_instance() {
+    return reinterpret_cast<const BucketSetMessage*>(
+               &_BucketSetMessage_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    10;
+
+  friend void swap(BucketSetMessage& a, BucketSetMessage& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(BucketSetMessage* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(BucketSetMessage* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline BucketSetMessage* New() const final {
+    return new BucketSetMessage();
+  }
+
+  BucketSetMessage* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<BucketSetMessage>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const BucketSetMessage& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const BucketSetMessage& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(BucketSetMessage* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "BucketSetMessage";
+  }
+  protected:
+  explicit BucketSetMessage(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIsOdictFieldNumber = 1,
+    kNumberOfBucketsFieldNumber = 2,
+    kOramIdFieldNumber = 3,
+  };
+  // bool is_odict = 1;
+  void clear_is_odict();
+  bool is_odict() const;
+  void set_is_odict(bool value);
+  private:
+  bool _internal_is_odict() const;
+  void _internal_set_is_odict(bool value);
+  public:
+
+  // int32 number_of_buckets = 2;
+  void clear_number_of_buckets();
+  ::PROTOBUF_NAMESPACE_ID::int32 number_of_buckets() const;
+  void set_number_of_buckets(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_number_of_buckets() const;
+  void _internal_set_number_of_buckets(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // int32 oram_id = 3;
+  void clear_oram_id();
+  ::PROTOBUF_NAMESPACE_ID::int32 oram_id() const;
+  void set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_oram_id() const;
+  void _internal_set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:BucketSetMessage)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  bool is_odict_;
+  ::PROTOBUF_NAMESPACE_ID::int32 number_of_buckets_;
+  ::PROTOBUF_NAMESPACE_ID::int32 oram_id_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_seal_2eproto;
+};
 // ===================================================================
 
 
@@ -1271,52 +1914,6 @@ inline void SetupMessage::_internal_set_oram_block_size(::PROTOBUF_NAMESPACE_ID:
 inline void SetupMessage::set_oram_block_size(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_oram_block_size(value);
   // @@protoc_insertion_point(field_set:SetupMessage.oram_block_size)
-}
-
-// bytes random_engine = 5;
-inline void SetupMessage::clear_random_engine() {
-  random_engine_.ClearToEmpty();
-}
-inline const std::string& SetupMessage::random_engine() const {
-  // @@protoc_insertion_point(field_get:SetupMessage.random_engine)
-  return _internal_random_engine();
-}
-template <typename ArgT0, typename... ArgT>
-inline PROTOBUF_ALWAYS_INLINE
-void SetupMessage::set_random_engine(ArgT0&& arg0, ArgT... args) {
- 
- random_engine_.SetBytes(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set:SetupMessage.random_engine)
-}
-inline std::string* SetupMessage::mutable_random_engine() {
-  std::string* _s = _internal_mutable_random_engine();
-  // @@protoc_insertion_point(field_mutable:SetupMessage.random_engine)
-  return _s;
-}
-inline const std::string& SetupMessage::_internal_random_engine() const {
-  return random_engine_.Get();
-}
-inline void SetupMessage::_internal_set_random_engine(const std::string& value) {
-  
-  random_engine_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
-}
-inline std::string* SetupMessage::_internal_mutable_random_engine() {
-  
-  return random_engine_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
-}
-inline std::string* SetupMessage::release_random_engine() {
-  // @@protoc_insertion_point(field_release:SetupMessage.random_engine)
-  return random_engine_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
-}
-inline void SetupMessage::set_allocated_random_engine(std::string* random_engine) {
-  if (random_engine != nullptr) {
-    
-  } else {
-    
-  }
-  random_engine_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), random_engine,
-      GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set_allocated:SetupMessage.random_engine)
 }
 
 // -------------------------------------------------------------------
@@ -1667,9 +2264,305 @@ inline void OdictInitMessage::set_block_size(::PROTOBUF_NAMESPACE_ID::int32 valu
   // @@protoc_insertion_point(field_set:OdictInitMessage.block_size)
 }
 
+// -------------------------------------------------------------------
+
+// BucketReadMessage
+
+// bool is_odict = 1;
+inline void BucketReadMessage::clear_is_odict() {
+  is_odict_ = false;
+}
+inline bool BucketReadMessage::_internal_is_odict() const {
+  return is_odict_;
+}
+inline bool BucketReadMessage::is_odict() const {
+  // @@protoc_insertion_point(field_get:BucketReadMessage.is_odict)
+  return _internal_is_odict();
+}
+inline void BucketReadMessage::_internal_set_is_odict(bool value) {
+  
+  is_odict_ = value;
+}
+inline void BucketReadMessage::set_is_odict(bool value) {
+  _internal_set_is_odict(value);
+  // @@protoc_insertion_point(field_set:BucketReadMessage.is_odict)
+}
+
+// int32 position = 2;
+inline void BucketReadMessage::clear_position() {
+  position_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 BucketReadMessage::_internal_position() const {
+  return position_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 BucketReadMessage::position() const {
+  // @@protoc_insertion_point(field_get:BucketReadMessage.position)
+  return _internal_position();
+}
+inline void BucketReadMessage::_internal_set_position(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  position_ = value;
+}
+inline void BucketReadMessage::set_position(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_position(value);
+  // @@protoc_insertion_point(field_set:BucketReadMessage.position)
+}
+
+// int32 oram_id = 3;
+inline void BucketReadMessage::clear_oram_id() {
+  oram_id_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 BucketReadMessage::_internal_oram_id() const {
+  return oram_id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 BucketReadMessage::oram_id() const {
+  // @@protoc_insertion_point(field_get:BucketReadMessage.oram_id)
+  return _internal_oram_id();
+}
+inline void BucketReadMessage::_internal_set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  oram_id_ = value;
+}
+inline void BucketReadMessage::set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_oram_id(value);
+  // @@protoc_insertion_point(field_set:BucketReadMessage.oram_id)
+}
+
+// -------------------------------------------------------------------
+
+// BucketReadResponse
+
+// bytes buffer = 1;
+inline void BucketReadResponse::clear_buffer() {
+  buffer_.ClearToEmpty();
+}
+inline const std::string& BucketReadResponse::buffer() const {
+  // @@protoc_insertion_point(field_get:BucketReadResponse.buffer)
+  return _internal_buffer();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void BucketReadResponse::set_buffer(ArgT0&& arg0, ArgT... args) {
+ 
+ buffer_.SetBytes(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:BucketReadResponse.buffer)
+}
+inline std::string* BucketReadResponse::mutable_buffer() {
+  std::string* _s = _internal_mutable_buffer();
+  // @@protoc_insertion_point(field_mutable:BucketReadResponse.buffer)
+  return _s;
+}
+inline const std::string& BucketReadResponse::_internal_buffer() const {
+  return buffer_.Get();
+}
+inline void BucketReadResponse::_internal_set_buffer(const std::string& value) {
+  
+  buffer_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* BucketReadResponse::_internal_mutable_buffer() {
+  
+  return buffer_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* BucketReadResponse::release_buffer() {
+  // @@protoc_insertion_point(field_release:BucketReadResponse.buffer)
+  return buffer_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void BucketReadResponse::set_allocated_buffer(std::string* buffer) {
+  if (buffer != nullptr) {
+    
+  } else {
+    
+  }
+  buffer_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), buffer,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:BucketReadResponse.buffer)
+}
+
+// -------------------------------------------------------------------
+
+// BucketWriteMessage
+
+// bool is_odict = 1;
+inline void BucketWriteMessage::clear_is_odict() {
+  is_odict_ = false;
+}
+inline bool BucketWriteMessage::_internal_is_odict() const {
+  return is_odict_;
+}
+inline bool BucketWriteMessage::is_odict() const {
+  // @@protoc_insertion_point(field_get:BucketWriteMessage.is_odict)
+  return _internal_is_odict();
+}
+inline void BucketWriteMessage::_internal_set_is_odict(bool value) {
+  
+  is_odict_ = value;
+}
+inline void BucketWriteMessage::set_is_odict(bool value) {
+  _internal_set_is_odict(value);
+  // @@protoc_insertion_point(field_set:BucketWriteMessage.is_odict)
+}
+
+// int32 position = 2;
+inline void BucketWriteMessage::clear_position() {
+  position_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 BucketWriteMessage::_internal_position() const {
+  return position_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 BucketWriteMessage::position() const {
+  // @@protoc_insertion_point(field_get:BucketWriteMessage.position)
+  return _internal_position();
+}
+inline void BucketWriteMessage::_internal_set_position(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  position_ = value;
+}
+inline void BucketWriteMessage::set_position(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_position(value);
+  // @@protoc_insertion_point(field_set:BucketWriteMessage.position)
+}
+
+// bytes buffer = 3;
+inline void BucketWriteMessage::clear_buffer() {
+  buffer_.ClearToEmpty();
+}
+inline const std::string& BucketWriteMessage::buffer() const {
+  // @@protoc_insertion_point(field_get:BucketWriteMessage.buffer)
+  return _internal_buffer();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void BucketWriteMessage::set_buffer(ArgT0&& arg0, ArgT... args) {
+ 
+ buffer_.SetBytes(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:BucketWriteMessage.buffer)
+}
+inline std::string* BucketWriteMessage::mutable_buffer() {
+  std::string* _s = _internal_mutable_buffer();
+  // @@protoc_insertion_point(field_mutable:BucketWriteMessage.buffer)
+  return _s;
+}
+inline const std::string& BucketWriteMessage::_internal_buffer() const {
+  return buffer_.Get();
+}
+inline void BucketWriteMessage::_internal_set_buffer(const std::string& value) {
+  
+  buffer_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* BucketWriteMessage::_internal_mutable_buffer() {
+  
+  return buffer_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* BucketWriteMessage::release_buffer() {
+  // @@protoc_insertion_point(field_release:BucketWriteMessage.buffer)
+  return buffer_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void BucketWriteMessage::set_allocated_buffer(std::string* buffer) {
+  if (buffer != nullptr) {
+    
+  } else {
+    
+  }
+  buffer_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), buffer,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:BucketWriteMessage.buffer)
+}
+
+// int32 oram_id = 4;
+inline void BucketWriteMessage::clear_oram_id() {
+  oram_id_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 BucketWriteMessage::_internal_oram_id() const {
+  return oram_id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 BucketWriteMessage::oram_id() const {
+  // @@protoc_insertion_point(field_get:BucketWriteMessage.oram_id)
+  return _internal_oram_id();
+}
+inline void BucketWriteMessage::_internal_set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  oram_id_ = value;
+}
+inline void BucketWriteMessage::set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_oram_id(value);
+  // @@protoc_insertion_point(field_set:BucketWriteMessage.oram_id)
+}
+
+// -------------------------------------------------------------------
+
+// BucketSetMessage
+
+// bool is_odict = 1;
+inline void BucketSetMessage::clear_is_odict() {
+  is_odict_ = false;
+}
+inline bool BucketSetMessage::_internal_is_odict() const {
+  return is_odict_;
+}
+inline bool BucketSetMessage::is_odict() const {
+  // @@protoc_insertion_point(field_get:BucketSetMessage.is_odict)
+  return _internal_is_odict();
+}
+inline void BucketSetMessage::_internal_set_is_odict(bool value) {
+  
+  is_odict_ = value;
+}
+inline void BucketSetMessage::set_is_odict(bool value) {
+  _internal_set_is_odict(value);
+  // @@protoc_insertion_point(field_set:BucketSetMessage.is_odict)
+}
+
+// int32 number_of_buckets = 2;
+inline void BucketSetMessage::clear_number_of_buckets() {
+  number_of_buckets_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 BucketSetMessage::_internal_number_of_buckets() const {
+  return number_of_buckets_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 BucketSetMessage::number_of_buckets() const {
+  // @@protoc_insertion_point(field_get:BucketSetMessage.number_of_buckets)
+  return _internal_number_of_buckets();
+}
+inline void BucketSetMessage::_internal_set_number_of_buckets(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  number_of_buckets_ = value;
+}
+inline void BucketSetMessage::set_number_of_buckets(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_number_of_buckets(value);
+  // @@protoc_insertion_point(field_set:BucketSetMessage.number_of_buckets)
+}
+
+// int32 oram_id = 3;
+inline void BucketSetMessage::clear_oram_id() {
+  oram_id_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 BucketSetMessage::_internal_oram_id() const {
+  return oram_id_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 BucketSetMessage::oram_id() const {
+  // @@protoc_insertion_point(field_get:BucketSetMessage.oram_id)
+  return _internal_oram_id();
+}
+inline void BucketSetMessage::_internal_set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  oram_id_ = value;
+}
+inline void BucketSetMessage::set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_oram_id(value);
+  // @@protoc_insertion_point(field_set:BucketSetMessage.oram_id)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

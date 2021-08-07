@@ -18,10 +18,16 @@ private:
 
     OramInterface* oram;
 
+    const int oram_id;
+
     /**
      * @note This variable depends on the role that this current OramAccessController plays.
      */
-    int block_size;
+    const int block_size;
+
+    const bool is_odict;
+
+    Seal::Stub* stub_;
 
 public:
     /**
@@ -33,17 +39,17 @@ public:
     RandForOramInterface* get_random_engine();
 
     /**
-     * @deprecated
      * @brief The normal way to access the PathORAM.
      * 
      * @param op the operation: READ / WRITE. INSERT / DELETE are not used in this interface.
      * @param address the physical address.
      * @param data the data to be read / written.
      */
-    void oblivious_access(OramAccessOp op, const int& address, unsigned char* data);
+    void oblivious_access(OramAccessOp op, const int& address, std::string& data);
 
     /**
      * @brief The normal way to access the PathORAM.
+     * @note reserved.
      * 
      * @param op the operation: READ / WRITE. INSERT / DELETE are not used in this interface.
      * @param address the physical address.
@@ -51,19 +57,19 @@ public:
      * @param oram_id the id of the oram block to be accessed.
      * @param stub_ interface to the remote server.
      */
-    void oblivious_access(OramAccessOp op, const int& address, unsigned char* data, const int& oram_id, Seal::Stub* stub_);
+    void oblivious_access(OramAccessOp op, const int& address, std::string& data, const int& oram_id);
 
     /**
-     * @deprecated
      * @brief The special way to access the PathORAM. For oblviious data structures.
      * 
      * @param op the operation: READ/ WRITE. INSERT / DELETE are not used in this interface either.
      * @param data the data to be read / written. @note It must contain pos_tag.
      */
-    void oblivious_access_direct(OramAccessOp op, unsigned char* data);
+    void oblivious_access_direct(OramAccessOp op, std::string& data);
 
     /**
      * @brief The special way to access the PathORAM. For oblviious data structures.
+     * @note reserved.
      * 
      * @param op the operation: READ/ WRITE. INSERT / DELETE are not used in this interface either.
      * @param data the data to be read / written. @note It must contain pos_tag.
@@ -84,8 +90,15 @@ public:
      * @param bucket_size
      * @param block_number
      * @param block_size sizeof(the data you want to manipulate)
+     * @param oram_id The id of the oram block. Any value can be set if is_odict = true.
+     * @param is_odict Is this oram served as oblivious dictionary.
+     * @param stub_ Interfaces to the server.
      */
-    OramAccessController(const int& bucket_size, const int& block_number, const int& block_size);
+    OramAccessController(
+        const int& bucket_size, const int& block_number, const int& block_size,
+        const int& oram_id, const bool& is_odict, Seal::Stub* stub_ = nullptr);
+
+    void set_stub(Seal::Stub* stub_);
 };
 
 #endif

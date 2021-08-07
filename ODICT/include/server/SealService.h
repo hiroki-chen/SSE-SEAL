@@ -8,6 +8,7 @@
 #include <oram/OramStruct.h>
 #include <proto/seal.grpc.pb.h>
 #include <proto/seal.pb.h>
+#include <oram/Bucket.h>
 
 #include <memory>
 #include <vector>
@@ -17,26 +18,18 @@ private:
     std::unique_ptr<SEAL::Connector> connector;
 
     /**
-     * It is provided for Oblivious Dictionary.
-     */
-    std::unique_ptr<OramStruct> oram_for_odict;
+     * @brief The storage array provided by the server.
+     */ 
+    std::vector<Bucket> odict_storage;
+
 
     /**
-     * It is provided for seperate oram blocks.
-     */
-    std::vector<std::unique_ptr<OramStruct>> oram_blocks;
+     * @brief The ORAM block (sub-divided) array provided by the server.
+     * 
+     * @note This is a two-dimensional array. [oram_id][bucket_index]
+     */ 
+    std::vector<std::vector<Bucket>> oram_storage;
 
-    size_t block_size;
-
-    size_t oram_block_size;
-
-    size_t block_number;
-    
-    size_t bucket_size;
-
-    /**
-     * TODO: Construct several ORAM Blocks.
-     */
 public:
     SealService();
 
@@ -44,10 +37,11 @@ public:
 
     grpc::Status setup(grpc::ServerContext* context, const SetupMessage* request, google::protobuf::Empty* e) override;
 
-    grpc::Status oram_access(grpc::ServerContext* context, const OramAccessMessage* message, OramAccessResponse* response) override;
+    grpc::Status set_capacity(grpc::ServerContext* context, const BucketSetMessage* message, google::protobuf::Empty* e) override;
 
-    grpc::Status oram_init(grpc::ServerContext* context, const OramInitMessage* message, google::protobuf::Empty* reponse) override;
-    // grpc::Status search(grpc::ServerContext* context, const SearchMessage* request, SearchResponse* response);
+    grpc::Status read_bucket(grpc::ServerContext* context, const BucketReadMessage* message, BucketReadResponse* reponse) override;
+
+    grpc::Status write_bucket(grpc::ServerContext* context, const BucketWriteMessage* message, google::protobuf::Empty* e) override;
 };
 
 #endif

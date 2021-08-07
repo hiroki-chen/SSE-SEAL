@@ -8,11 +8,19 @@ service Seal {
 
     rpc search(SearchMessage) returns (SearchResponse) {}
 
-    // Access to oram block.
+    /**
+     * @deprecated.
+     */
     rpc oram_access(OramAccessMessage) returns (OramAccessResponse) {}
 
     // Init the oram block.
     rpc oram_init(OramInitMessage) returns (google.protobuf.Empty) {}
+
+    rpc read_bucket(BucketReadMessage) returns (BucketReadResponse) {}
+
+    rpc write_bucket(BucketWriteMessage) returns (google.protobuf.Empty) {}
+
+    rpc set_capacity(BucketSetMessage) returns (google.protobuf.Empty) {}
 }
 
 /*
@@ -25,7 +33,7 @@ message SetupMessage
     int32 block_number = 2;
     int32 block_size = 3;
     int32 oram_block_size = 4;
-    bytes random_engine = 5;
+    // bytes random_engine = 5;
 }
 
 /* Not used */
@@ -63,4 +71,31 @@ message OramInitMessage
 message OdictInitMessage
 {
     int32 block_size = 1;
+}
+
+message BucketReadMessage
+{
+    bool is_odict = 1;
+    int32 position = 2;
+    int32 oram_id = 3;
+}
+
+message BucketReadResponse
+{
+    bytes buffer = 1;
+}
+
+message BucketWriteMessage
+{
+    bool is_odict = 1;
+    int32 position = 2;
+    bytes buffer = 3;
+    int32 oram_id = 4;
+}
+
+message BucketSetMessage
+{
+    bool is_odict = 1;
+    int32 number_of_buckets = 2;
+    int32 oram_id = 3;
 }

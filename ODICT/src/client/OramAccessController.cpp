@@ -1,5 +1,4 @@
 #include <client/OramAccessController.h>
-#include <oram/OramDeterministic.h>
 #include <oram/OramReadPathEviction.h>
 #include <oram/RandomForOram.h>
 #include <oram/ServerStorage.h>
@@ -10,7 +9,17 @@
 #include <iostream>
 #include <strings.h>
 
-OramAccessController::OramAccessController(const int& bucket_size, const int& block_number, const int& block_size)
+OramAccessController::OramAccessController(
+    const int& bucket_size,
+    const int& block_number,
+    const int& block_size,
+    const int& oram_id,
+    const bool& is_odict,
+    Seal::Stub* stub_)
+    : oram_id(oram_id)
+    , block_size(block_size)
+    , is_odict(is_odict)
+    , stub_(stub_)
 {
     auto logger = plog::get<0>();
     if (logger == NULL) {
@@ -19,80 +28,23 @@ OramAccessController::OramAccessController(const int& bucket_size, const int& bl
 
     PLOG(plog::info) << "Warming up OramAccessController...\n";
     Bucket::setMaxSize(bucket_size);
-    this->block_size = block_size;
 
-    storage = nullptr;
+    storage = new ServerStorage(oram_id, is_odict, stub_);
     random = RandomForOram::get_instance();
-    oram = nullptr;
+    oram = new OramReadPathEviction(storage, random, bucket_size, block_number, block_size);
 }
 
-// TODO: Add an overloaded version for gRPC.
-void OramAccessController::oblivious_access(OramAccessOp op, const int& address, unsigned char* data)
+void OramAccessController::oblivious_access(OramAccessOp op, const int& address, std::string& data)
 {
-    int* new_data = new int[block_size];
-    memcpy(new_data, transform<int, unsigned char>(data), block_size);
     OramInterface::Operation operation = deduct_operation(op);
-    new_data = oram->access(operation, address, new_data);
-    memcpy(data, transform<unsigned char, int>(new_data), block_size);
+    data = oram->access(operation, address, data);
 }
 
-void OramAccessController::oblivious_access(
-    OramAccessOp op,
-    const int& address,
-    unsigned char* data,
-    const int& oram_id,
-    Seal::Stub* stub_)
+void OramAccessController::oblivious_access_direct(OramAccessOp op, std::string& data)
 {
-    grpc::ClientContext context;
-    OramAccessMessage message;
-    OramAccessResponse response;
-    message.set_id(address);
-    message.set_is_odict(false);
-    message.set_oram_id(oram_id);
-    message.set_operation(op == OramAccessOp::ORAM_ACCESS_READ ? false : true);
-    message.set_buffer(data, block_size);
-
-    grpc::Status status = stub_->oram_access(&context, message, &response);
-
-    if (!status.ok()) {
-        PLOG(plog::error) << "Cannot access the remote server.";
-        return;
-    }
-    const std::string ans = response.buffer();
-    memcpy(data, ans.c_str(), block_size);
-}
-
-void OramAccessController::oblivious_access_direct(
-    OramAccessOp op,
-    unsigned char* data,
-    Seal::Stub* stub_)
-{
-    ODict::Node* node = transform<ODict::Node, unsigned char>(data);
-    grpc::ClientContext context;
-    OramAccessMessage message;
-    OramAccessResponse response;
-    message.set_id(node->id);
-    message.set_is_odict(true);
-    message.set_oram_id(0);
-    message.set_operation(op == OramAccessOp::ORAM_ACCESS_READ ? false : true);
-    message.set_buffer(data, block_size);
-    grpc::Status status = stub_->oram_access(&context, message, &response);
-
-    if (!status.ok()) {
-        PLOG(plog::error) << "Cannot access the remote server.";
-        return;
-    }
-    const std::string ans = response.buffer();
-    memcpy(data, ans.c_str(), block_size);
-}
-
-void OramAccessController::oblivious_access_direct(OramAccessOp op, unsigned char* data)
-{
-    int* new_data = new int[block_size];
-    memcpy(new_data, transform<int, unsigned char>(data), block_size);
+    std::cout << "In oblivioud access direct: " << deserialize<ODict::Node>(data).id << std::endl;
     OramInterface::Operation operation = deduct_operation(op);
-    new_data = oram->access_direct(operation, new_data);
-    memcpy(data, transform<unsigned char, int>(new_data), block_size);
+    data = oram->access_direct(operation, data);
 }
 
 int OramAccessController::random_new_pos()
@@ -103,4 +55,9 @@ int OramAccessController::random_new_pos()
 RandForOramInterface* OramAccessController::get_random_engine()
 {
     return random;
+}
+
+void OramAccessController::set_stub(Seal::Stub * stub_)
+{
+    this->stub_ = stub_;
 }

@@ -20,10 +20,10 @@ ClientRunner::ClientRunner(const int& bucket_size, const int& block_number,
     : stub_(Seal::NewStub(std::shared_ptr<grpc::Channel>(grpc::CreateChannel(address, grpc::InsecureChannelCredentials()))))
     , client(std::make_unique<SEAL::Client>(bucket_size, block_number, block_size,
           odict_size, max_size, alpha, x,
-          password, connection_info))
+          password, connection_info, stub_.get()))
 {
     std::cout << "In ClientRunner!" << std::endl;
-    setup(bucket_size, block_number, block_size, oram_block_size);
+
     client.get()->set_stub(stub_);
     client.get()->init_dummy_data();
 }
@@ -45,7 +45,7 @@ void ClientRunner::setup(const int& bucket_size, const int& block_number, const 
     grpc::Status status = stub_.get()->setup(&context, message, &e);
 
     if (!status.ok()) {
-        throw std::runtime_error("Cannot setup the server!");
+        throw std::runtime_error(status.error_message());
     }
 }
 

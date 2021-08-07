@@ -8,9 +8,13 @@
 #include <algorithm>
 #include <iostream>
 #include <string>
+#include <sstream>
 
 #include <client/Objects.h>
+#include <oram/Bucket.h>
 #include <oram/OramInterface.h>
+
+#include <cereal/archives/binary.hpp>
 
 /**
  * @brief The template will provide us with a function equivalent to
@@ -51,5 +55,30 @@ std::pair<unsigned int, unsigned int> get_bits(const unsigned int& base, const u
 std::string encrypt_message(std::string_view key, std::string_view message, const unsigned char* nonce);
 
 std::string decrypt_message(std::string_view key, std::string_view ciphertext, const unsigned char* nonce, const size_t& raw_length);
+
+template <typename Object>
+std::string serialize(const Object& obj)
+{
+    std::ostringstream oss;
+    {
+        cereal::BinaryOutputArchive oa(oss);
+        oa(obj);
+        oss.flush();
+    }
+    return oss.str();
+}
+
+template <typename Object>
+Object deserialize(const std::string& serial_str)
+{
+    Object obj;
+    std::istringstream iss(serial_str);
+    {
+        cereal::BinaryInputArchive ia(iss);
+        ia >> obj;
+    }
+
+    return obj;
+}
 
 #endif

@@ -46,6 +46,8 @@ private:
 
     int root_pos;
 
+    Seal::Stub* stub_;
+
     std::unique_ptr<OramAccessController> oramAccessController;
 
     std::vector<ODict::Node*> clientCache;
@@ -66,8 +68,6 @@ private:
     std::string secret_key; // for pseudo-random permutation
 
     std::vector<std::unique_ptr<OramAccessController>> adj_oramAccessControllers;
-
-    Seal::Stub* stub_;
 
     /*==================== Connection to Relational Database (PostgreSQL based openGauss) =====================*/
     std::unique_ptr<SEAL::Connector> connector;
@@ -274,6 +274,21 @@ private:
         const std::map<std::string, unsigned int>& first_occurrence,
         const std::map<std::string, unsigned int>& count);
 
+    //====================Util=====================//
+    /**
+     * @brief Read the node from the oram. No need to manipulate the oblivious data structure anymore.
+     * 
+     * @param id
+     */ 
+    ODict::Node* read_from_oram(const int& id);
+
+    /**
+     * @brief Write the node to the oram
+     * 
+     * @param node
+     */
+    void write_to_oram(const ODict::Node* const node);
+
 public:
     /**
      * @brief the construtor of the class Client.
@@ -285,12 +300,13 @@ public:
      * @param max_size the maximum size of the client cache.
      * @param password the password for encryption / decryption
      * @param connection_info the connection information to the relational database.
+     * @param stub_ grpc
      */
     Client(const int& bucket_size, const int& block_number,
         const int& block_size, const int& odict_size,
         const size_t& max_size, const unsigned int& alpha,
         const unsigned int& x, std::string_view password,
-        std::string_view connection_info);
+        std::string_view connection_info, Seal::Stub* stub_);
 
     /**
      * @brief A test function.

@@ -10,33 +10,52 @@
 
 class OramReadPathEviction : public OramInterface {
 private:
-    int* access_handler(Operation op, int blockIndex, int oldLeaf, int newLeaf, int* newdata);
+    std::string access_handler(
+        Operation op, const unsigned int& blockIndex,
+        const int& oldLeaf, const int& newLeaf, const std::string& newdata);
 
 public:
     UntrustedStorageInterface* storage;
+
     RandForOramInterface* rand_gen;
 
-    int bucket_size;
-    int num_levels;
-    int num_leaves;
-    int num_blocks;
-    int num_buckets;
-    int block_size;
+    unsigned int bucket_size;
 
-    std::map<int, int> position_map; //array
-    vector<Block> stash;
+    unsigned int num_levels;
 
-    OramReadPathEviction(UntrustedStorageInterface* storage,
-        RandForOramInterface* rand_gen, int bucket_size, int num_blocks, int block_size = Block::BLOCK_SIZE);
-    int* access(Operation op, int blockIndex, int newdata[]);
-    int* access_direct(Operation op, int newdata[]);
+    unsigned int num_leaves;
+
+    unsigned int num_blocks;
+
+    unsigned int num_buckets;
+
+    std::map<unsigned int, unsigned int> position_map; //array
+
+    std::vector<Block> stash;
+
+    OramReadPathEviction(
+        UntrustedStorageInterface* storage,
+        RandForOramInterface* rand_gen, const unsigned int& bucket_size, 
+        const unsigned int& num_blocks, const unsigned int& block_size = BLOCK_SIZE);
+
+    std::string access(Operation op, const unsigned int& blockIndex, const std::string& new_data);
+
+    std::string access_direct(Operation op, const std::string& new_data);
+
     int P(int leaf, int level);
+
     int* getPositionMap();
+
     vector<Block> getStash();
+
     int getStashSize();
+
     int getNumLeaves();
+
     int getNumLevels();
+
     int getNumBlocks();
+
     int getNumBuckets();
 };
 

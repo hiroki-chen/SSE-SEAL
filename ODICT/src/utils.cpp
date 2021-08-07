@@ -7,17 +7,7 @@
 #include <stdexcept>
 
 void copy(ODict::Node* const dst, const ODict::Node* const src)
-{
-    dst->data = new char[strlen(src->data) + 1];
-    strcpy(dst->data, src->data);
-    dst->left_height = src->left_height;
-    dst->right_height = src->right_height;
-    dst->childrenPos[0] = src->childrenPos[0];
-    dst->childrenPos[1] = src->childrenPos[1];
-    dst->id = src->id;
-    dst->left_id = src->left_id;
-    dst->right_id = src->right_id;
-    dst->pos_tag = src->pos_tag;
+{ 
 }
 
 int get_height(const ODict::Node* const node)

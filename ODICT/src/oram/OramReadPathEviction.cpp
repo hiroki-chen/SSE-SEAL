@@ -7,95 +7,88 @@
 #include <string>
 #include <strings.h>
 
-OramReadPathEviction::OramReadPathEviction(UntrustedStorageInterface* storage, RandForOramInterface* rand_gen,
-    int bucket_size, int num_blocks, int block_size)
+OramReadPathEviction::OramReadPathEviction(
+    UntrustedStorageInterface* storage,
+    RandForOramInterface* rand_gen, const unsigned int& bucket_size,
+    const unsigned int& num_blocks, const unsigned int& block_size)
 {
     this->storage = storage;
-    this->block_size = block_size;
     this->rand_gen = rand_gen;
     this->bucket_size = bucket_size;
     this->num_blocks = num_blocks;
-    this->num_levels = ceil(log10(num_blocks) / log10(2)) + 1;
-    this->num_buckets = pow(2, num_levels) - 1;
+    this->num_levels = std::ceil(log10(num_blocks) / log10(2)) + 1;
+    this->num_buckets = (unsigned int)std::pow(2, num_levels) - 1;
+
     if (this->num_buckets * this->bucket_size < this->num_blocks) //deal with precision loss
     {
         throw new runtime_error("Not enough space for the acutal number of blocks.");
     }
-    this->num_leaves = pow(2, num_levels - 1);
+
+    this->num_leaves = (unsigned int)std::pow(2, num_levels - 1);
     Bucket::resetState();
     Bucket::setMaxSize(bucket_size);
     this->rand_gen->setBound(num_leaves);
     this->storage->setCapacity(num_buckets);
-    this->stash = vector<Block>();
 
-    for (int i = 0; i < this->num_blocks; i++) {
+    for (unsigned int i = 0; i < num_blocks; i++) {
         position_map[i] = rand_gen->getRandomLeaf();
     }
 
-    for (int i = 0; i < num_buckets; i++) {
-
+    for (unsigned int i = 0; i < num_buckets; i++) {
         Bucket init_bkt = Bucket();
-        for (int j = 0; j < bucket_size; j++) {
+        for (unsigned int j = 0; j < bucket_size; j++) {
             init_bkt.addBlock(Block());
         }
         storage->WriteBucket(i, Bucket(init_bkt));
     }
 }
-
-int* OramReadPathEviction::access_handler(Operation op, int blockIndex, int oldLeaf, int newLeaf, int* newdata)
+std::string
+OramReadPathEviction::access_handler(
+    Operation op, const unsigned int& blockIndex,
+    const int& oldLeaf, const int& newLeaf, const std::string& new_data)
 {
-    int targetPos = 0;
-    int* data = new int[block_size];
+    std::string data; // The data to be returned.
 
-    for (int i = 0; i < num_levels; i++) {
+    for (unsigned int i = 0; i < num_levels; i++) {
         vector<Block> blocks = storage->ReadBucket(OramReadPathEviction::P(oldLeaf, i)).getBlocks();
         for (Block b : blocks) {
             if (b.index != -1) {
-                stash.push_back(Block(b));
+                stash.push_back(b);
+                if (b.index == 5) {
+                    b.printBlock();
+                }
             }
         }
     }
 
-    Block* targetBlock = nullptr;
-
-    for (unsigned int i = 0; i < stash.size(); i++) {
-        Block b = stash[i];
-        if (b.index == blockIndex) {
-            targetBlock = &b;
-            targetPos = i;
-            break;
-        }
-    }
+    auto iter = std::find_if(stash.begin(), stash.end(), [blockIndex](const Block& block) {
+        return block.index == (int)blockIndex;
+    });
 
     if (op == Operation::WRITE) {
-        if (targetBlock == nullptr) {
-            Block newBlock = Block(newLeaf, blockIndex, newdata);
-            newBlock.data = new int[block_size];
-            memcpy(newBlock.data, newdata, block_size);
+        if (iter == stash.end()) {
+            Block newBlock = Block(newLeaf, blockIndex, new_data);
             stash.push_back(newBlock);
         } else {
-            targetBlock->data = new int[block_size];
-            memcpy(targetBlock->data, newdata, block_size);
+            (*iter).data = new_data;
         }
     } else {
-        if (targetBlock == nullptr) {
-            data = nullptr;
-        } else {
-            memcpy(data, targetBlock->data, block_size);
+        if (iter != stash.end()) {
+            std::cout << "size: " << (*iter).data.size() << std::endl;
+            data = (*iter).data;
         }
     }
 
     // Eviction steps: write to the same path that was read from.
     for (int l = num_levels - 1; l >= 0; l--) {
 
-        vector<int> bid_evicted = vector<int>();
+        std::vector<int> bid_evicted;
         Bucket bucket = Bucket();
         int Pxl = P(oldLeaf, l);
         int counter = 0;
 
         for (Block b_instash : stash) {
-
-            if (counter >= bucket_size) {
+            if ((unsigned)counter >= bucket_size) {
                 break;
             }
             Block be_evicted = Block(b_instash);
@@ -109,7 +102,6 @@ int* OramReadPathEviction::access_handler(Operation op, int blockIndex, int oldL
 
         //remove from the stash
         for (unsigned int i = 0; i < bid_evicted.size(); i++) {
-
             for (unsigned int j = 0; j < stash.size(); j++) {
                 Block b_instash = stash.at(j);
                 if (b_instash.index == bid_evicted.at(i)) {
@@ -120,7 +112,7 @@ int* OramReadPathEviction::access_handler(Operation op, int blockIndex, int oldL
             }
         }
 
-        while (counter < bucket_size) {
+        while ((unsigned)counter < bucket_size) {
             bucket.addBlock(Block()); //dummy block
             counter++;
         }
@@ -130,31 +122,37 @@ int* OramReadPathEviction::access_handler(Operation op, int blockIndex, int oldL
     return data;
 }
 
-int* OramReadPathEviction::access_direct(Operation op, int* newdata)
+std::string
+OramReadPathEviction::access_direct(Operation op, const std::string& new_data)
 {
     /*if (!instanceof<ODict::Node, int>(newdata))
     {
         throw std::runtime_error("Cannot access directly with a non-node data array!");
     }*/
-
-    ODict::Node* node = transform<ODict::Node, int>(newdata);
-    int blockIndex = node->id;
+    ODict::Node node = deserialize<ODict::Node>(new_data);
+    int blockIndex = node.id;
     int oldLeaf = position_map[blockIndex];
-    int newLeaf = node->pos_tag;
+    int newLeaf = node.pos_tag;
 
-    if (op == Operation::READ) {
+    std::cout << "Access direct for " << node.id << " with leaf id " << newLeaf << std::endl;
+
+    if (op == Operation::READ || blockIndex == 0) {
         newLeaf = rand_gen->getRandomLeaf();
     }
 
-    return access_handler(op, blockIndex, oldLeaf, newLeaf, newdata);
+    return access_handler(op, blockIndex, oldLeaf, newLeaf, new_data);
 }
 
-int* OramReadPathEviction::access(Operation op, int blockIndex, int* newdata)
+std::string
+OramReadPathEviction::access(
+    Operation op,
+    const unsigned int& blockIndex,
+    const std::string& new_data)
 {
     int oldLeaf = position_map[blockIndex];
     position_map[blockIndex] = rand_gen->getRandomLeaf();
 
-    return access_handler(op, blockIndex, oldLeaf, position_map[blockIndex], newdata);
+    return access_handler(op, blockIndex, oldLeaf, position_map[blockIndex], new_data);
 }
 
 int OramReadPathEviction::P(int leaf, int level)

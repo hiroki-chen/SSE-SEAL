@@ -4,18 +4,11 @@
 #include <sstream>
 #include <string>
 
-using namespace std;
-
 bool Bucket::is_init = false;
 int Bucket::max_size = -1;
 
 Bucket::Bucket()
 {
-    if (!is_init) {
-        std::cout << "triggered by me? Uninit?\n";
-        throw new runtime_error("Please set bucket size before creating a bucket");
-    }
-    blocks = vector<Block>();
 }
 
 //Copy constructor
@@ -23,9 +16,9 @@ Bucket::Bucket(Bucket* other)
 {
     if (other == NULL) {
         std::cout << "triggered by me? NULL check\n";
-        throw new runtime_error("the other bucket is not malloced.");
+        throw std::runtime_error("the other bucket is not malloced.");
     }
-    blocks = vector<Block>(max_size);
+    blocks = std::vector<Block>(max_size);
     for (int i = 0; i < max_size; i++) {
         blocks[i] = Block(other->blocks[i]);
     }
@@ -75,8 +68,7 @@ void Bucket::setMaxSize(int maximumSize)
 {
     // For convenience, we can re-init it.
     if (is_init == true && maximumSize != max_size) {
-        std::cout << "triggered by me?\n";
-        throw new runtime_error("Max Bucket Size was already set");
+        throw std::runtime_error("Max Bucket Size was already set");
     }
     max_size = maximumSize;
     is_init = true;

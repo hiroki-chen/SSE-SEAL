@@ -1,6 +1,6 @@
 #include <client/Client.h>
-#include <plog/Log.h>
 #include <crypto/sm4.h>
+#include <plog/Log.h>
 #include <utils.h>
 
 #include <sodium.h>
@@ -16,15 +16,31 @@
 #include <sstream>
 #include <stdexcept>
 
+ODict::Node* SEAL::Client::read_from_oram(const int& id)
+{
+    std::string data = serialize<ODict::Node>(ODict::Node(id, -1));
+    ODict::Operation* const op = new ODict::Operation(id, data, ORAM_ACCESS_READ);
+    ODS_access(*op);
+    ODict::Node* node = new ODict::Node();
+    *node = deserialize<ODict::Node>(op->data);
+    return node;
+}
+
+void SEAL::Client::write_to_oram(const ODict::Node* const node)
+{
+    std::string data = serialize<ODict::Node>(*node);
+    ODict::Operation* const op = new ODict::Operation(node->id, data, ORAM_ACCESS_WRITE);
+    ODS_access(*op);
+}
+
 // TODO: FIX RIGHT ROTATE.
 void SEAL::Client::init_dummy_data()
 {
     PLOG(plog::info) << "Initializing dummy data!";
 
     ODict::Node* test_root = new ODict::Node(0, -1);
-    unsigned char* data = transform<unsigned char, ODict::Node>(test_root);
-    // oramAccessController.get()->oblivious_access(ORAM_ACCESS_WRITE, 0, data);
-    oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_WRITE, data, stub_);
+    std::string data = serialize<ODict::Node>(*test_root);
+    oramAccessController.get()->oblivious_access(ORAM_ACCESS_WRITE, 0, data);
 }
 
 void SEAL::Client::init_key(std::string_view password)
@@ -63,18 +79,11 @@ int SEAL::Client::find_pos_by_id(const int& id)
     }
 
     return cache->find_pos_by_id(id);
-
-    /*
-    // Find from the oram. Never Used though.
-    unsigned char* buffer = new unsigned char[block_size];
-    oramAccessController.get()->oblivious_access(ORAM_ACCESS_READ, id, buffer);
-    return transform<ODict::Node, unsigned char>(buffer)->pos_tag;
-    */
 }
 
 void SEAL::Client::ODS_access(ODict::Operation& op)
 {
-    ODict::Node* node = transform<ODict::Node, char>(op.data);
+    ODict::Node node = deserialize<ODict::Node>(op.data);
 
     const int id = op.id;
 
@@ -83,84 +92,59 @@ void SEAL::Client::ODS_access(ODict::Operation& op)
         PLOG(plog::info) << "Read node " << id
                          << " from Oblivious Data Structure";
         read_count += 1;
-        ODict::Node* ret = cache->get(id);
-        if (ret != nullptr) {
-            PLOG(plog::info) << "Found node in cache: " << ret->id;
-            memcpy(node, ret, block_size);
+        ODict::Node ret = cache->get(id);
+        if (ret.id != 0) {
+            PLOG(plog::info) << "Found node in cache: " << ret.id;
+            op.data = serialize<ODict::Node>(ret);
         } else {
             PLOG(plog::info) << "Node not found in cache! Fetch from ORAM";
-            cache_helper(id, node);
-            node->old_tag = node->pos_tag;
+            cache_helper(id, &node);
+            node.old_tag = node.pos_tag;
+            op.data = serialize<ODict::Node>(node);
 
-            ODict::Node* evicted = cache->put(id, node);
-            if (evicted != nullptr) {
-                evicted->pos_tag = oramAccessController.get()->random_new_pos();
-                unsigned char* buffer = new unsigned char[block_size];
-                memcpy(buffer, evicted, block_size);
-                oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_WRITE,
-                    buffer, stub_);
-            }
+            cache->put(id, node);
         }
 
         return;
     }
 
     case ORAM_ACCESS_WRITE: {
-        PLOG(plog::info) << "Write node " << node->id
+        PLOG(plog::info) << "Write node " << node.id
                          << " to the Oblivious Data Structure";
         write_count += 1;
-        ODict::Node* ret = cache->get(node->id);
+        ODict::Node ret = cache->get(node.id);
 
-        if (ret != nullptr) {
-            PLOG(plog::info) << "Found node in cache: " << ret->id;
-            memcpy(ret, node, block_size);
+        if (ret.id != 0) {
+            PLOG(plog::info) << "Found node in cache: " << ret.id;
+            cache->put(ret.id, node);
         } else {
             PLOG(plog::info) << "Node not found in cache! Fetch from ORAM";
             ODict::Node* tmp = new ODict::Node();
             cache_helper(id, tmp);
-            memcpy(tmp, node, block_size);
 
-            ODict::Node* evicted = cache->put(id, node);
-            if (evicted != nullptr) {
-                evicted->pos_tag = oramAccessController.get()->random_new_pos();
-                unsigned char* buffer = new unsigned char[block_size];
-                memcpy(buffer, evicted, block_size);
-                oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_WRITE,
-                    buffer, stub_);
-            }
+            cache->put(id, node);
         }
 
         return;
     }
 
     case ORAM_ACCESS_DELETE: {
-        PLOG(plog::info) << "Delete node " << node->id
+        PLOG(plog::info) << "Delete node " << node.id
                          << " from Oblivious Data Structure";
-        ODict::Node* ret = cache->get(node->id);
-        if (ret != nullptr) {
-            PLOG(plog::info) << "Found node in cache: " << ret->id;
+        ODict::Node ret = cache->get(node.id);
+        if (ret.id != 0) {
+            PLOG(plog::info) << "Found node in cache: " << ret.id;
         } else {
             PLOG(plog::info) << "Node not found in cache! Fetch from ORAM";
-            cache_helper(id, node);
+            cache_helper(id, &node);
         }
 
         return;
     }
 
     case ORAM_ACCESS_INSERT: {
-        PLOG(plog::info) << "Insert a new node " << node->id << " into cache";
-
-        ODict::Node* evicted = cache->put(id, node);
-        if (evicted != nullptr) {
-            PLOG(plog::debug) << "evicted: insert";
-            PLOG(plog::debug) << evicted->data;
-            evicted->pos_tag = oramAccessController.get()->random_new_pos();
-            unsigned char* buffer = new unsigned char[block_size];
-            memcpy(buffer, evicted, block_size);
-            oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_WRITE,
-                buffer, stub_);
-        }
-
+        PLOG(plog::info) << "Insert a new node " << node.id << " into cache";
+        cache->put(id, node);
         return;
     }
     }
@@ -169,13 +153,11 @@ void SEAL::Client::ODS_access(ODict::Operation& op)
 void SEAL::Client::cache_helper(const int& id, ODict::Node* const ret)
 {
     int pos = find_pos_by_id(id);
-    unsigned char* buffer = new unsigned char[block_size];
-    memcpy(buffer, new ODict::Node(id, pos), block_size);
-    oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_READ, buffer, stub_);
-    memcpy(ret, buffer, block_size);
+    std::string buffer = serialize<ODict::Node>(ODict::Node(id, pos));
+    oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_READ, buffer);
+    *ret = deserialize<ODict::Node>(buffer);
     const std::string plaintext = decrypt_SM4_EBC(ret->data, secret_key);
-    ret->data = new char[plaintext.size()];
-    memcpy(ret->data, plaintext.c_str(), plaintext.size());
+    ret->data = plaintext;
     std::cout << ret->data << std::endl;
 }
 
@@ -197,37 +179,35 @@ void SEAL::Client::ODS_finalize(const int& pad_val)
 
     for (int i = pad_val - read_count; i <= pad_val; i++) {
         // dummy operation.
-        unsigned char* data = new unsigned char[block_size];
-        ODict::Node* node = new ODict::Node(0, -1);
-        memcpy(data, node, block_size);
-        oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_READ, data, stub_);
+        std::string data = "ok";
+        oramAccessController.get()->oblivious_access(ORAM_ACCESS_READ, 0, data);
     }
 
     // Evict the cache
     while (!cache->empty()) {
-        ODict::Node* node = cache->get();
+        ODict::Node node = cache->get();
         // We store a node as a char array.
-        const std::string ciphertext = encrypt_SM4_EBC(node->data, secret_key);
-        node->data = new char[ciphertext.size()];
-        strcpy(node->data, ciphertext.c_str());
-        unsigned char* buffer = new unsigned char[block_size];
-        memcpy(buffer, node, block_size);
-        PLOG(plog::debug) << "evicting " << node->id << "with data " << node->data;
+        const std::string ciphertext = encrypt_SM4_EBC(node.data, secret_key);
+        node.data = ciphertext;
+        std::string buffer = serialize<ODict::Node>(node);
+        PLOG(plog::debug) << "evicting " << node.id << "with data " << node.data << " key = " << node.key;
         oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_WRITE,
-            buffer, stub_);
+            buffer);
         cache->pop();
     }
+    PLOG(plog::debug) << "Eviction finished.";
 
     // Pad add to padVal.
+
     for (int i = pad_val - write_count; i <= pad_val; i++) {
         // dummy operation.
-        unsigned char* data = new unsigned char[block_size];
         ODict::Node* node = new ODict::Node(0, -1);
-        memcpy(data, node, block_size);
-        oramAccessController.get()->oblivious_access_direct(ORAM_ACCESS_WRITE, data, stub_);
+        std::string data = serialize<ODict::Node>(*node);
+        oramAccessController.get()->oblivious_access(ORAM_ACCESS_WRITE, 0, data);
     }
 
     write_count = read_count = 0;
+    PLOG(plog::debug) << "ODS_finalize finished.";
 }
 
 ODict::Node* SEAL::Client::find(std::string_view key)
@@ -262,11 +242,7 @@ ODict::Node* SEAL::Client::find_priv(std::string_view key, const int& root_id)
         return root;
     }
 
-    char* data = new char[block_size];
-    ODict::Operation* const op = new ODict::Operation(root_id, data, ORAM_ACCESS_READ);
-    ODS_access(*op);
-
-    root = transform<ODict::Node, char>(data);
+    root = read_from_oram(root_id);
 
     if (root->key == key) {
         return root;
@@ -282,7 +258,7 @@ ODict::Node* SEAL::Client::insert(ODict::Node* node)
     ODict::Node* res = insert_priv(node, root_id);
 
     if (this->root_id == 0) {
-        this->root_id = node->id;
+        this->root_id = res->id;
     }
 
     return res;
@@ -303,61 +279,46 @@ void SEAL::Client::insert(const std::vector<ODict::Node*>& nodes)
 // we suppose that node->id is pre-set.
 ODict::Node* SEAL::Client::insert_priv(ODict::Node* node, const int& root_id)
 {
+    std::cout << "Inserting " << node->id << ", key = " << node->key << std::endl;
     // If there is yet no root, assign node as the root node.
     if (root_id == 0) {
-        ODict::Node* ret = new ODict::Node();
-        memcpy(ret, node, block_size);
-        char* data = transform<char, ODict::Node>(ret);
+        
+        std::string data = serialize<ODict::Node>(*node);
         ODict::Operation* const op = new ODict::Operation(
             node->id, data, ORAM_ACCESS_INSERT); // insert into cache.
         ODS_access(*op);
 
-        return ret;
+        return node;
     }
 
     // Read the current root node.
-    char* data = new char[block_size];
-    ODict::Operation* const op = new ODict::Operation(root_id, data, ORAM_ACCESS_READ);
-    ODS_access(*op);
-    ODict::Node* root = transform<ODict::Node, char>(data);
-
-    PLOG(plog::info) << "Reading " << root->id;
+    PLOG(plog::info) << "Reading " << root_id;
+    ODict::Node* root = read_from_oram(root_id);
 
     if (root->key < node->key) {
         ODict::Node* cur = insert_priv(node, root->right_id);
         root->right_id = cur->id;
         root->right_height = get_height(cur);
-
-        char* buffer = transform<char, ODict::Node>(root);
-        ODict::Operation* const op2 = new ODict::Operation(root_id, buffer, ORAM_ACCESS_WRITE);
-        ODS_access(*op2);
     } else if (root->key > node->key) {
         ODict::Node* cur = insert_priv(node, root->left_id);
         root->left_id = cur->id;
         root->left_height = get_height(cur);
-
-        char* buffer = transform<char, ODict::Node>(root);
-        ODict::Operation* const op2 = new ODict::Operation(root_id, buffer, ORAM_ACCESS_WRITE);
-        ODS_access(*op2);
     }
+
+    write_to_oram(root);
 
     return balance(root_id);
 }
 
 ODict::Node* SEAL::Client::balance(const int& root_id)
 {
-    char* data = new char[block_size];
-    ODict::Operation* const op = new ODict::Operation(root_id, data, ORAM_ACCESS_READ);
-    ODS_access(*op);
-    ODict::Node* root = static_cast<ODict::Node*>(static_cast<void*>(op->data));
+    ODict::Node* root = read_from_oram(root_id);
 
     int left_height = root->left_height, right_height = root->right_height;
 
     // LL / LR
     if (left_height - right_height > 1) {
-        op->id = root->left_id;
-        ODS_access(*op);
-        ODict::Node* left = transform<ODict::Node, char>(op->data);
+        ODict::Node* left = read_from_oram(root->left_id);
         // case 1: LL. Single Rotation. RightRotate.
         if (left->left_height >= left->right_height) {
             return right_rotate(root_id);
@@ -367,9 +328,7 @@ ODict::Node* SEAL::Client::balance(const int& root_id)
             return left_right_rotate(root_id);
         }
     } else if (right_height - left_height > 1) {
-        op->id = root->right_id;
-        ODS_access(*op);
-        ODict::Node* right = transform<ODict::Node, char>(op->data);
+        ODict::Node* right = read_from_oram(root->right_id);
         // case 3: RR. Single Rotation. LeftRotate
         if (right->right_height >= right->left_height) {
             return left_rotate(root_id);
@@ -387,31 +346,18 @@ ODict::Node* SEAL::Client::right_rotate(const int& root_id)
 {
     PLOG(plog::info) << "Doing right rotating";
 
-    char* data = new char[block_size];
-    ODict::Operation* const op = new ODict::Operation(root_id, data, ORAM_ACCESS_READ);
-    ODS_access(*op);
-    ODict::Node* root = new ODict::Node();
-    memcpy(root, op->data, block_size);
-
-    op->id = root->left_id;
-    ODS_access(*op);
-    ODict::Node* left = new ODict::Node();
-    memcpy(left, op->data,
-        block_size); // Deep Copy! Or you will lose information.
+    ODict::Node* root = read_from_oram(root_id);
+    ODict::Node* left = read_from_oram(root->left_id);
 
     root->left_id = left->right_id;
     root->childrenPos[0].pos_tag = left->childrenPos[1].pos_tag;
     root->left_height = left->right_height;
-    char* data2 = transform<char, ODict::Node>(root);
-    ODict::Operation* const op2 = new ODict::Operation(root->id, data2, ORAM_ACCESS_WRITE);
-    ODS_access(*op2);
+    write_to_oram(root);
 
     left->right_height = get_height(root);
     left->right_id = root_id;
     left->childrenPos[1].pos_tag = root->pos_tag;
-    char* data3 = transform<char, ODict::Node>(left);
-    ODict::Operation* const op3 = new ODict::Operation(left->id, data3, ORAM_ACCESS_WRITE);
-    ODS_access(*op3);
+    write_to_oram(left);
 
     return left;
 }
@@ -420,31 +366,18 @@ ODict::Node* SEAL::Client::left_rotate(const int& root_id)
 {
     PLOG(plog::info) << "Doing left rotating";
 
-    char* data = new char[block_size];
-    ODict::Operation* const op = new ODict::Operation(root_id, data, ORAM_ACCESS_READ);
-    ODS_access(*op);
-    ODict::Node* root = new ODict::Node();
-    memcpy(root, op->data, block_size);
-
-    op->id = root->right_id;
-    ODS_access(*op);
-    ODict::Node* right = new ODict::Node();
-    memcpy(right, op->data,
-        block_size); // Deep Copy! Or you will lose information.
+    ODict::Node* root = read_from_oram(root_id);
+    ODict::Node* right = read_from_oram(root->right_id);
 
     root->right_id = right->left_id;
     root->childrenPos[1].pos_tag = right->childrenPos[0].pos_tag;
     root->right_height = right->left_height;
-    char* data2 = transform<char, ODict::Node>(root);
-    ODict::Operation* const op2 = new ODict::Operation(root->id, data2, ORAM_ACCESS_WRITE);
-    ODS_access(*op2);
+    write_to_oram(root);
 
     right->left_height = get_height(root);
     right->left_id = root_id;
     right->childrenPos[0].pos_tag = root->pos_tag;
-    char* data3 = transform<char, ODict::Node>(right);
-    ODict::Operation* const op3 = new ODict::Operation(right->id, data3, ORAM_ACCESS_WRITE);
-    ODS_access(*op3);
+    write_to_oram(right);
 
     return right;
 }
@@ -453,19 +386,12 @@ ODict::Node* SEAL::Client::left_right_rotate(const int& root_id)
 {
     PLOG(plog::info) << "Doing left right rotating";
 
-    char* data = new char[block_size];
-    ODict::Operation* const op = new ODict::Operation(root_id, data, ORAM_ACCESS_READ);
-    ODS_access(*op);
-    ODict::Node* root = new ODict::Node();
-    memcpy(root, op->data, block_size);
-
+    ODict::Node* root = read_from_oram(root_id);
     ODict::Node* left = left_rotate(root->left_id);
+
     root->left_id = left->id;
     root->left_height = get_height(left);
-    char* data2 = new char[block_size];
-    memcpy(data2, root, block_size);
-    ODict::Operation* const op2 = new ODict::Operation(root->id, data2, ORAM_ACCESS_WRITE);
-    ODS_access(*op2);
+    write_to_oram(root);
 
     return right_rotate(root_id);
 }
@@ -474,19 +400,12 @@ ODict::Node* SEAL::Client::right_left_rotate(const int& root_id)
 {
     PLOG(plog::info) << "Doing right left rotating";
 
-    char* data = new char[block_size];
-    ODict::Operation* const op = new ODict::Operation(root_id, data, ORAM_ACCESS_READ);
-    ODS_access(*op);
-    ODict::Node* root = new ODict::Node();
-    memcpy(root, op->data, block_size);
-
+    ODict::Node* root = read_from_oram(root_id);
     ODict::Node* right = right_rotate(root->right_id);
+
     root->right_id = right->id;
     root->right_height = get_height(right);
-    char* data2 = new char[block_size];
-    memcpy(data2, root, block_size);
-    ODict::Operation* const op2 = new ODict::Operation(root->id, data2, ORAM_ACCESS_WRITE);
-    ODS_access(*op2);
+    write_to_oram(root);
 
     return left_rotate(root_id);
 }
@@ -578,9 +497,7 @@ ODict::Node* SEAL::Client::remove_priv(std::string_view key,
 
     // LL / LR
     if (left_height - right_height > 1) {
-        op->id = root->left_id;
-        ODS_access(*op);
-        ODict::Node* left = transform<ODict::Node, char>(op->data);
+        ODict::Node* left = read_from_oram(root->left_id);
         // case 1: LL. Single Rotation. RightRotate.
         if (left->left_height >= left->right_height) {
             return right_rotate(root_id);
@@ -590,9 +507,7 @@ ODict::Node* SEAL::Client::remove_priv(std::string_view key,
             return left_right_rotate(root_id);
         }
     } else if (right_height - left_height > 1) {
-        op->id = root->right_id;
-        ODS_access(*op);
-        ODict::Node* right = transform<ODict::Node, char>(op->data);
+        ODict::Node* right = read_from_oram(root->right_id);
         // case 3: RR. Single Rotation. LeftRotate
         if (right->right_height >= right->left_height) {
             return left_rotate(root_id);
@@ -642,7 +557,7 @@ const char* SEAL::Client::add_node(const int& number)
 
     std::vector<std::string> keys;
     for (int i = 0; i < number; i++) {
-        keys.push_back(std::to_string(i % 2 == 0 ? i : number - i));
+        keys.push_back(std::to_string(i));
     }
 
     auto begin = std::chrono::high_resolution_clock::now();
@@ -751,8 +666,7 @@ void SEAL::Client::adj_insert(
         const std::string data = std::to_string(iw).append('_' + std::to_string(cntw));
         node->id = node_count++;
         node->key = memory[i].first;
-        node->data = new char[data.size() + 1];
-        strcpy(node->data, data.c_str());
+        node->data = data;
         nodes.push_back(node);
     }
     insert(nodes);
@@ -770,10 +684,8 @@ void SEAL::Client::adj_oram_init_helper(
     try {
         for (unsigned int i = 0; i < sub_arrays.size(); i++) {
             /* Initialize local oram access controllers */
-            std::cout << 1 << std::endl;
             adj_oramAccessControllers.emplace_back(
-                new OramAccessController(bucket_size, block_number, sizeof(unsigned int)));
-            std::cout << 2 << std::endl;
+                new OramAccessController(bucket_size, block_number, sizeof(unsigned int), i, false, stub_));
 
             grpc::ClientContext context;
             OramInitMessage message;
@@ -782,13 +694,14 @@ void SEAL::Client::adj_oram_init_helper(
             message.set_oram_id(i);
             grpc::Status status = stub_->oram_init(&context, message, &e);
 
-            if (!status.ok()) {
-                throw std::runtime_error("There may be problems when initializing the remote oram blocks!");
-            }
+            //if (!status.ok()) {
+            //    throw std::runtime_error(status.error_message());
+            //}
 
             for (unsigned int j = 0; j < sub_arrays[i].size(); j++) {
+                std::string data = std::to_string(sub_arrays[i][j]);
                 adj_oramAccessControllers[i].get()->oblivious_access(
-                    OramAccessOp::ORAM_ACCESS_WRITE, j, (unsigned char*)(&(sub_arrays[i][j])), i, stub_);
+                    OramAccessOp::ORAM_ACCESS_WRITE, j, data);
             }
         }
     } catch (const std::runtime_error& e) {
@@ -830,9 +743,8 @@ std::vector<ODict::Node*> SEAL::Client::create_test_cases(const int& number)
         const std::string information = random_string(16, secret_key);
         ODict::Node* const test_root = new ODict::Node();
         test_root->id = node_count++;
-        test_root->key = std::to_string(i % 2 == 0 ? test_root->id : number - test_root->id);
-        test_root->data = new char[information.size() + 1];
-        strcpy(test_root->data, information.c_str());
+        test_root->key = std::to_string(i);
+        test_root->data = information;
         vec.push_back(test_root);
     }
 
@@ -848,14 +760,15 @@ SEAL::Client::Client(const int& bucket_size, const int& block_number,
     const int& block_size, const int& odict_size,
     const size_t& max_size, const unsigned int& alpha,
     const unsigned int& x, std::string_view password,
-    std::string_view connection_info)
+    std::string_view connection_info, Seal::Stub* stub_)
     : bucket_size(bucket_size)
     , block_number(block_number)
     , block_size(block_size)
     , odict_size(odict_size)
     , root_id(0)
     , root_pos(-1)
-    , oramAccessController(std::make_unique<OramAccessController>(bucket_size, block_number, block_size))
+    , stub_(stub_)
+    , oramAccessController(std::make_unique<OramAccessController>(bucket_size, block_number, block_size, -1, true, stub_))
     , node_count(1)
     , read_count(0)
     , write_count(0)
@@ -872,8 +785,8 @@ void SEAL::Client::test_adj(std::string_view file_path)
 {
     adj_data_in(file_path);
 
-    PLOG(plog::info) << "trying to fetch keyword beautiful: "
-                     << find("beautiful"s)->data;
+    //PLOG(plog::info) << "trying to fetch keyword beautiful: "
+    //                 << find("beautiful"s)->data;
 }
 
 void SEAL::Client::test_sql(std::string_view sql)
@@ -884,4 +797,5 @@ void SEAL::Client::test_sql(std::string_view sql)
 void SEAL::Client::set_stub(const std::unique_ptr<Seal::Stub>& stub)
 {
     stub_ = stub.get();
+    oramAccessController.get()->set_stub(stub_);
 }

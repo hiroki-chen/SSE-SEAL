@@ -2,6 +2,7 @@
 #define PORAM_ORAMINTERFACE_H
 
 #include <vector>
+#include <string>
 
 #include "Block.h"
 
@@ -11,15 +12,25 @@ public:
         READ,
         WRITE
     };
-    virtual int* access(Operation op, int blockIndex, int newdata[]) { return 0; };
-    virtual int* access_direct(Operation op, int newdata[]) { return 0; }
+
+    virtual std::string access(Operation op, const unsigned int& blockIndex, const std::string& newdata) { return 0; };
+
+    virtual std::string access_direct(Operation op, const std::string& newdata) { return 0; }
+
     virtual int P(int leaf, int level) { return 0; };
+
     virtual int* getPositionMap() { return 0; };
-    virtual vector<Block> getStash() { return vector<Block>(); };
+
+    virtual std::vector<Block> getStash() { return std::vector<Block>(); };
+
     virtual int getStashSize() { return 0; };
+
     virtual int getNumLeaves() { return 0; };
+
     virtual int getNumLevels() { return 0; };
+
     virtual int getNumBlocks() { return 0; };
+
     virtual int getNumBuckets() { return 0; };
 };
 

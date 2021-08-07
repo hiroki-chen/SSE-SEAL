@@ -25,6 +25,9 @@ static const char* Seal_method_names[] = {
   "/Seal/search",
   "/Seal/oram_access",
   "/Seal/oram_init",
+  "/Seal/read_bucket",
+  "/Seal/write_bucket",
+  "/Seal/set_capacity",
 };
 
 std::unique_ptr< Seal::Stub> Seal::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
@@ -38,6 +41,9 @@ Seal::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, cons
   , rpcmethod_search_(Seal_method_names[1], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_oram_access_(Seal_method_names[2], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_oram_init_(Seal_method_names[3], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_read_bucket_(Seal_method_names[4], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_write_bucket_(Seal_method_names[5], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_set_capacity_(Seal_method_names[6], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
 ::grpc::Status Seal::Stub::setup(::grpc::ClientContext* context, const ::SetupMessage& request, ::google::protobuf::Empty* response) {
@@ -132,6 +138,75 @@ void Seal::Stub::experimental_async::oram_init(::grpc::ClientContext* context, c
   return result;
 }
 
+::grpc::Status Seal::Stub::read_bucket(::grpc::ClientContext* context, const ::BucketReadMessage& request, ::BucketReadResponse* response) {
+  return ::grpc::internal::BlockingUnaryCall< ::BucketReadMessage, ::BucketReadResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_read_bucket_, context, request, response);
+}
+
+void Seal::Stub::experimental_async::read_bucket(::grpc::ClientContext* context, const ::BucketReadMessage* request, ::BucketReadResponse* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::BucketReadMessage, ::BucketReadResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_read_bucket_, context, request, response, std::move(f));
+}
+
+void Seal::Stub::experimental_async::read_bucket(::grpc::ClientContext* context, const ::BucketReadMessage* request, ::BucketReadResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_read_bucket_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::BucketReadResponse>* Seal::Stub::PrepareAsyncread_bucketRaw(::grpc::ClientContext* context, const ::BucketReadMessage& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::BucketReadResponse, ::BucketReadMessage, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_read_bucket_, context, request);
+}
+
+::grpc::ClientAsyncResponseReader< ::BucketReadResponse>* Seal::Stub::Asyncread_bucketRaw(::grpc::ClientContext* context, const ::BucketReadMessage& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncread_bucketRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
+::grpc::Status Seal::Stub::write_bucket(::grpc::ClientContext* context, const ::BucketWriteMessage& request, ::google::protobuf::Empty* response) {
+  return ::grpc::internal::BlockingUnaryCall< ::BucketWriteMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_write_bucket_, context, request, response);
+}
+
+void Seal::Stub::experimental_async::write_bucket(::grpc::ClientContext* context, const ::BucketWriteMessage* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::BucketWriteMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_write_bucket_, context, request, response, std::move(f));
+}
+
+void Seal::Stub::experimental_async::write_bucket(::grpc::ClientContext* context, const ::BucketWriteMessage* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_write_bucket_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* Seal::Stub::PrepareAsyncwrite_bucketRaw(::grpc::ClientContext* context, const ::BucketWriteMessage& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::google::protobuf::Empty, ::BucketWriteMessage, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_write_bucket_, context, request);
+}
+
+::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* Seal::Stub::Asyncwrite_bucketRaw(::grpc::ClientContext* context, const ::BucketWriteMessage& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncwrite_bucketRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
+::grpc::Status Seal::Stub::set_capacity(::grpc::ClientContext* context, const ::BucketSetMessage& request, ::google::protobuf::Empty* response) {
+  return ::grpc::internal::BlockingUnaryCall< ::BucketSetMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_set_capacity_, context, request, response);
+}
+
+void Seal::Stub::experimental_async::set_capacity(::grpc::ClientContext* context, const ::BucketSetMessage* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::BucketSetMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_set_capacity_, context, request, response, std::move(f));
+}
+
+void Seal::Stub::experimental_async::set_capacity(::grpc::ClientContext* context, const ::BucketSetMessage* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_set_capacity_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* Seal::Stub::PrepareAsyncset_capacityRaw(::grpc::ClientContext* context, const ::BucketSetMessage& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::google::protobuf::Empty, ::BucketSetMessage, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_set_capacity_, context, request);
+}
+
+::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* Seal::Stub::Asyncset_capacityRaw(::grpc::ClientContext* context, const ::BucketSetMessage& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncset_capacityRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
 Seal::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Seal_method_names[0],
@@ -173,6 +248,36 @@ Seal::Service::Service() {
              ::google::protobuf::Empty* resp) {
                return service->oram_init(ctx, req, resp);
              }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      Seal_method_names[4],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< Seal::Service, ::BucketReadMessage, ::BucketReadResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+          [](Seal::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::BucketReadMessage* req,
+             ::BucketReadResponse* resp) {
+               return service->read_bucket(ctx, req, resp);
+             }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      Seal_method_names[5],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< Seal::Service, ::BucketWriteMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+          [](Seal::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::BucketWriteMessage* req,
+             ::google::protobuf::Empty* resp) {
+               return service->write_bucket(ctx, req, resp);
+             }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      Seal_method_names[6],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< Seal::Service, ::BucketSetMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+          [](Seal::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::BucketSetMessage* req,
+             ::google::protobuf::Empty* resp) {
+               return service->set_capacity(ctx, req, resp);
+             }, this)));
 }
 
 Seal::Service::~Service() {
@@ -200,6 +305,27 @@ Seal::Service::~Service() {
 }
 
 ::grpc::Status Seal::Service::oram_init(::grpc::ServerContext* context, const ::OramInitMessage* request, ::google::protobuf::Empty* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status Seal::Service::read_bucket(::grpc::ServerContext* context, const ::BucketReadMessage* request, ::BucketReadResponse* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status Seal::Service::write_bucket(::grpc::ServerContext* context, const ::BucketWriteMessage* request, ::google::protobuf::Empty* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status Seal::Service::set_capacity(::grpc::ServerContext* context, const ::BucketSetMessage* request, ::google::protobuf::Empty* response) {
   (void) context;
   (void) request;
   (void) response;

@@ -27,11 +27,11 @@ private:
 public:
     Cache(const size_t& max_size, OramAccessController* const oramAccessController);
 
-    T* get(const int& id);
+    T get(const int& id);
 
-    T* get();
+    T get();
 
-    T* put(const int& id, const T* const item);
+    T put(const int& id, const T& item);
 
     int find_pos_by_id(const int& id);
 
@@ -53,30 +53,30 @@ SEAL::Cache<T>::Cache(const size_t& max_size, OramAccessController* const oramAc
 }
 
 template <typename T>
-T* SEAL::Cache<T>::get(const int& id)
+T SEAL::Cache<T>::get(const int& id)
 {
     auto iter = cache_items.find(id);
 
     if (iter == cache_items.end()) {
-        return nullptr;
+        return T(0, -1);
     } else {
         auto it = std::find_if(lru_table.begin(), lru_table.end(), [id](const int& item_id) { return item_id == id; });
 
         int item_id = *it;
         lru_table.erase(it);
         lru_table.push_front(item_id);
-        return &(iter->second);
+        return iter->second;
     }
 }
 
 template <typename T>
-T* SEAL::Cache<T>::get()
+T SEAL::Cache<T>::get()
 {
-    return &(cache_items.begin()->second);
+    return cache_items.begin()->second;
 }
 
 template <typename T>
-T* SEAL::Cache<T>::put(const int& id, const T* const item)
+T SEAL::Cache<T>::put(const int& id, const T& item)
 {
     auto iter = cache_items.find(id);
     auto it = std::find_if(lru_table.begin(), lru_table.end(), [id](const int& item_id) { return item_id == id; });
@@ -87,7 +87,7 @@ T* SEAL::Cache<T>::put(const int& id, const T* const item)
         lru_table.erase(it);
     }
 
-    cache_items[id] = *item;
+    cache_items[id] = item;
 
     // evict the item
     if (cache_items.size() > max_size) {
@@ -95,8 +95,7 @@ T* SEAL::Cache<T>::put(const int& id, const T* const item)
         lru_table.pop_back();
         iter = cache_items.find(back);
 
-        T* ret = new T();
-        memcpy(ret, &(iter->second), sizeof(T));
+        T ret = iter->second;
         cache_items.erase(iter);
 
         PLOG(plog::info) << "Cache is full! Evict one element " << back << " to ORAM server";
@@ -125,7 +124,7 @@ T* SEAL::Cache<T>::put(const int& id, const T* const item)
         return ret;
     }
 
-    return nullptr;
+    return T(0, -1);
 }
 
 template <typename T>

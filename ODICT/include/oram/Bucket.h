@@ -4,11 +4,20 @@
 #include <stdexcept>
 #include <vector>
 
+#include <cereal/access.hpp>
+#include <cereal/types/vector.hpp>
+
 #include "Block.h"
 
 using namespace std;
 
 class Bucket {
+    friend class cereal::access;
+    template <class Archive>
+    void serialize(Archive& ar)
+    {
+        ar(is_init, max_size, blocks);
+    }
 
 public:
     Bucket();

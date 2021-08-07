@@ -3,12 +3,12 @@
 #include <utils.h>
 
 #include <client/ClientRunner.h>
+#include <oram/Bucket.h>
+#include <oram/ServerStorage.h>
 #include <proto/seal.pb.h>
-#include <server/SealServerRunner.h>
 
 #include <grpc++/client_context.h>
 #include <grpc++/create_channel.h>
-#include <grpc++/security/credentials.h>
 #include <grpc/grpc.h>
 
 #include <cassert>
@@ -22,6 +22,7 @@
  */
 int main(int argc, const char** args)
 {
+    std::unique_ptr<Seal::Stub> stub_ = Seal::NewStub(std::shared_ptr<grpc::Channel>(grpc::CreateChannel("127.0.0.1:4567", grpc::InsecureChannelCredentials())));
     // Every time the client will sample a new key from the password.
     /*
     try {
@@ -38,9 +39,10 @@ int main(int argc, const char** args)
     //auto ans = get_bits((unsigned int)0b0, 3);
     //std::cout << ans.first << "," << ans.second << std::endl;
     */
+   
     try {
         ClientRunner client(256, 256, sizeof(ODict::Node), 1024, INT_MAX, 2, 2, "123456789", PSQL_CONNECTION_INFORMATION, sizeof(unsigned int), "localhost:4567");
-        client.test_adj("input/test.txt");
+        client.test_add_node(3);
         std::cout << (long long)(&client) << std::endl;
     } catch (const std::runtime_error& e) {
         std::cout << e.what() << std::endl;

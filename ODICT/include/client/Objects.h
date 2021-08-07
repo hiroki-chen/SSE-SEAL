@@ -5,9 +5,16 @@
 #include <string>
 
 #include <oram/PathORAM.h>
+#include <cereal/access.hpp>
 
 namespace ODict {
 struct ChildrenPos {
+    friend class cereal::access;
+    template<typename Archive>
+    void serialize(Archive& ar) {
+        ar(id, pos_tag);
+    }
+
 public:
     int id;
     int pos_tag;
@@ -18,8 +25,13 @@ public:
 };
 
 struct Node {
+    friend class cereal::access;
+    template<typename Archive>
+    void serialize(Archive& ar) {
+        ar(data, id, pos_tag, old_tag, key, left_height, right_height, childrenPos, left_id, right_id);
+    }
 public:
-    char* data; // The content of the data. It should be a VALID string!
+    std::string data; // The content of the data. It should be a VALID string!
     int id; // id is the address.
     int pos_tag;
     int old_tag = -1;
@@ -37,16 +49,19 @@ public:
     int right_id = 0;
 
     Node() = default;
+
     Node(const int& id, const int& pos_tag);
+    
+    Node(const Node& node);
 };
 
 struct Operation {
 public:
     int id; // Id of the data in the Oblivious data stucture.
-    char* data; // Data to be read / written.
+    std::string data; // Data to be read / written.
     OramAccessOp op; // Operation type.
 
-    Operation(const int& id, char* data, OramAccessOp op);
+    Operation(const int& id, const std::string& data, OramAccessOp op);
 };
 }
 

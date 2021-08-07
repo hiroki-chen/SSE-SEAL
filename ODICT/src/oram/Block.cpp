@@ -3,34 +3,42 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-
-using namespace std;
-
-Block::Block()
-{ // dummy index
-    this->leaf_id = -1;
-    this->index = -1;
+Block::Block(const Block& block)
+{
+    index = block.index;
+    leaf_id = block.leaf_id;
+    data = block.data;
 }
 
-Block::Block(int leaf_id, int index, int data[])
+Block::Block(
+    const int& leaf_id,
+    const int& index,
+    const std::string& data)
     : leaf_id(leaf_id)
     , index(index)
+    , data(data)
+{
+}
+
+Block::Block()
+    : leaf_id(-1)
+    , index(-1)
+    , data("")
 {
 }
 
 Block::~Block()
 {
-    // dtor
 }
 
 void Block::printBlock()
 {
-    string data_holder = "";
-    for (unsigned int i = 0; i < BLOCK_SIZE; i++) {
-        data_holder += to_string(this->data[i]);
-        data_holder += " ";
-    }
-    cout << "index: " << to_string(this->index)
-         << " leaf id: " << to_string(this->leaf_id) << " data: " << data_holder
-         << endl;
+    std::string data_holder;
+    std::for_each(data.begin(), data.end(), [&data_holder](const char& c) {
+        data_holder.push_back(c);
+    });
+
+    std::cout << "index: " << std::to_string(index)
+              << " leaf id: " << std::to_string(leaf_id) << " data: " << data_holder
+              << std::endl;
 }
