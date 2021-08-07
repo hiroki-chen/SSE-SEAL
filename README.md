@@ -71,6 +71,10 @@ make all;
 ```shell
 ./build/run
 ```
+Be sure first start the server by
+```shell
+./build/server
+```
 
 # Notice
 * The implementation codes are still under construction.
