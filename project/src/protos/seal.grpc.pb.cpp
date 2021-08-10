@@ -2,8 +2,8 @@
 // If you make any local change, they will be lost.
 // source: seal.proto
 
-#include "proto/seal.pb.h"
-#include "proto/seal.grpc.pb.h"
+#include "seal.pb.h"
+#include "seal.grpc.pb.h"
 
 #include <functional>
 #include <grpcpp/impl/codegen/async_stream.h>

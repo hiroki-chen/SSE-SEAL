@@ -1,11 +1,25 @@
 BUILD_DIR = ./build
 LOG_DIR = ./log
 SRC_DIR = ./src
-PROTP_DIR = ./protos
+PROTO_DIR = ./protos
 GRPC_PLUGIN_DIR = /usr/local/opt/grpc/bin/
 PROTOC = protoc
-CXX = g++
-CXXFLAGS = -std=c++17 -g -O3 -fPIE -Iinclude -Wall \
+INCLUDE_DIR = ./include
+INCLUDE_PROTO = $(INCLUDE_DIR)/proto
+
+ifeq ($(OS),Windows_NT)
+
+else
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S), Linux)
+		CXX = g++
+	endif
+	ifeq ($(UNAME_S), Darwin)
+		CXX = clang++
+	endif
+endif
+
+CXXFLAGS = -std=c++17 -g -O3 -fPIE -I$(INCLUDE_DIR) -I$(INCLUDE_PROTO) -Wall \
 		-Wmissing-declarations \
 		-Wextra \
 		-Wno-unknown-attributes \
@@ -28,49 +42,49 @@ LD = -L/usr/local/lib `pkg-config --libs protobuf grpc++`\
 		   -lpq\
 		   -lsodium
 
-SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp $(SRC_DIR)/server/*.cpp $(SRC_DIR)/client/*.cpp $(SRC_DIR)/oram/*.cpp $(SRC_DIR)/test/main.cpp $(SRC_DIR)/crypto/*.cpp)
-BUILD_FILES = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRC_FILES))
+BASE_SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp $(SRC_DIR)/oram/*.cpp $(SRC_DIR)/protos/*.cpp $(SRC_DIR)/crypto/*.cpp)
+CLIENT_SRC_FILES := $(BASE_SRC_FILES) $(wildcard $(SRC_DIR)/client/*.cpp) $(SRC_DIR)/test/main.cpp
+SERVER_SRC_FILES := $(BASE_SRC_FILES) $(wildcard $(SRC_DIR)/server/*.cpp) $(SRC_DIR)/test/test_server.cpp
+BASE_BUILD_FILES = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(BASE_SRC_FILES))
+CLIENT_BUILD_FILES := $(BASE_BUILD_FILES) $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(CLIENT_SRC_FILES))
+SERVER_BUILD_FILES := $(BASE_BUILD_FILES) $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SERVER_SRC_FILES))
 PROTO_FILES = $(wildcard $(PROTO_DIR)/*.proto)
 
 PROTO_FLAGS = --proto_path=$(PROTO_DIR) --cpp_out=include/proto
-PROTO_GRPC_FLAGS = --proto_path=$(PROTO_DIR)\ 
-				   --plugin=protoc-gen-grpc=$(GRPC_PLUGIN_DIR)/grpc_cpp_plugin\
-				   --grpc_out=include/proto
+PROTO_GRPC_FLAGS = --proto_path=$(PROTO_DIR) --plugin=protoc-gen-grpc=$(GRPC_PLUGIN_DIR)/grpc_cpp_plugin --grpc_out=include/proto
 
-RUN = run
+PROTOS = protos
+CLIENT = client
+SERVER = server
 
-all: clean make_dir make_protos $(RUN)
+all: clean make_dir make_protos $(CLIENT) $(SERVER)
 
 .PHONY: clean make_dir make_protos test
 clean:
-	$(RM) $(BUILD_DIR)/*.o *~ $(RUN)
-	$(RM) $(LOG_DIR)/*
+	$(RM) -rf $(BUILD_DIR)/*
+	$(RM) -rf $(LOG_DIR)/*
 
 make_protos:
 	$(PROTOC) $(PROTO_FLAGS) $(PROTO_FILES)
 	$(PROTOC) $(PROTO_GRPC_FLAGS) $(PROTO_FILES)
-	mv $(PROTO_DIR)/*.cc $(SRC_DIR)/protos
+	mv $(INCLUDE_PROTO)/*.cc $(SRC_DIR)/protos
+	
+	for f in $(SRC_DIR)/protos/*.cc; do mv -- "$$f" "$${f%.cc}.cpp";done
 make_dir:
 	mkdir -p $(BUILD_DIR)/server
 	mkdir -p $(BUILD_DIR)/client
 	mkdir -p $(BUILD_DIR)/test
 	mkdir -p $(BUILD_DIR)/oram
+	mkdir -p $(BUILD_DIR)/protos
 	mkdir -p $(BUILD_DIR)/crypto
+	mkdir -p $(BUILD_DIR)/executable
 	mkdir -p $(LOG_DIR)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-$(RUN): $(BUILD_FILES)
-	$(CXX) -o $(BUILD_DIR)/$@ $^ $(LD)
-	$(BUILD_DIR)/$@
+$(CLIENT): $(CLIENT_BUILD_FILES)
+	$(CXX) -o $(BUILD_DIR)/executable/$@ $^ $(LD)
 
-test:
-	rm -rf *.o
-	clang++ -std=c++17 -c -O2 -fPIE -Iinclude src/server/*.cpp src/Connector.cpp src/oram/*.cpp src/*.cpp src/test/test_server.cpp
-	clang++ -o test_server *.o $(LD)
-
-none:
-	rm -rf test_server.o
-	clang++ -c test/test_client.cpp src/client/*.cpp -std=c++17 -O2 -fPIE -Iinclude
-	clang++ -o test_client *.o $(LD)
+$(SERVER): $(SERVER_BUILD_FILES)
+	$(CXX) -o $(BUILD_DIR)/executable/$@ $^ $(LD)

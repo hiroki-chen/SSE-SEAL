@@ -1,3 +1,20 @@
+/*
+ Copyright (c) 2021 Haobin Chen
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #include <oram/ServerStorage.h>
 #include <plog/Log.h>
 #include <utils.h>
@@ -19,7 +36,7 @@ ServerStorage::ServerStorage(const unsigned int& oram_id, const bool& is_odict, 
     PLOG(plog::info) << "The server storage interface class is initialized.";
 }
 
-void ServerStorage::setCapacity(int totalNumOfBuckets)
+void ServerStorage::setCapacity(const int& totalNumOfBuckets)
 {
     capacity = totalNumOfBuckets;
 
@@ -37,7 +54,7 @@ void ServerStorage::setCapacity(int totalNumOfBuckets)
     }
 }
 
-Bucket ServerStorage::ReadBucket(int position)
+Bucket ServerStorage::ReadBucket(const int& position)
 {
     if (position >= this->capacity || position < 0) {
         throw std::runtime_error(
@@ -59,7 +76,7 @@ Bucket ServerStorage::ReadBucket(int position)
     return deserialize<Bucket>(response.buffer());
 }
 
-void ServerStorage::WriteBucket(int position, const Bucket& bucket_to_write)
+void ServerStorage::WriteBucket(const int& position, const Bucket& bucket_to_write)
 {   
     if (position >= this->capacity || position < 0) {
         throw std::runtime_error(

@@ -1,3 +1,20 @@
+/*
+ Copyright (c) 2021 Haobin Chen
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #include <client/Client.h>
 #include <crypto/sm4.h>
 #include <plog/Log.h>
@@ -48,7 +65,7 @@ void SEAL::Client::init_key(std::string_view password)
     try {
         PLOG(plog::info) << "Initializing secret key...";
         if (sodium_init() < 0) {
-            throw std::runtime_error("Crypto Library cannot be initialized!\n");
+            throw std::runtime_error("Crypto Library cannot be initialized due to sodium initilization failure!\n");
         }
 
         unsigned char key[crypto_box_SEEDBYTES];
@@ -285,7 +302,6 @@ ODict::Node* SEAL::Client::insert_priv(ODict::Node* node, const int& root_id)
 {
     // If there is yet no root, assign node as the root node.
     if (root_id == 0) {
-        std::cout << "Inserting " << node->id << ", key = " << node->key << std::endl;
         std::string data = serialize<ODict::Node>(*node);
         ODict::Operation* const op = new ODict::Operation(
             node->id, data, ORAM_ACCESS_INSERT); // insert into cache.
@@ -295,7 +311,6 @@ ODict::Node* SEAL::Client::insert_priv(ODict::Node* node, const int& root_id)
     }
 
     // Read the current root node.
-    PLOG(plog::info) << "Reading " << root_id;
     ODict::Node* root = read_from_oram(root_id);
 
     if (root->key < node->key) {
@@ -693,7 +708,7 @@ void SEAL::Client::adj_oram_init_helper(
                 new OramAccessController(bucket_size, block_number, sizeof(unsigned int), i, false, stub_));
 
             for (unsigned int j = 0; j < sub_arrays[i].size(); j++) {
-                const std::string data = encrypt_SM4_EBC(std::to_string(sub_arrays[i][j]));
+                std::string data = encrypt_SM4_EBC(std::to_string(sub_arrays[i][j]), secret_key);
                 adj_oramAccessControllers[i].get()->oblivious_access(
                     OramAccessOp::ORAM_ACCESS_WRITE, j, data);
             }
@@ -730,18 +745,24 @@ void SEAL::Client::adj_oram_init(
 
 std::vector<std::string> SEAL::Client::search(std::string_view keyword)
 {
-    const std::string index_value = find(keyword);
-    const std::vector<std::strirng> res = split(index_value, "_");
+    auto begin = std::chrono::high_resolution_clock::now();
+
+    const ODict::Node *const node = find(keyword);
+    const std::string index_value = node->data;
+    const std::vector<std::string> res = split(index_value, "_");
     const unsigned int iw = std::stoul(res[0]);
     const unsigned int countw = std::stoul(res[1]);
+
+    PLOG(plog::debug) << "In search: " << iw << ", " << countw << std::endl;
     const size_t base = std::ceil((log(memory_size) / log(2)));
 
     std::vector<std::string> ans;
 
     const std::vector<unsigned int> prp = pseudo_random_permutation(memory_size, secret_key);
-    for (unsigned int i = iw; i <= iw + countw; i++) {
+    for (unsigned int i = iw; i < iw + countw; i++) {
         const unsigned int value = prp[i];
         const std::pair<unsigned int, unsigned int> bits = get_bits(base, value, alpha);
+        std::cout << adj_oramAccessControllers.size() << ", " << bits.first << std::endl;
 
         std::string res;
         adj_oramAccessControllers[bits.first].get()->oblivious_access(
@@ -749,6 +770,10 @@ std::vector<std::string> SEAL::Client::search(std::string_view keyword)
         res = decrypt_SM4_EBC(res, secret_key);
         ans.push_back(res);
     }
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - begin;
+    PLOG(plog::info) << "Search finished, time consumed: " << elapsed.count() << " s";
 
     return ans;
 }

@@ -1,8 +1,8 @@
 1, beautiful, ugly, okk
 2, good, beautiful, okk, ugly, why, dont
-3, apl,  so, good   , beautifu, ugly
+3, apl,  so, good   , beautiful, ugly
 4, siaj, aioi, oaio, test_adj
 5, no
 6, ninini
 7, no, canyoutry, asiji, aijdi, aijdias, aodjosa92n, aiojd, aisj
-6, ninini, oosoa lals, aisd,sa
+8, ninini, oosoa lals, aisd,sa

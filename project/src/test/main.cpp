@@ -43,6 +43,10 @@ int main(int argc, const char** args)
     try {
         ClientRunner client(256, 256, sizeof(ODict::Node), 1024, INT_MAX, 2, 2, "123456789", PSQL_CONNECTION_INFORMATION, sizeof(unsigned int), "localhost:4567");
         client.test_adj("input/test.txt");
+        std::vector<std::string> ans = client.search("beautiful");
+        for (auto item : ans) {
+            std::cout << item << std::endl;
+        }
         std::cout << (long long)(&client) << std::endl;
     } catch (const std::runtime_error& e) {
         std::cout << e.what() << std::endl;

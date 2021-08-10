@@ -1,3 +1,20 @@
+/*
+ Copyright (c) 2021 Haobin Chen
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 #ifndef CLIENT_H_
 #define CLIENT_H_
 
@@ -276,14 +293,6 @@ private:
         const std::map<std::string, unsigned int>& first_occurrence,
         const std::map<std::string, unsigned int>& count);
 
-    /**
-     * @brief Search the document id by a keyword.
-     * 
-     * @param keyword
-     * @return the document ids
-     */
-    std::vector<std::string> search(std::string_view keyword);
-
     //====================Util=====================//
     /**
      * @brief Read the node from the oram. No need to manipulate the oblivious data structure anymore.
@@ -350,6 +359,14 @@ public:
     OramAccessController* get_oram_controller();
 
     void set_stub(const std::unique_ptr<Seal::Stub>& stub);
+
+    /**
+     * @brief Search the document id by a keyword.
+     * 
+     * @param keyword
+     * @return the document ids
+     */
+    std::vector<std::string> search(std::string_view keyword);
 };
 }
 
