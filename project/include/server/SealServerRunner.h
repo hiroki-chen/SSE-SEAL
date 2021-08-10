@@ -21,15 +21,26 @@
 #include <string>
 #include <memory>
 
+#include <server/SealService.h>
+
+#include <signal.h>
 #include <grpc++/server.h>
 #include <grpc++/server_builder.h>
 
 class SealServerRunner {
 private:
     std::unique_ptr<grpc::Server> server;
+
+    std::unique_ptr<SealService> service;
 public:
-    SealServerRunner(const std::string& address);
+    void sig_handler(int s);
+
+    void run(const std::string& address);
+
+    SealServerRunner() = default;
+
     ~SealServerRunner();
+
 };
 
 #endif

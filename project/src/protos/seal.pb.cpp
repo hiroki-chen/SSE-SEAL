@@ -17,11 +17,7 @@
 
 PROTOBUF_PRAGMA_INIT_SEG
 constexpr SetupMessage::SetupMessage(
-  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : bucket_size_(0)
-  , block_number_(0)
-  , block_size_(0)
-  , oram_block_size_(0){}
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized){}
 struct SetupMessageDefaultTypeInternal {
   constexpr SetupMessageDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -173,10 +169,6 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_seal_2eproto::offsets[] PROTOB
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::SetupMessage, bucket_size_),
-  PROTOBUF_FIELD_OFFSET(::SetupMessage, block_number_),
-  PROTOBUF_FIELD_OFFSET(::SetupMessage, block_size_),
-  PROTOBUF_FIELD_OFFSET(::SetupMessage, oram_block_size_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::SearchMessage, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -252,16 +244,16 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_seal_2eproto::offsets[] PROTOB
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::SetupMessage)},
-  { 9, -1, sizeof(::SearchMessage)},
-  { 15, -1, sizeof(::SearchResponse)},
-  { 21, -1, sizeof(::OramAccessMessage)},
-  { 31, -1, sizeof(::OramAccessResponse)},
-  { 37, -1, sizeof(::OramInitMessage)},
-  { 44, -1, sizeof(::OdictInitMessage)},
-  { 50, -1, sizeof(::BucketReadMessage)},
-  { 58, -1, sizeof(::BucketReadResponse)},
-  { 64, -1, sizeof(::BucketWriteMessage)},
-  { 73, -1, sizeof(::BucketSetMessage)},
+  { 5, -1, sizeof(::SearchMessage)},
+  { 11, -1, sizeof(::SearchResponse)},
+  { 17, -1, sizeof(::OramAccessMessage)},
+  { 27, -1, sizeof(::OramAccessResponse)},
+  { 33, -1, sizeof(::OramInitMessage)},
+  { 40, -1, sizeof(::OdictInitMessage)},
+  { 46, -1, sizeof(::BucketReadMessage)},
+  { 54, -1, sizeof(::BucketReadResponse)},
+  { 60, -1, sizeof(::BucketWriteMessage)},
+  { 69, -1, sizeof(::BucketSetMessage)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -280,41 +272,39 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 
 const char descriptor_table_protodef_seal_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
   "\n\nseal.proto\032\033google/protobuf/empty.prot"
-  "o\"f\n\014SetupMessage\022\023\n\013bucket_size\030\001 \001(\005\022\024"
-  "\n\014block_number\030\002 \001(\005\022\022\n\nblock_size\030\003 \001(\005"
-  "\022\027\n\017oram_block_size\030\004 \001(\005\"\037\n\rSearchMessa"
-  "ge\022\016\n\006buffer\030\001 \001(\014\" \n\016SearchResponse\022\016\n\006"
-  "buffer\030\001 \001(\014\"e\n\021OramAccessMessage\022\021\n\tope"
-  "ration\030\001 \001(\010\022\020\n\010is_odict\030\002 \001(\010\022\016\n\006buffer"
-  "\030\003 \001(\014\022\017\n\007oram_id\030\004 \001(\005\022\n\n\002id\030\005 \001(\005\"$\n\022O"
-  "ramAccessResponse\022\016\n\006buffer\030\001 \001(\014\"6\n\017Ora"
-  "mInitMessage\022\017\n\007oram_id\030\001 \001(\005\022\022\n\nblock_s"
-  "ize\030\002 \001(\005\"&\n\020OdictInitMessage\022\022\n\nblock_s"
-  "ize\030\001 \001(\005\"H\n\021BucketReadMessage\022\020\n\010is_odi"
-  "ct\030\001 \001(\010\022\020\n\010position\030\002 \001(\005\022\017\n\007oram_id\030\003 "
-  "\001(\005\"$\n\022BucketReadResponse\022\016\n\006buffer\030\001 \001("
-  "\014\"Y\n\022BucketWriteMessage\022\020\n\010is_odict\030\001 \001("
-  "\010\022\020\n\010position\030\002 \001(\005\022\016\n\006buffer\030\003 \001(\014\022\017\n\007o"
-  "ram_id\030\004 \001(\005\"P\n\020BucketSetMessage\022\020\n\010is_o"
-  "dict\030\001 \001(\010\022\031\n\021number_of_buckets\030\002 \001(\005\022\017\n"
-  "\007oram_id\030\003 \001(\0052\216\003\n\004Seal\0220\n\005setup\022\r.Setup"
-  "Message\032\026.google.protobuf.Empty\"\000\022+\n\006sea"
-  "rch\022\016.SearchMessage\032\017.SearchResponse\"\000\0228"
-  "\n\013oram_access\022\022.OramAccessMessage\032\023.Oram"
-  "AccessResponse\"\000\0227\n\toram_init\022\020.OramInit"
-  "Message\032\026.google.protobuf.Empty\"\000\0228\n\013rea"
-  "d_bucket\022\022.BucketReadMessage\032\023.BucketRea"
-  "dResponse\"\000\022=\n\014write_bucket\022\023.BucketWrit"
-  "eMessage\032\026.google.protobuf.Empty\"\000\022;\n\014se"
-  "t_capacity\022\021.BucketSetMessage\032\026.google.p"
-  "rotobuf.Empty\"\000b\006proto3"
+  "o\"\016\n\014SetupMessage\"\037\n\rSearchMessage\022\016\n\006bu"
+  "ffer\030\001 \001(\014\" \n\016SearchResponse\022\016\n\006buffer\030\001"
+  " \001(\014\"e\n\021OramAccessMessage\022\021\n\toperation\030\001"
+  " \001(\010\022\020\n\010is_odict\030\002 \001(\010\022\016\n\006buffer\030\003 \001(\014\022\017"
+  "\n\007oram_id\030\004 \001(\005\022\n\n\002id\030\005 \001(\005\"$\n\022OramAcces"
+  "sResponse\022\016\n\006buffer\030\001 \001(\014\"6\n\017OramInitMes"
+  "sage\022\017\n\007oram_id\030\001 \001(\005\022\022\n\nblock_size\030\002 \001("
+  "\005\"&\n\020OdictInitMessage\022\022\n\nblock_size\030\001 \001("
+  "\005\"H\n\021BucketReadMessage\022\020\n\010is_odict\030\001 \001(\010"
+  "\022\020\n\010position\030\002 \001(\005\022\017\n\007oram_id\030\003 \001(\005\"$\n\022B"
+  "ucketReadResponse\022\016\n\006buffer\030\001 \001(\014\"Y\n\022Buc"
+  "ketWriteMessage\022\020\n\010is_odict\030\001 \001(\010\022\020\n\010pos"
+  "ition\030\002 \001(\005\022\016\n\006buffer\030\003 \001(\014\022\017\n\007oram_id\030\004"
+  " \001(\005\"P\n\020BucketSetMessage\022\020\n\010is_odict\030\001 \001"
+  "(\010\022\031\n\021number_of_buckets\030\002 \001(\005\022\017\n\007oram_id"
+  "\030\003 \001(\0052\216\003\n\004Seal\0220\n\005setup\022\r.SetupMessage\032"
+  "\026.google.protobuf.Empty\"\000\022+\n\006search\022\016.Se"
+  "archMessage\032\017.SearchResponse\"\000\0228\n\013oram_a"
+  "ccess\022\022.OramAccessMessage\032\023.OramAccessRe"
+  "sponse\"\000\0227\n\toram_init\022\020.OramInitMessage\032"
+  "\026.google.protobuf.Empty\"\000\0228\n\013read_bucket"
+  "\022\022.BucketReadMessage\032\023.BucketReadRespons"
+  "e\"\000\022=\n\014write_bucket\022\023.BucketWriteMessage"
+  "\032\026.google.protobuf.Empty\"\000\022;\n\014set_capaci"
+  "ty\022\021.BucketSetMessage\032\026.google.protobuf."
+  "Empty\"\000b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_seal_2eproto_deps[1] = {
   &::descriptor_table_google_2fprotobuf_2fempty_2eproto,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_seal_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_seal_2eproto = {
-  false, false, 1143, descriptor_table_protodef_seal_2eproto, "seal.proto", 
+  false, false, 1055, descriptor_table_protodef_seal_2eproto, "seal.proto", 
   &descriptor_table_seal_2eproto_once, descriptor_table_seal_2eproto_deps, 1, 11,
   schemas, file_default_instances, TableStruct_seal_2eproto::offsets,
   file_level_metadata_seal_2eproto, file_level_enum_descriptors_seal_2eproto, file_level_service_descriptors_seal_2eproto,
@@ -344,17 +334,10 @@ SetupMessage::SetupMessage(::PROTOBUF_NAMESPACE_ID::Arena* arena,
 SetupMessage::SetupMessage(const SetupMessage& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&bucket_size_, &from.bucket_size_,
-    static_cast<size_t>(reinterpret_cast<char*>(&oram_block_size_) -
-    reinterpret_cast<char*>(&bucket_size_)) + sizeof(oram_block_size_));
   // @@protoc_insertion_point(copy_constructor:SetupMessage)
 }
 
 inline void SetupMessage::SharedCtor() {
-::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-    reinterpret_cast<char*>(&bucket_size_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&oram_block_size_) -
-    reinterpret_cast<char*>(&bucket_size_)) + sizeof(oram_block_size_));
 }
 
 SetupMessage::~SetupMessage() {
@@ -384,9 +367,6 @@ void SetupMessage::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&bucket_size_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&oram_block_size_) -
-      reinterpret_cast<char*>(&bucket_size_)) + sizeof(oram_block_size_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -395,37 +375,6 @@ const char* SetupMessage::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_I
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
-    switch (tag >> 3) {
-      // int32 bucket_size = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
-          bucket_size_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // int32 block_number = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
-          block_number_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // int32 block_size = 3;
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
-          block_size_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // int32 oram_block_size = 4;
-      case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 32)) {
-          oram_block_size_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      default: {
-      handle_unusual:
         if ((tag == 0) || ((tag & 7) == 4)) {
           CHK_(ptr);
           ctx->SetLastTag(tag);
@@ -436,8 +385,6 @@ const char* SetupMessage::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_I
             ptr, ctx);
         CHK_(ptr != nullptr);
         continue;
-      }
-    }  // switch
   }  // while
 success:
   return ptr;
@@ -452,30 +399,6 @@ failure:
   // @@protoc_insertion_point(serialize_to_array_start:SetupMessage)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
-
-  // int32 bucket_size = 1;
-  if (this->_internal_bucket_size() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_bucket_size(), target);
-  }
-
-  // int32 block_number = 2;
-  if (this->_internal_block_number() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_block_number(), target);
-  }
-
-  // int32 block_size = 3;
-  if (this->_internal_block_size() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(3, this->_internal_block_size(), target);
-  }
-
-  // int32 oram_block_size = 4;
-  if (this->_internal_oram_block_size() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(4, this->_internal_oram_block_size(), target);
-  }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -492,34 +415,6 @@ size_t SetupMessage::ByteSizeLong() const {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
-
-  // int32 bucket_size = 1;
-  if (this->_internal_bucket_size() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_bucket_size());
-  }
-
-  // int32 block_number = 2;
-  if (this->_internal_block_number() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_block_number());
-  }
-
-  // int32 block_size = 3;
-  if (this->_internal_block_size() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_block_size());
-  }
-
-  // int32 oram_block_size = 4;
-  if (this->_internal_oram_block_size() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_oram_block_size());
-  }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
@@ -549,18 +444,6 @@ void SetupMessage::MergeFrom(const SetupMessage& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from._internal_bucket_size() != 0) {
-    _internal_set_bucket_size(from._internal_bucket_size());
-  }
-  if (from._internal_block_number() != 0) {
-    _internal_set_block_number(from._internal_block_number());
-  }
-  if (from._internal_block_size() != 0) {
-    _internal_set_block_size(from._internal_block_size());
-  }
-  if (from._internal_oram_block_size() != 0) {
-    _internal_set_oram_block_size(from._internal_oram_block_size());
-  }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -578,12 +461,6 @@ bool SetupMessage::IsInitialized() const {
 void SetupMessage::InternalSwap(SetupMessage* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(SetupMessage, oram_block_size_)
-      + sizeof(SetupMessage::oram_block_size_)
-      - PROTOBUF_FIELD_OFFSET(SetupMessage, bucket_size_)>(
-          reinterpret_cast<char*>(&bucket_size_),
-          reinterpret_cast<char*>(&other->bucket_size_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata SetupMessage::GetMetadata() const {

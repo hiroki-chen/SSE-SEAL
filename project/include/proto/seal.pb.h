@@ -217,48 +217,6 @@ class SetupMessage final :
 
   // accessors -------------------------------------------------------
 
-  enum : int {
-    kBucketSizeFieldNumber = 1,
-    kBlockNumberFieldNumber = 2,
-    kBlockSizeFieldNumber = 3,
-    kOramBlockSizeFieldNumber = 4,
-  };
-  // int32 bucket_size = 1;
-  void clear_bucket_size();
-  ::PROTOBUF_NAMESPACE_ID::int32 bucket_size() const;
-  void set_bucket_size(::PROTOBUF_NAMESPACE_ID::int32 value);
-  private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_bucket_size() const;
-  void _internal_set_bucket_size(::PROTOBUF_NAMESPACE_ID::int32 value);
-  public:
-
-  // int32 block_number = 2;
-  void clear_block_number();
-  ::PROTOBUF_NAMESPACE_ID::int32 block_number() const;
-  void set_block_number(::PROTOBUF_NAMESPACE_ID::int32 value);
-  private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_block_number() const;
-  void _internal_set_block_number(::PROTOBUF_NAMESPACE_ID::int32 value);
-  public:
-
-  // int32 block_size = 3;
-  void clear_block_size();
-  ::PROTOBUF_NAMESPACE_ID::int32 block_size() const;
-  void set_block_size(::PROTOBUF_NAMESPACE_ID::int32 value);
-  private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_block_size() const;
-  void _internal_set_block_size(::PROTOBUF_NAMESPACE_ID::int32 value);
-  public:
-
-  // int32 oram_block_size = 4;
-  void clear_oram_block_size();
-  ::PROTOBUF_NAMESPACE_ID::int32 oram_block_size() const;
-  void set_oram_block_size(::PROTOBUF_NAMESPACE_ID::int32 value);
-  private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_oram_block_size() const;
-  void _internal_set_oram_block_size(::PROTOBUF_NAMESPACE_ID::int32 value);
-  public:
-
   // @@protoc_insertion_point(class_scope:SetupMessage)
  private:
   class _Internal;
@@ -266,10 +224,6 @@ class SetupMessage final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::int32 bucket_size_;
-  ::PROTOBUF_NAMESPACE_ID::int32 block_number_;
-  ::PROTOBUF_NAMESPACE_ID::int32 block_size_;
-  ::PROTOBUF_NAMESPACE_ID::int32 oram_block_size_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_seal_2eproto;
 };
@@ -1835,86 +1789,6 @@ class BucketSetMessage final :
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
 // SetupMessage
-
-// int32 bucket_size = 1;
-inline void SetupMessage::clear_bucket_size() {
-  bucket_size_ = 0;
-}
-inline ::PROTOBUF_NAMESPACE_ID::int32 SetupMessage::_internal_bucket_size() const {
-  return bucket_size_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::int32 SetupMessage::bucket_size() const {
-  // @@protoc_insertion_point(field_get:SetupMessage.bucket_size)
-  return _internal_bucket_size();
-}
-inline void SetupMessage::_internal_set_bucket_size(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  
-  bucket_size_ = value;
-}
-inline void SetupMessage::set_bucket_size(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  _internal_set_bucket_size(value);
-  // @@protoc_insertion_point(field_set:SetupMessage.bucket_size)
-}
-
-// int32 block_number = 2;
-inline void SetupMessage::clear_block_number() {
-  block_number_ = 0;
-}
-inline ::PROTOBUF_NAMESPACE_ID::int32 SetupMessage::_internal_block_number() const {
-  return block_number_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::int32 SetupMessage::block_number() const {
-  // @@protoc_insertion_point(field_get:SetupMessage.block_number)
-  return _internal_block_number();
-}
-inline void SetupMessage::_internal_set_block_number(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  
-  block_number_ = value;
-}
-inline void SetupMessage::set_block_number(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  _internal_set_block_number(value);
-  // @@protoc_insertion_point(field_set:SetupMessage.block_number)
-}
-
-// int32 block_size = 3;
-inline void SetupMessage::clear_block_size() {
-  block_size_ = 0;
-}
-inline ::PROTOBUF_NAMESPACE_ID::int32 SetupMessage::_internal_block_size() const {
-  return block_size_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::int32 SetupMessage::block_size() const {
-  // @@protoc_insertion_point(field_get:SetupMessage.block_size)
-  return _internal_block_size();
-}
-inline void SetupMessage::_internal_set_block_size(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  
-  block_size_ = value;
-}
-inline void SetupMessage::set_block_size(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  _internal_set_block_size(value);
-  // @@protoc_insertion_point(field_set:SetupMessage.block_size)
-}
-
-// int32 oram_block_size = 4;
-inline void SetupMessage::clear_oram_block_size() {
-  oram_block_size_ = 0;
-}
-inline ::PROTOBUF_NAMESPACE_ID::int32 SetupMessage::_internal_oram_block_size() const {
-  return oram_block_size_;
-}
-inline ::PROTOBUF_NAMESPACE_ID::int32 SetupMessage::oram_block_size() const {
-  // @@protoc_insertion_point(field_get:SetupMessage.oram_block_size)
-  return _internal_oram_block_size();
-}
-inline void SetupMessage::_internal_set_oram_block_size(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  
-  oram_block_size_ = value;
-}
-inline void SetupMessage::set_oram_block_size(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  _internal_set_oram_block_size(value);
-  // @@protoc_insertion_point(field_set:SetupMessage.oram_block_size)
-}
 
 // -------------------------------------------------------------------
 

@@ -120,3 +120,17 @@ SealService::write_bucket(
 
     return grpc::Status::OK;
 }
+
+void SealService::print_oram_blocks()
+{
+    std::cout << "----------------- Oblivious Dictionary ----------------------" << std::endl;
+    for (unsigned int i = 0; i < odict_storage.size(); i++) {
+        odict_storage[i].printBlocks();
+    }
+    std::cout << "--------------------- Oblivious RAM -------------------------" << std::endl;
+    for (unsigned int i = 0; i < oram_storage.size(); i++) {
+        for (unsigned int j = 0; j < oram_storage[i].size(); j++) {
+            oram_storage[i][j].printBlocks();
+        }
+    }
+}

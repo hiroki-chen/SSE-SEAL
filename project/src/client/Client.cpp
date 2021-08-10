@@ -640,7 +640,7 @@ void SEAL::Client::adj_data_in(std::string_view file_path)
 
         size_t memory_size = memory.size();
         for (unsigned int i = memory_size; i <= x * memory_size; i++) {
-            memory.push_back(std::make_pair(random_string(16, secret_key), UINT_MAX));
+            memory.push_back(std::make_pair(random_string(16, secret_key), randombytes_uniform(UINT_MAX)));
         }
 
         // Sort the keyword in lexicographical order.

@@ -59,6 +59,8 @@ public:
     grpc::Status read_bucket(grpc::ServerContext* context, const BucketReadMessage* message, BucketReadResponse* reponse) override;
 
     grpc::Status write_bucket(grpc::ServerContext* context, const BucketWriteMessage* message, google::protobuf::Empty* e) override;
+
+    void print_oram_blocks();
 };
 
 #endif

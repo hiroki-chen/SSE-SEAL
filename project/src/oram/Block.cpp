@@ -50,12 +50,9 @@ Block::~Block()
 
 void Block::printBlock()
 {
-    std::string data_holder;
-    std::for_each(data.begin(), data.end(), [&data_holder](const char& c) {
-        data_holder.push_back(c);
-    });
-
-    std::cout << "index: " << std::to_string(index)
-              << " leaf id: " << std::to_string(leaf_id) << " data: " << data_holder
-              << std::endl;
+    if (index != -1 && leaf_id != -1) {
+        std::cout << "index: " << std::to_string(index)
+                  << " leaf id: " << std::to_string(leaf_id) << " data: " << data
+                  << std::endl;
+    }
 }
