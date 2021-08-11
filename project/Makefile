@@ -2,7 +2,7 @@ BUILD_DIR = ./build
 LOG_DIR = ./log
 SRC_DIR = ./src
 PROTO_DIR = ./protos
-GRPC_PLUGIN_DIR = /usr/local/opt/grpc/bin/
+GRPC_PLUGIN_DIR = /usr/local/bin
 PROTOC = protoc
 INCLUDE_DIR = ./include
 INCLUDE_PROTO = $(INCLUDE_DIR)/proto
@@ -22,7 +22,6 @@ endif
 CXXFLAGS = -std=c++17 -g -O3 -fPIE -I$(INCLUDE_DIR) -I$(INCLUDE_PROTO) -Wall \
 		-Wmissing-declarations \
 		-Wextra \
-		-Wno-unknown-attributes \
 		-Wno-unused-parameter \
 		-Wno-missing-field-initializers \
 		-Wswitch \
@@ -30,9 +29,7 @@ CXXFLAGS = -std=c++17 -g -O3 -fPIE -I$(INCLUDE_DIR) -I$(INCLUDE_PROTO) -Wall \
 		-Wformat \
 		-Wtype-limits \
 		-Wno-undef \
-		-Werror \
-		-Wno-missing-prototypes \
-		-Wstrict-prototypes
+		-Werror
 
 LD = -L/usr/local/lib `pkg-config --libs protobuf grpc++`\
            -pthread\

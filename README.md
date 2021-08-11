@@ -37,6 +37,9 @@ For simplicity, this model is a single-client-single-server model. We construct 
     └── test
 ```
 
+# Compatibility
+Codes are tested on macOS 10.14.6 High Sierra with `Apple LLVM version 10.0.1 (clang-1001.0.46.4)` and Ubuntu 20.04 LTS with `gcc 9.3.0-17-Ubuntu1-20.04`.
+
 # Usage and Prerequisites
 * GCC Compiler (or equivalent compilers) version 7.3.0 or higher;
 * The compiler must support C++ 2017 standard (to enable the use of `std::string_view`)
@@ -45,30 +48,51 @@ For simplicity, this model is a single-client-single-server model. We construct 
   <br>
   For macOS users, you can install libpqxx by homebrew:
   ```shell
-  brew install libpqxx
+  brew install libpqxx;
   ```
   which will automatically install all the required libraries and the headers in the homebrew path and link the libararies to /usr/local/lib.
   <br>
   For Ubuntu users, `apt-get` suffices.
   ```shell
-  sudo apt-get install libpqxx-dev
+  sudo apt-get install libpqxx-dev;
   ```
 * libsodium(github page is [here](https://github.com/jedisct1/libsodium))
   <br>
   Sodium library provides with cryptographically secure random generators, and it also gives us some public-key or private-key encryption interfaces.
-
+  ```shell
+  ./configure;
+  make && make check && sudo make install;
+  ```
+* CMake for compilation of the gRPC library.
+```shell
+brew install cmake;
+```
+```shell
+sudo apt-get install cmake;
+```
 * gRPC for remote process call. This is for the communication with the remote database. (We first issue request to remote processes rather than the remote database directly.)
   ```shell
-  brew install grpc
+  brew install grpc;
   ```
+  For Linux users, gRPC libarary should be installed via git clone.
   ```shell
-  sudo apt-get install libgrpc-dev
+  git clone https://github.com/grpc/grpc.git;
+  cd grpc;
+  git submodule update --init;
+  mkdir -p cmake/build;
+  cd cmake/build;
+  cmake ../..;
+  make && sudo make install;
   ```
 * Dependencies on which gRPC relies. These may include `autoconf`, `automake`, `openssl`, `libtool`, `pkg-config`, etc. For more information, please refer to gRPC's official website: https://grpc.io.
-* Make sure that gRPC plugin `grpc_cpp_plugin` for generating protobuf-based cpp files is correctly installed in the `grpc/bin/` path. If your gRPC dirctory is different with the one specified in `Makefile`, you should modify it manually.
+* Make sure that gRPC plugin `grpc_cpp_plugin` for generating protobuf-based cpp files is correctly installed in the `usr/local/bin/` path. If your gRPC dirctory is different with the one specified in `Makefile`, you should modify it manually.
 * Make sure that your `pkgconfig` directory (this may located in `/usr/local/lib` directory) contains these three pkgconfig files: `libcrypto.pc`, `libssl.pc` and `openssl.pc`. If not, link the original `.pc` file (can be found in openssl directory) to the path or manually export the path:
 ```shell
 export PKG_CONFIG_PATH=/path/to/openssl/lib/pkgconfig;
+```
+For Ubuntu users, you can install ssl via `apt-get`:
+```shell
+sudo apt-get install libssl-dev;
 ```
 
 1. To compile the project, please first locate to the directory by
