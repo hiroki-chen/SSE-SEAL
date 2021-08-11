@@ -23,8 +23,10 @@
 #include <server/SealService.h>
 #include <utils.h>
 
-SealService::SealService()
+SealService::SealService(std::string_view connection_info)
 {
+    /* Create a new connector to the database. */
+    connector = std::make_unique<SEAL::Connector>(connection_info);
     PLOG_(1, plog::info) << "Server starts.";
 }
 

@@ -39,30 +39,66 @@ private:
 
     std::deque<int> lru_table;
 
-    OramAccessController* const oramAccessController;
+    OramAccessController* oramAccessController;
 
 public:
+    /**
+     * @brief The constructor for client cache.
+     * @param max_size the maximum size the cache can hold.
+     * @param oramAccessController the oram controller needed to generate random position tag for the items in the cache.
+     */
     Cache(const size_t& max_size, OramAccessController* const oramAccessController);
 
+    /**
+     * @brief Get an item by its id from the cache.
+     * @param id the id of the desired item.
+     */
     T get(const int& id);
 
+    /**
+     * @brief Used to get an arbitrary item from the tail of the cache.
+     */
     T get();
 
+    /**
+     * @brief Put an item into the cache.
+     * @param id the id of the item.
+     * @param item the item passed by const reference.
+     * @return An item evicted if  the cache is full.
+     */
     T put(const int& id, const T& item);
 
+    /**
+     * @brief Find the position tag in the local cache.
+     * @param id the id of the item.
+     */
     int find_pos_by_id(const int& id);
 
+    /**
+     * @brief Update all the position tags locally.
+     * @param root_id the id the root item (ODS)
+     * @return The updated root position
+     */
     int update_pos(const int& root_id);
 
+    /**
+     * @brief Clear all the items in the cache.
+     */
     void clear();
 
+    /**
+     * @brief Pop an item from the cache.
+     */
     void pop();
 
+    /**
+     * @brief Check if the cache is empty.
+     */
     bool empty();
 };
 
 template <typename T>
-SEAL::Cache<T>::Cache(const size_t& max_size, OramAccessController* const oramAccessController)
+inline SEAL::Cache<T>::Cache(const size_t& max_size, OramAccessController* const oramAccessController)
     : max_size(max_size)
     , oramAccessController(oramAccessController)
 {
@@ -70,7 +106,7 @@ SEAL::Cache<T>::Cache(const size_t& max_size, OramAccessController* const oramAc
 }
 
 template <typename T>
-T SEAL::Cache<T>::get(const int& id)
+inline T SEAL::Cache<T>::get(const int& id)
 {
     auto iter = cache_items.find(id);
 
@@ -87,13 +123,13 @@ T SEAL::Cache<T>::get(const int& id)
 }
 
 template <typename T>
-T SEAL::Cache<T>::get()
+inline T SEAL::Cache<T>::get()
 {
     return cache_items.begin()->second;
 }
 
 template <typename T>
-T SEAL::Cache<T>::put(const int& id, const T& item)
+inline T SEAL::Cache<T>::put(const int& id, const T& item)
 {
     auto iter = cache_items.find(id);
     auto it = std::find_if(lru_table.begin(), lru_table.end(), [id](const int& item_id) { return item_id == id; });
@@ -145,7 +181,7 @@ T SEAL::Cache<T>::put(const int& id, const T& item)
 }
 
 template <typename T>
-int SEAL::Cache<T>::update_pos(const int& root_id)
+inline int SEAL::Cache<T>::update_pos(const int& root_id)
 {
     std::map<int, int> position_tag;
     for (auto iter = cache_items.begin(); iter != cache_items.end(); iter++) {
@@ -171,7 +207,7 @@ int SEAL::Cache<T>::update_pos(const int& root_id)
 }
 
 template <typename T>
-int SEAL::Cache<T>::find_pos_by_id(const int& id)
+inline int SEAL::Cache<T>::find_pos_by_id(const int& id)
 {
     for (auto iter = cache_items.begin(); iter != cache_items.end(); iter++) {
         auto node = transform<ODict::Node, T>(&(iter->second));
@@ -186,20 +222,20 @@ int SEAL::Cache<T>::find_pos_by_id(const int& id)
 }
 
 template <typename T>
-void SEAL::Cache<T>::clear()
+inline void SEAL::Cache<T>::clear()
 {
     cache_items.clear();
     lru_table.clear();
 }
 
 template <typename T>
-void SEAL::Cache<T>::pop()
+inline void SEAL::Cache<T>::pop()
 {
     cache_items.erase(cache_items.begin());
 }
 
 template <typename T>
-bool SEAL::Cache<T>::empty()
+inline bool SEAL::Cache<T>::empty()
 {
     return cache_items.empty();
 }

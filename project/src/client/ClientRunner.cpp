@@ -51,6 +51,7 @@ ClientRunner::~ClientRunner()
 
 void ClientRunner::setup(const int& bucket_size, const int& block_number, const int& block_size, const int& oram_block_size)
 {
+    /*
     grpc::ClientContext context;
     SetupMessage message;
     message.set_block_number(block_number);
@@ -64,6 +65,7 @@ void ClientRunner::setup(const int& bucket_size, const int& block_number, const 
     if (!status.ok()) {
         throw std::runtime_error(status.error_message());
     }
+    */
 }
 
 void ClientRunner::test_add_node(const unsigned int&number)
@@ -76,7 +78,8 @@ void ClientRunner::test_adj(std::string_view file_path)
     client.get()->test_adj(file_path);
 }
 
-std::vector<std::string> ClientRunner::search(std::string_view keyword)
+std::vector<std::string>
+ClientRunner::search(std::string_view keyword)
 {
     return client.get()->search(keyword);
 }

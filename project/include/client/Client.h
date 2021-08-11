@@ -164,7 +164,8 @@ private:
      * @param key
      * @return the node (nullptr = not found)
      */
-    ODict::Node* find(std::string_view key);
+    ODict::Node*
+    find(std::string_view key);
 
     /**
      * @brief Batch find to better utiltize the client cache.
@@ -172,22 +173,26 @@ private:
      * @param keys
      * @return mapping between keys and nodes.
      */
-    std::map<int, ODict::Node*> find(const std::vector<std::string>& keys);
+    std::map<int, ODict::Node*>
+    find(const std::vector<std::string>& keys);
 
     /**
      * @brief Actual function for find. Recursive function.
      */
-    ODict::Node* find_priv(std::string_view key, const int& cur_root_id);
+    ODict::Node*
+    find_priv(std::string_view key, const int& cur_root_id);
 
     /**
      * @brief Find the minimum node to be the root for deletion.
      */
-    ODict::Node* find_min(const int& cur_root_id);
+    ODict::Node*
+    find_min(const int& cur_root_id);
 
     /**
      * @brief Insert a node into the AVL Tree. It is a wrapper function.
      */
-    ODict::Node* insert(ODict::Node* node);
+    ODict::Node*
+    insert(ODict::Node* node);
 
     /**
      * @brief batch insertion.
@@ -199,7 +204,8 @@ private:
     /**
      * @brief Actural function for insert.
      */
-    ODict::Node* insert_priv(ODict::Node* node, const int& cur_root_id);
+    ODict::Node*
+    insert_priv(ODict::Node* node, const int& cur_root_id);
 
     /**
      * @brief Batch remove the nodes from the AVL Tree.
@@ -221,45 +227,54 @@ private:
      * @param key
      * @param cur_root_id the current root id.
      */
-    ODict::Node* remove_priv(std::string_view key, const int& cur_root_id);
+    ODict::Node*
+    remove_priv(std::string_view key, const int& cur_root_id);
 
     /**
      * @brief Rebalance the AVL Tree because of the insertion.
      */
-    ODict::Node* balance(const int& cur_root_id);
+    ODict::Node*
+    balance(const int& cur_root_id);
 
     /**
      * @brief RightRotate for LL case.
      */
-    ODict::Node* right_rotate(const int& cur_root_id);
+    ODict::Node*
+    right_rotate(const int& cur_root_id);
 
     /**
      * @brief LeftAndRightRotate for LR case.
      */
-    ODict::Node* left_right_rotate(const int& cur_root_id);
+    ODict::Node*
+    left_right_rotate(const int& cur_root_id);
 
     /**
      * @brief LeftRotate for RR case.
      */
-    ODict::Node* left_rotate(const int& cur_root_id);
+    ODict::Node*
+    left_rotate(const int& cur_root_id);
 
     /**
      * @brief RightAndLeftRotate for RL case.
      */
-    ODict::Node* right_left_rotate(const int& cur_root_id);
+    ODict::Node*
+    right_left_rotate(const int& cur_root_id);
 
     /**
      * @brief Creates test data.
      */
-    std::vector<ODict::Node*> create_test_cases(const int& number);
+    std::vector<ODict::Node*>
+    create_test_cases(const int& number);
 
     /**
      * @brief Adjustable Padding for any document to the nearest power of x.
      * 
-     * @param document a set of keywords
-     * @param x the given parameter as base number
+     * @param memory the dataset to be padded.
+     * @param count the count of the keyword. (Assume that keywords do not repeat in one document)
      */
-    void adj_padding(std::vector<std::string>& document);
+    void adj_padding(
+        std::vector<std::pair<std::string, unsigned int>>& memory,
+        std::map<std::string, unsigned int>& count);
 
     /**
      * @brief Load the dataset from the file, and also analyze the document input.
@@ -280,7 +295,7 @@ private:
      * 
      * @param sub_array plain memory blocks
      */
-    void adj_oram_init_helper(const std::vector<std::vector<unsigned int>> &sub_arrays);
+    void adj_oram_init_helper(const std::vector<std::vector<unsigned int>>& sub_arrays);
 
     /**
      * @brief Build the secret index on input documents.
@@ -298,8 +313,9 @@ private:
      * @brief Read the node from the oram. No need to manipulate the oblivious data structure anymore.
      * 
      * @param id
-     */ 
-    ODict::Node* read_from_oram(const int& id);
+     */
+    ODict::Node*
+    read_from_oram(const int& id);
 
     /**
      * @brief Write the node to the oram
@@ -330,7 +346,8 @@ public:
     /**
      * @brief A test function.
      */
-    const char* add_node(const int& number);
+    const char*
+    add_node(const int& number);
 
     /**
      * For padding. ORAM does not allow access to address that does not exist.
@@ -356,7 +373,8 @@ public:
      * 
      * @return OramAccessController
      */
-    OramAccessController* get_oram_controller();
+    OramAccessController*
+    get_oram_controller();
 
     void set_stub(const std::unique_ptr<Seal::Stub>& stub);
 
@@ -366,7 +384,8 @@ public:
      * @param keyword
      * @return the document ids
      */
-    std::vector<std::string> search(std::string_view keyword);
+    std::vector<std::string>
+    search(std::string_view keyword);
 };
 }
 

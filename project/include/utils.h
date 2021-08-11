@@ -24,8 +24,8 @@
 
 #include <algorithm>
 #include <iostream>
-#include <string>
 #include <sstream>
+#include <string>
 
 #include <client/Objects.h>
 #include <oram/Bucket.h>

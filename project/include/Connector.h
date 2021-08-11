@@ -15,8 +15,8 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef _CONNECTOR_H
-#define _CONNECTOR_H
+#ifndef CONNECTOR_H
+#define CONNECTOR_H
 
 #define PSQL_CONNECTION_INFORMATION "dbname = testdb "      \
                                     "user = chenhaobin "    \

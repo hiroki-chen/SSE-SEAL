@@ -24,8 +24,21 @@
 #include <oram/PathORAM.h>
 #include <cereal/access.hpp>
 
+/**
+ * @brief The namsapce ODict defines all the objects needed for the access to the oblivious data structure.
+ * 
+ * It contains
+ *  1. the class Node which is used to represent the node in the AVL tree data structure;
+ *  2. the class Operation which is used to represent an access operation (WRITE / READ / INSERT / DELETE) for
+ *     the access to the oblivious data structure. Note that the data is stored by its reference to the original
+ *     one.
+ * 
+ *  Furthermore, in order to store the node in the oblivious ram, the cereal library is used for the serialization
+ *  of the data, which allows all the class to be stored in std::string form.
+ */
 namespace ODict {
 struct ChildrenPos {
+    /* Intrusive serialization helper. */
     friend class cereal::access;
     template<typename Archive>
     void serialize(Archive& ar) {
@@ -42,9 +55,11 @@ public:
 };
 
 struct Node {
+    /* Intrusive serialization helper. */
     friend class cereal::access;
     template<typename Archive>
     void serialize(Archive& ar) {
+        /* The structure childrenPos is serialized in a recursive manner. */
         ar(data, id, pos_tag, old_tag, key, left_height, right_height, childrenPos, left_id, right_id);
     }
 public:

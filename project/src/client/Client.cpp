@@ -33,7 +33,8 @@
 #include <sstream>
 #include <stdexcept>
 
-ODict::Node* SEAL::Client::read_from_oram(const int& id)
+ODict::Node*
+SEAL::Client::read_from_oram(const int& id)
 {
     std::string data = serialize<ODict::Node>(ODict::Node(id, -1));
     ODict::Operation* const op = new ODict::Operation(id, data, ORAM_ACCESS_READ);
@@ -231,7 +232,8 @@ void SEAL::Client::ODS_finalize(const int& pad_val)
     PLOG(plog::debug) << "ODS_finalize finished.";
 }
 
-ODict::Node* SEAL::Client::find(std::string_view key)
+ODict::Node*
+SEAL::Client::find(std::string_view key)
 {
     ODS_start();
     ODict::Node* node = find_priv(key, root_id);
@@ -240,7 +242,8 @@ ODict::Node* SEAL::Client::find(std::string_view key)
     return node;
 }
 
-std::map<int, ODict::Node*> SEAL::Client::find(
+std::map<int, ODict::Node*>
+SEAL::Client::find(
     const std::vector<std::string>& keys)
 {
     ODS_start();
@@ -256,7 +259,8 @@ std::map<int, ODict::Node*> SEAL::Client::find(
     return ans;
 }
 
-ODict::Node* SEAL::Client::find_priv(std::string_view key, const int& root_id)
+ODict::Node*
+SEAL::Client::find_priv(std::string_view key, const int& root_id)
 {
     ODict::Node* root = nullptr;
     if (root_id == 0) {
@@ -274,7 +278,8 @@ ODict::Node* SEAL::Client::find_priv(std::string_view key, const int& root_id)
     }
 }
 
-ODict::Node* SEAL::Client::insert(ODict::Node* node)
+ODict::Node*
+SEAL::Client::insert(ODict::Node* node)
 {
     ODict::Node* res = insert_priv(node, root_id);
 
@@ -298,7 +303,8 @@ void SEAL::Client::insert(const std::vector<ODict::Node*>& nodes)
 }
 
 // we suppose that node->id is pre-set.
-ODict::Node* SEAL::Client::insert_priv(ODict::Node* node, const int& root_id)
+ODict::Node*
+SEAL::Client::insert_priv(ODict::Node* node, const int& root_id)
 {
     // If there is yet no root, assign node as the root node.
     if (root_id == 0) {
@@ -328,7 +334,8 @@ ODict::Node* SEAL::Client::insert_priv(ODict::Node* node, const int& root_id)
     return balance(root_id);
 }
 
-ODict::Node* SEAL::Client::balance(const int& root_id)
+ODict::Node*
+SEAL::Client::balance(const int& root_id)
 {
     ODict::Node* root = read_from_oram(root_id);
 
@@ -360,7 +367,8 @@ ODict::Node* SEAL::Client::balance(const int& root_id)
     return root;
 }
 
-ODict::Node* SEAL::Client::right_rotate(const int& root_id)
+ODict::Node*
+SEAL::Client::right_rotate(const int& root_id)
 {
     PLOG(plog::info) << "Doing right rotating";
 
@@ -380,7 +388,8 @@ ODict::Node* SEAL::Client::right_rotate(const int& root_id)
     return left;
 }
 
-ODict::Node* SEAL::Client::left_rotate(const int& root_id)
+ODict::Node*
+SEAL::Client::left_rotate(const int& root_id)
 {
     PLOG(plog::info) << "Doing left rotating";
 
@@ -400,7 +409,8 @@ ODict::Node* SEAL::Client::left_rotate(const int& root_id)
     return right;
 }
 
-ODict::Node* SEAL::Client::left_right_rotate(const int& root_id)
+ODict::Node*
+SEAL::Client::left_right_rotate(const int& root_id)
 {
     PLOG(plog::info) << "Doing left right rotating";
 
@@ -414,7 +424,8 @@ ODict::Node* SEAL::Client::left_right_rotate(const int& root_id)
     return right_rotate(root_id);
 }
 
-ODict::Node* SEAL::Client::right_left_rotate(const int& root_id)
+ODict::Node*
+SEAL::Client::right_left_rotate(const int& root_id)
 {
     PLOG(plog::info) << "Doing right left rotating";
 
@@ -428,7 +439,8 @@ ODict::Node* SEAL::Client::right_left_rotate(const int& root_id)
     return left_rotate(root_id);
 }
 
-ODict::Node* SEAL::Client::remove_priv(std::string_view key,
+ODict::Node*
+SEAL::Client::remove_priv(std::string_view key,
     const int& cur_root_id)
 {
     if (cur_root_id == 0) {
@@ -539,7 +551,8 @@ ODict::Node* SEAL::Client::remove_priv(std::string_view key,
     return root;
 }
 
-ODict::Node* SEAL::Client::find_min(const int& cur_root_id)
+ODict::Node*
+SEAL::Client::find_min(const int& cur_root_id)
 {
     if (cur_root_id == 0) {
         return nullptr;
@@ -569,7 +582,8 @@ void SEAL::Client::remove(const std::vector<std::string>& keys)
 /**
  * @brief A test function, you can add whatever you like.
  */
-const char* SEAL::Client::add_node(const int& number)
+const char*
+SEAL::Client::add_node(const int& number)
 {
     insert(create_test_cases(number));
 
@@ -599,15 +613,33 @@ const char* SEAL::Client::add_node(const int& number)
 
     return "ok";
 }
-
-void SEAL::Client::adj_padding(std::vector<std::string>& document)
+// TODO: Modify the function. It is incorrect now. -> Rewrite the parameters to [keyword, id] tuples, count.
+/*
+Assume that in each document, the keyword will not repeat, and then we can simply reuse the global count
+table to pad the document; to filter out those not needed, we can generate the dummy id's above the valid count.
+I.e., we generate id that exceeds the maximum one, which denotes such an id is invalid.
+*/
+void SEAL::Client::adj_padding(
+    std::vector<std::pair<std::string, unsigned int>>& memory,
+    std::map<std::string, unsigned int>& count)
 {
-    unsigned int power = std::ceil((log((double)document.size()) / log((double)x)));
-    unsigned int size = (unsigned int)pow(x, power);
+    for (auto iter = count.begin(); iter != count.end(); iter++) {
+        const unsigned int power = std::ceil((log((double)iter->second) / log((double)x)));
+        const unsigned int size = (unsigned int)pow(x, power);
 
-    // Pad the document
-    for (unsigned int i = document.size(); i <= size; i++) {
-        document.push_back(random_string(16, secret_key));
+        // Pad the document
+        for (unsigned int i = iter->second ; i <= size; i++) {
+            memory.push_back(
+                std::make_pair(iter->first, randombytes_uniform(0xfffffff0 - memory.size()) + memory.size()));
+        }
+        iter->second = size;
+    }
+
+    const size_t memory_size = memory.size();
+    /* Pad the document to x * N */
+    for (unsigned int i = memory_size; i <= x * memory_size; i++) {
+        memory.push_back(std::make_pair(random_string(16, secret_key), randombytes_uniform(UINT_MAX)));
+        count[memory.back().first]++;
     }
 }
 
@@ -627,7 +659,6 @@ void SEAL::Client::adj_data_in(std::string_view file_path)
             std::getline(file, line);
             // Split the string by coma.
             std::vector<std::string> tokens = split(line, "(\\s*),(\\s*)");
-            adj_padding(tokens);
 
             unsigned int id = std::stoul(tokens[0]);
 
@@ -638,11 +669,13 @@ void SEAL::Client::adj_data_in(std::string_view file_path)
             }
         }
 
-        size_t memory_size = memory.size();
-        for (unsigned int i = memory_size; i <= x * memory_size; i++) {
-            memory.push_back(std::make_pair(random_string(16, secret_key), randombytes_uniform(UINT_MAX)));
+        std::map<std::string, unsigned int> count;
+        for (unsigned int i = 0; i < memory.size(); i++) {
+            count[memory[i].first]++;
         }
 
+        // Pad the document set.
+        adj_padding(memory, count);
         // Sort the keyword in lexicographical order.
         auto lambda_cmp =
             [](const std::pair<std::string, unsigned int>& lhs,
@@ -651,16 +684,13 @@ void SEAL::Client::adj_data_in(std::string_view file_path)
         };
         std::sort(memory.begin(), memory.end(), lambda_cmp);
 
+        this->memory_size = memory.size();
         std::map<std::string, unsigned int> first_occurrence;
-        std::map<std::string, unsigned int> count;
         for (unsigned int i = 0; i < memory.size(); i++) {
             if (first_occurrence.count(memory[i].first) == 0) {
                 first_occurrence[memory[i].first] = i;
             }
-            count[memory[i].first]++;
         }
-
-        this->memory_size = memory.size();
 
         adj_insert(memory, first_occurrence, count);
 
@@ -679,7 +709,6 @@ void SEAL::Client::adj_insert(
 {
     std::vector<ODict::Node*> nodes;
     for (unsigned int i = 0; i < memory.size(); i++) {
-        std::cout << memory[i].first << ", " << memory[i].second << std::endl;
         ODict::Node* const node = new ODict::Node();
         const unsigned int iw = first_occurrence.at(memory[i].first);
         const unsigned int cntw = count.at(memory[i].first);
@@ -722,7 +751,7 @@ void SEAL::Client::adj_oram_init(
     const std::vector<std::pair<std::string, unsigned int>>& memory)
 {
     size_t mu = pow(2, alpha);
-    size_t base = std::ceil((log(memory_size) / log(2)));
+    size_t base = std::ceil((log(memory.size()) / log(2)));
     size_t array_size = std::ceil(pow(2, base) / mu);
 
     std::vector<std::vector<unsigned int>> sub_arrays(
@@ -732,7 +761,6 @@ void SEAL::Client::adj_oram_init(
 
     for (unsigned int i = 0; i < memory.size(); i++) {
         unsigned int value = prp[i];
-        std::cout << value << std::endl;
         std::pair<unsigned int, unsigned int> bits = get_bits(base, value, alpha);
 
         PLOG(plog::info) << "ORAM BLOCK " << bits.first << ", INDEX " << bits.second << ": " << memory[i].second;
@@ -743,11 +771,12 @@ void SEAL::Client::adj_oram_init(
     adj_oram_init_helper(sub_arrays);
 }
 
-std::vector<std::string> SEAL::Client::search(std::string_view keyword)
+std::vector<std::string>
+SEAL::Client::search(std::string_view keyword)
 {
     auto begin = std::chrono::high_resolution_clock::now();
 
-    const ODict::Node *const node = find(keyword);
+    const ODict::Node* const node = find(keyword);
     const std::string index_value = node->data;
     const std::vector<std::string> res = split(index_value, "_");
     const unsigned int iw = std::stoul(res[0]);
@@ -759,16 +788,18 @@ std::vector<std::string> SEAL::Client::search(std::string_view keyword)
     std::vector<std::string> ans;
 
     const std::vector<unsigned int> prp = pseudo_random_permutation(memory_size, secret_key);
-    for (unsigned int i = iw; i < iw + countw; i++) {
+    for (unsigned int i = iw; i <= iw + countw; i++) {
         const unsigned int value = prp[i];
         const std::pair<unsigned int, unsigned int> bits = get_bits(base, value, alpha);
-        std::cout << adj_oramAccessControllers.size() << ", " << bits.first << std::endl;
 
         std::string res;
         adj_oramAccessControllers[bits.first].get()->oblivious_access(
             OramAccessOp::ORAM_ACCESS_READ, bits.second, res);
         res = decrypt_SM4_EBC(res, secret_key);
-        ans.push_back(res);
+        /* Filter out dummy records. */
+        if (std::stoul(res) < memory_size) {
+            ans.push_back(res);
+        }
     }
 
     auto end = std::chrono::high_resolution_clock::now();
@@ -778,7 +809,8 @@ std::vector<std::string> SEAL::Client::search(std::string_view keyword)
     return ans;
 }
 
-std::vector<ODict::Node*> SEAL::Client::create_test_cases(const int& number)
+std::vector<ODict::Node*>
+SEAL::Client::create_test_cases(const int& number)
 {
     std::vector<ODict::Node*> vec;
 
@@ -794,7 +826,8 @@ std::vector<ODict::Node*> SEAL::Client::create_test_cases(const int& number)
     return vec;
 }
 
-OramAccessController* SEAL::Client::get_oram_controller()
+OramAccessController*
+SEAL::Client::get_oram_controller()
 {
     return oramAccessController.get();
 }

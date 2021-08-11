@@ -68,7 +68,8 @@ int OramAccessController::random_new_pos()
     return random->getRandomLeaf();
 }
 
-RandForOramInterface* OramAccessController::get_random_engine()
+RandForOramInterface*
+OramAccessController::get_random_engine()
 {
     return random;
 }

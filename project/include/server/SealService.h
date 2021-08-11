@@ -48,7 +48,9 @@ private:
     std::vector<std::vector<Bucket>> oram_storage;
 
 public:
-    SealService();
+    SealService() = default;
+
+    SealService(std::string_view connection_info);
 
     virtual ~SealService();
 

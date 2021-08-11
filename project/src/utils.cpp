@@ -24,7 +24,7 @@
 #include <stdexcept>
 
 void copy(ODict::Node* const dst, const ODict::Node* const src)
-{ 
+{
 }
 
 int get_height(const ODict::Node* const node)
@@ -100,11 +100,11 @@ pseudo_random_permutation(const size_t& value_size,
     return ans;
 }
 
-std::pair<unsigned int, unsigned int> get_bits(const unsigned int& base, const unsigned int& number, const unsigned int& alpha)
+std::pair<unsigned int, unsigned int>
+get_bits(const unsigned int& base, const unsigned int& number, const unsigned int& alpha)
 {
     unsigned int most = number >> (base - alpha);
     unsigned int rest = number & (unsigned int)(pow(2, base - alpha) - 1);
-    std::cout << most << "," << rest << std::endl;
     return { most, rest };
 }
 
