@@ -5,7 +5,7 @@ Searchable Encryption with Adjustable Leakage
 * The codes will need to communicate with a relational database (e.g., MySQL, PostgreSQL, openGauss...) to see if such an SSE scheme could be used in real-world scenarios. For the connection to the remote database, please be sure the relevant libararies (e.g., mysql-connector libs) are installed correctly.
 
 # The structure of the model
-For simplicity, this model is a client-server model. We construct a server which handles remote process call and also serves as the oblivious storage for the client. The server contains a relational database connector so the client could interact with the client. To search for an item, the client first looks up the position map locally and then sends the position and the bucket to the remote server (or fetch a bucket from the server).
+For simplicity, this model is a single-client-single-server model. We construct a server which handles remote process call and also serves as the oblivious storage for the client. The server contains a relational database connector so the client could interact with the client. To search for an item, the client first looks up the position map locally and then sends the position and the bucket to the remote server (or fetch a bucket from the server).
 
 # The structure of the project:
 ```
