@@ -33,6 +33,7 @@ private:
 
     std::unique_ptr<SealService> service;
 public:
+
     void sig_handler(int s);
 
     void run(const std::string& address);

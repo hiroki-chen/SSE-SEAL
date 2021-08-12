@@ -89,7 +89,10 @@ pseudo_random_permutation(const size_t& value_size,
         ans.push_back(i);
     }
 
-    randombytes_buf_deterministic(permutation, sizeof(permutation), (unsigned char*)secret_key.data());
+    randombytes_buf_deterministic(
+        permutation,
+        sizeof(permutation),
+        (unsigned char*)(secret_key.data()));
 
     for (unsigned int i = 0; i < interval - 1; i++) {
         // j := random integer such that i ≤ j < n

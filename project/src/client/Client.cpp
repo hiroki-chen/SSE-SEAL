@@ -657,7 +657,7 @@ void SEAL::Client::adj_data_in(std::string_view file_path)
         while (!file.eof()) {
             std::string line;
             std::getline(file, line);
-            // Split the string by coma.
+            // Split the string by comma.
             std::vector<std::string> tokens = split(line, "(\\s*),(\\s*)");
 
             unsigned int id = std::stoul(tokens[0]);
@@ -709,6 +709,7 @@ void SEAL::Client::adj_insert(
 {
     std::vector<ODict::Node*> nodes;
     for (unsigned int i = 0; i < memory.size(); i++) {
+        /* Build the secret index. */
         ODict::Node* const node = new ODict::Node();
         const unsigned int iw = first_occurrence.at(memory[i].first);
         const unsigned int cntw = count.at(memory[i].first);
@@ -717,6 +718,8 @@ void SEAL::Client::adj_insert(
         node->key = memory[i].first;
         node->data = data;
         nodes.push_back(node);
+
+        /* Insert into the remote database. */
     }
     insert(nodes);
 
@@ -724,9 +727,6 @@ void SEAL::Client::adj_insert(
     PLOG(plog::info) << "SUB ORAMS INITIALIZED.";
 }
 
-/**
- * TODO: Simultaneously initialize the oram on the server side by remote process call.
- */
 void SEAL::Client::adj_oram_init_helper(
     const std::vector<std::vector<unsigned int>>& sub_arrays)
 {
@@ -747,6 +747,9 @@ void SEAL::Client::adj_oram_init_helper(
     }
 }
 
+/**
+ * TODO: Before calling adj_oram_init, the client should first do INSERT INTO. 
+ */
 void SEAL::Client::adj_oram_init(
     const std::vector<std::pair<std::string, unsigned int>>& memory)
 {
@@ -836,7 +839,7 @@ SEAL::Client::Client(const int& bucket_size, const int& block_number,
     const int& block_size, const int& odict_size,
     const size_t& max_size, const unsigned int& alpha,
     const unsigned int& x, std::string_view password,
-    std::string_view connection_info, Seal::Stub* stub_)
+    Seal::Stub* stub_)
     : bucket_size(bucket_size)
     , block_number(block_number)
     , block_size(block_size)
@@ -851,7 +854,6 @@ SEAL::Client::Client(const int& bucket_size, const int& block_number,
     , cache(new Cache<ODict::Node>(max_size, oramAccessController.get()))
     , alpha(alpha)
     , x(x)
-    , connector(std::make_unique<SEAL::Connector>(connection_info))
 {
     init_key(password);
     PLOG(plog::info) << "Client initialized\n";
@@ -863,11 +865,6 @@ void SEAL::Client::test_adj(std::string_view file_path)
 
     //PLOG(plog::info) << "trying to fetch keyword beautiful: "
     //                 << find("beautiful"s)->data;
-}
-
-void SEAL::Client::test_sql(std::string_view sql)
-{
-    connector.get()->insert_handler(sql);
 }
 
 void SEAL::Client::set_stub(const std::unique_ptr<Seal::Stub>& stub)

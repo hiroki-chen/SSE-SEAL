@@ -48,9 +48,7 @@ private:
     std::vector<std::vector<Bucket>> oram_storage;
 
 public:
-    SealService() = default;
-
-    SealService(std::string_view connection_info);
+    SealService();
 
     virtual ~SealService();
 
@@ -61,6 +59,10 @@ public:
     grpc::Status read_bucket(grpc::ServerContext* context, const BucketReadMessage* message, BucketReadResponse* reponse) override;
 
     grpc::Status write_bucket(grpc::ServerContext* context, const BucketWriteMessage* message, google::protobuf::Empty* e) override;
+
+    grpc::Status insert_handler(grpc::ServerContext* context, const InsertMessage* message, google::protobuf::Empty* e) override;
+
+    grpc::Status select_handler(grpc::ServerContext* context, const SelectMessage* message, SelectResult* reponse) override;
 
     void print_oram_blocks();
 };

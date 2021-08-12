@@ -46,11 +46,19 @@ public:
 
     Connector(std::string_view connection_information);
 
+    bool create_table_handler(std::string_view table, const std::vector<std::string>& column_names) const;
+
     bool update_handler(std::string_view sql) const;
 
     bool delete_handler(std::string_view sql) const;
 
     bool insert_handler(std::string_view sql) const;
+
+    bool insert_handler(std::string_view table, const std::vector<std::string>& values) const;
+
+    pqxx::result select_handler(std::string_view sql) const;
+
+    pqxx::result select_handler(std::string_view table, std::string_view where, const std::vector<std::string>& columns) const;
 
     std::vector<std::string> select_handler(const std::string& sql, const std::string& column) const;
 };

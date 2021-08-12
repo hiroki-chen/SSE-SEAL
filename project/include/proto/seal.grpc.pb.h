@@ -34,7 +34,7 @@ class Seal final {
   class StubInterface {
    public:
     virtual ~StubInterface() {}
-    // Setup the remote server by initializing the oram blocks.
+    // Setup the remote database by the database name, username, password.
     virtual ::grpc::Status setup(::grpc::ClientContext* context, const ::SetupMessage& request, ::google::protobuf::Empty* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>> Asyncsetup(::grpc::ClientContext* context, const ::SetupMessage& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>>(AsyncsetupRaw(context, request, cq));
@@ -42,30 +42,7 @@ class Seal final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>> PrepareAsyncsetup(::grpc::ClientContext* context, const ::SetupMessage& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>>(PrepareAsyncsetupRaw(context, request, cq));
     }
-    virtual ::grpc::Status search(::grpc::ClientContext* context, const ::SearchMessage& request, ::SearchResponse* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SearchResponse>> Asyncsearch(::grpc::ClientContext* context, const ::SearchMessage& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SearchResponse>>(AsyncsearchRaw(context, request, cq));
-    }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SearchResponse>> PrepareAsyncsearch(::grpc::ClientContext* context, const ::SearchMessage& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SearchResponse>>(PrepareAsyncsearchRaw(context, request, cq));
-    }
-    // *
-    // @deprecated.
-    virtual ::grpc::Status oram_access(::grpc::ClientContext* context, const ::OramAccessMessage& request, ::OramAccessResponse* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::OramAccessResponse>> Asyncoram_access(::grpc::ClientContext* context, const ::OramAccessMessage& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::OramAccessResponse>>(Asyncoram_accessRaw(context, request, cq));
-    }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::OramAccessResponse>> PrepareAsyncoram_access(::grpc::ClientContext* context, const ::OramAccessMessage& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::OramAccessResponse>>(PrepareAsyncoram_accessRaw(context, request, cq));
-    }
-    // Init the oram block.
-    virtual ::grpc::Status oram_init(::grpc::ClientContext* context, const ::OramInitMessage& request, ::google::protobuf::Empty* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>> Asyncoram_init(::grpc::ClientContext* context, const ::OramInitMessage& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>>(Asyncoram_initRaw(context, request, cq));
-    }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>> PrepareAsyncoram_init(::grpc::ClientContext* context, const ::OramInitMessage& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>>(PrepareAsyncoram_initRaw(context, request, cq));
-    }
+    // Read a bucket from the ORAM pool.
     virtual ::grpc::Status read_bucket(::grpc::ClientContext* context, const ::BucketReadMessage& request, ::BucketReadResponse* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::BucketReadResponse>> Asyncread_bucket(::grpc::ClientContext* context, const ::BucketReadMessage& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::BucketReadResponse>>(Asyncread_bucketRaw(context, request, cq));
@@ -73,6 +50,7 @@ class Seal final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::BucketReadResponse>> PrepareAsyncread_bucket(::grpc::ClientContext* context, const ::BucketReadMessage& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::BucketReadResponse>>(PrepareAsyncread_bucketRaw(context, request, cq));
     }
+    // Write a bucket to the ORAM pool.
     virtual ::grpc::Status write_bucket(::grpc::ClientContext* context, const ::BucketWriteMessage& request, ::google::protobuf::Empty* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>> Asyncwrite_bucket(::grpc::ClientContext* context, const ::BucketWriteMessage& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>>(Asyncwrite_bucketRaw(context, request, cq));
@@ -80,6 +58,7 @@ class Seal final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>> PrepareAsyncwrite_bucket(::grpc::ClientContext* context, const ::BucketWriteMessage& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>>(PrepareAsyncwrite_bucketRaw(context, request, cq));
     }
+    // When an ORAM access controller is initialized, the capacity of the bucket is set.
     virtual ::grpc::Status set_capacity(::grpc::ClientContext* context, const ::BucketSetMessage& request, ::google::protobuf::Empty* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>> Asyncset_capacity(::grpc::ClientContext* context, const ::BucketSetMessage& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>>(Asyncset_capacityRaw(context, request, cq));
@@ -87,54 +66,64 @@ class Seal final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>> PrepareAsyncset_capacity(::grpc::ClientContext* context, const ::BucketSetMessage& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>>(PrepareAsyncset_capacityRaw(context, request, cq));
     }
+    // Handles communication with the relational database.
+    virtual ::grpc::Status insert_handler(::grpc::ClientContext* context, const ::InsertMessage& request, ::google::protobuf::Empty* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>> Asyncinsert_handler(::grpc::ClientContext* context, const ::InsertMessage& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>>(Asyncinsert_handlerRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>> PrepareAsyncinsert_handler(::grpc::ClientContext* context, const ::InsertMessage& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>>(PrepareAsyncinsert_handlerRaw(context, request, cq));
+    }
+    virtual ::grpc::Status select_handler(::grpc::ClientContext* context, const ::SelectMessage& request, ::SelectResult* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SelectResult>> Asyncselect_handler(::grpc::ClientContext* context, const ::SelectMessage& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SelectResult>>(Asyncselect_handlerRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SelectResult>> PrepareAsyncselect_handler(::grpc::ClientContext* context, const ::SelectMessage& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SelectResult>>(PrepareAsyncselect_handlerRaw(context, request, cq));
+    }
     class experimental_async_interface {
      public:
       virtual ~experimental_async_interface() {}
-      // Setup the remote server by initializing the oram blocks.
+      // Setup the remote database by the database name, username, password.
       virtual void setup(::grpc::ClientContext* context, const ::SetupMessage* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void setup(::grpc::ClientContext* context, const ::SetupMessage* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
       virtual void setup(::grpc::ClientContext* context, const ::SetupMessage* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
-      virtual void search(::grpc::ClientContext* context, const ::SearchMessage* request, ::SearchResponse* response, std::function<void(::grpc::Status)>) = 0;
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void search(::grpc::ClientContext* context, const ::SearchMessage* request, ::SearchResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      #else
-      virtual void search(::grpc::ClientContext* context, const ::SearchMessage* request, ::SearchResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
-      #endif
-      // *
-      // @deprecated.
-      virtual void oram_access(::grpc::ClientContext* context, const ::OramAccessMessage* request, ::OramAccessResponse* response, std::function<void(::grpc::Status)>) = 0;
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void oram_access(::grpc::ClientContext* context, const ::OramAccessMessage* request, ::OramAccessResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      #else
-      virtual void oram_access(::grpc::ClientContext* context, const ::OramAccessMessage* request, ::OramAccessResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
-      #endif
-      // Init the oram block.
-      virtual void oram_init(::grpc::ClientContext* context, const ::OramInitMessage* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)>) = 0;
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void oram_init(::grpc::ClientContext* context, const ::OramInitMessage* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      #else
-      virtual void oram_init(::grpc::ClientContext* context, const ::OramInitMessage* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
-      #endif
+      // Read a bucket from the ORAM pool.
       virtual void read_bucket(::grpc::ClientContext* context, const ::BucketReadMessage* request, ::BucketReadResponse* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void read_bucket(::grpc::ClientContext* context, const ::BucketReadMessage* request, ::BucketReadResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
       virtual void read_bucket(::grpc::ClientContext* context, const ::BucketReadMessage* request, ::BucketReadResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
+      // Write a bucket to the ORAM pool.
       virtual void write_bucket(::grpc::ClientContext* context, const ::BucketWriteMessage* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void write_bucket(::grpc::ClientContext* context, const ::BucketWriteMessage* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
       virtual void write_bucket(::grpc::ClientContext* context, const ::BucketWriteMessage* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
+      // When an ORAM access controller is initialized, the capacity of the bucket is set.
       virtual void set_capacity(::grpc::ClientContext* context, const ::BucketSetMessage* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void set_capacity(::grpc::ClientContext* context, const ::BucketSetMessage* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
       virtual void set_capacity(::grpc::ClientContext* context, const ::BucketSetMessage* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      // Handles communication with the relational database.
+      virtual void insert_handler(::grpc::ClientContext* context, const ::InsertMessage* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void insert_handler(::grpc::ClientContext* context, const ::InsertMessage* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void insert_handler(::grpc::ClientContext* context, const ::InsertMessage* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      virtual void select_handler(::grpc::ClientContext* context, const ::SelectMessage* request, ::SelectResult* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void select_handler(::grpc::ClientContext* context, const ::SelectMessage* request, ::SelectResult* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void select_handler(::grpc::ClientContext* context, const ::SelectMessage* request, ::SelectResult* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
     };
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -147,18 +136,16 @@ class Seal final {
   private:
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>* AsyncsetupRaw(::grpc::ClientContext* context, const ::SetupMessage& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>* PrepareAsyncsetupRaw(::grpc::ClientContext* context, const ::SetupMessage& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SearchResponse>* AsyncsearchRaw(::grpc::ClientContext* context, const ::SearchMessage& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SearchResponse>* PrepareAsyncsearchRaw(::grpc::ClientContext* context, const ::SearchMessage& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::OramAccessResponse>* Asyncoram_accessRaw(::grpc::ClientContext* context, const ::OramAccessMessage& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::OramAccessResponse>* PrepareAsyncoram_accessRaw(::grpc::ClientContext* context, const ::OramAccessMessage& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>* Asyncoram_initRaw(::grpc::ClientContext* context, const ::OramInitMessage& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>* PrepareAsyncoram_initRaw(::grpc::ClientContext* context, const ::OramInitMessage& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::BucketReadResponse>* Asyncread_bucketRaw(::grpc::ClientContext* context, const ::BucketReadMessage& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::BucketReadResponse>* PrepareAsyncread_bucketRaw(::grpc::ClientContext* context, const ::BucketReadMessage& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>* Asyncwrite_bucketRaw(::grpc::ClientContext* context, const ::BucketWriteMessage& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>* PrepareAsyncwrite_bucketRaw(::grpc::ClientContext* context, const ::BucketWriteMessage& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>* Asyncset_capacityRaw(::grpc::ClientContext* context, const ::BucketSetMessage& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>* PrepareAsyncset_capacityRaw(::grpc::ClientContext* context, const ::BucketSetMessage& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>* Asyncinsert_handlerRaw(::grpc::ClientContext* context, const ::InsertMessage& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>* PrepareAsyncinsert_handlerRaw(::grpc::ClientContext* context, const ::InsertMessage& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SelectResult>* Asyncselect_handlerRaw(::grpc::ClientContext* context, const ::SelectMessage& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SelectResult>* PrepareAsyncselect_handlerRaw(::grpc::ClientContext* context, const ::SelectMessage& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
@@ -169,27 +156,6 @@ class Seal final {
     }
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>> PrepareAsyncsetup(::grpc::ClientContext* context, const ::SetupMessage& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>>(PrepareAsyncsetupRaw(context, request, cq));
-    }
-    ::grpc::Status search(::grpc::ClientContext* context, const ::SearchMessage& request, ::SearchResponse* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SearchResponse>> Asyncsearch(::grpc::ClientContext* context, const ::SearchMessage& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SearchResponse>>(AsyncsearchRaw(context, request, cq));
-    }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SearchResponse>> PrepareAsyncsearch(::grpc::ClientContext* context, const ::SearchMessage& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SearchResponse>>(PrepareAsyncsearchRaw(context, request, cq));
-    }
-    ::grpc::Status oram_access(::grpc::ClientContext* context, const ::OramAccessMessage& request, ::OramAccessResponse* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::OramAccessResponse>> Asyncoram_access(::grpc::ClientContext* context, const ::OramAccessMessage& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::OramAccessResponse>>(Asyncoram_accessRaw(context, request, cq));
-    }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::OramAccessResponse>> PrepareAsyncoram_access(::grpc::ClientContext* context, const ::OramAccessMessage& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::OramAccessResponse>>(PrepareAsyncoram_accessRaw(context, request, cq));
-    }
-    ::grpc::Status oram_init(::grpc::ClientContext* context, const ::OramInitMessage& request, ::google::protobuf::Empty* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>> Asyncoram_init(::grpc::ClientContext* context, const ::OramInitMessage& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>>(Asyncoram_initRaw(context, request, cq));
-    }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>> PrepareAsyncoram_init(::grpc::ClientContext* context, const ::OramInitMessage& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>>(PrepareAsyncoram_initRaw(context, request, cq));
     }
     ::grpc::Status read_bucket(::grpc::ClientContext* context, const ::BucketReadMessage& request, ::BucketReadResponse* response) override;
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::BucketReadResponse>> Asyncread_bucket(::grpc::ClientContext* context, const ::BucketReadMessage& request, ::grpc::CompletionQueue* cq) {
@@ -212,6 +178,20 @@ class Seal final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>> PrepareAsyncset_capacity(::grpc::ClientContext* context, const ::BucketSetMessage& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>>(PrepareAsyncset_capacityRaw(context, request, cq));
     }
+    ::grpc::Status insert_handler(::grpc::ClientContext* context, const ::InsertMessage& request, ::google::protobuf::Empty* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>> Asyncinsert_handler(::grpc::ClientContext* context, const ::InsertMessage& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>>(Asyncinsert_handlerRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>> PrepareAsyncinsert_handler(::grpc::ClientContext* context, const ::InsertMessage& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>>(PrepareAsyncinsert_handlerRaw(context, request, cq));
+    }
+    ::grpc::Status select_handler(::grpc::ClientContext* context, const ::SelectMessage& request, ::SelectResult* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SelectResult>> Asyncselect_handler(::grpc::ClientContext* context, const ::SelectMessage& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SelectResult>>(Asyncselect_handlerRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SelectResult>> PrepareAsyncselect_handler(::grpc::ClientContext* context, const ::SelectMessage& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SelectResult>>(PrepareAsyncselect_handlerRaw(context, request, cq));
+    }
     class experimental_async final :
       public StubInterface::experimental_async_interface {
      public:
@@ -220,24 +200,6 @@ class Seal final {
       void setup(::grpc::ClientContext* context, const ::SetupMessage* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
       void setup(::grpc::ClientContext* context, const ::SetupMessage* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
-      #endif
-      void search(::grpc::ClientContext* context, const ::SearchMessage* request, ::SearchResponse* response, std::function<void(::grpc::Status)>) override;
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void search(::grpc::ClientContext* context, const ::SearchMessage* request, ::SearchResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
-      #else
-      void search(::grpc::ClientContext* context, const ::SearchMessage* request, ::SearchResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
-      #endif
-      void oram_access(::grpc::ClientContext* context, const ::OramAccessMessage* request, ::OramAccessResponse* response, std::function<void(::grpc::Status)>) override;
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void oram_access(::grpc::ClientContext* context, const ::OramAccessMessage* request, ::OramAccessResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
-      #else
-      void oram_access(::grpc::ClientContext* context, const ::OramAccessMessage* request, ::OramAccessResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
-      #endif
-      void oram_init(::grpc::ClientContext* context, const ::OramInitMessage* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)>) override;
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void oram_init(::grpc::ClientContext* context, const ::OramInitMessage* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) override;
-      #else
-      void oram_init(::grpc::ClientContext* context, const ::OramInitMessage* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
       void read_bucket(::grpc::ClientContext* context, const ::BucketReadMessage* request, ::BucketReadResponse* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -257,6 +219,18 @@ class Seal final {
       #else
       void set_capacity(::grpc::ClientContext* context, const ::BucketSetMessage* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
+      void insert_handler(::grpc::ClientContext* context, const ::InsertMessage* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void insert_handler(::grpc::ClientContext* context, const ::InsertMessage* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void insert_handler(::grpc::ClientContext* context, const ::InsertMessage* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      void select_handler(::grpc::ClientContext* context, const ::SelectMessage* request, ::SelectResult* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void select_handler(::grpc::ClientContext* context, const ::SelectMessage* request, ::SelectResult* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void select_handler(::grpc::ClientContext* context, const ::SelectMessage* request, ::SelectResult* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
      private:
       friend class Stub;
       explicit experimental_async(Stub* stub): stub_(stub) { }
@@ -270,25 +244,22 @@ class Seal final {
     class experimental_async async_stub_{this};
     ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* AsyncsetupRaw(::grpc::ClientContext* context, const ::SetupMessage& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* PrepareAsyncsetupRaw(::grpc::ClientContext* context, const ::SetupMessage& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::SearchResponse>* AsyncsearchRaw(::grpc::ClientContext* context, const ::SearchMessage& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::SearchResponse>* PrepareAsyncsearchRaw(::grpc::ClientContext* context, const ::SearchMessage& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::OramAccessResponse>* Asyncoram_accessRaw(::grpc::ClientContext* context, const ::OramAccessMessage& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::OramAccessResponse>* PrepareAsyncoram_accessRaw(::grpc::ClientContext* context, const ::OramAccessMessage& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* Asyncoram_initRaw(::grpc::ClientContext* context, const ::OramInitMessage& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* PrepareAsyncoram_initRaw(::grpc::ClientContext* context, const ::OramInitMessage& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::BucketReadResponse>* Asyncread_bucketRaw(::grpc::ClientContext* context, const ::BucketReadMessage& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::BucketReadResponse>* PrepareAsyncread_bucketRaw(::grpc::ClientContext* context, const ::BucketReadMessage& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* Asyncwrite_bucketRaw(::grpc::ClientContext* context, const ::BucketWriteMessage& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* PrepareAsyncwrite_bucketRaw(::grpc::ClientContext* context, const ::BucketWriteMessage& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* Asyncset_capacityRaw(::grpc::ClientContext* context, const ::BucketSetMessage& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* PrepareAsyncset_capacityRaw(::grpc::ClientContext* context, const ::BucketSetMessage& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* Asyncinsert_handlerRaw(::grpc::ClientContext* context, const ::InsertMessage& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* PrepareAsyncinsert_handlerRaw(::grpc::ClientContext* context, const ::InsertMessage& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SelectResult>* Asyncselect_handlerRaw(::grpc::ClientContext* context, const ::SelectMessage& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SelectResult>* PrepareAsyncselect_handlerRaw(::grpc::ClientContext* context, const ::SelectMessage& request, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_setup_;
-    const ::grpc::internal::RpcMethod rpcmethod_search_;
-    const ::grpc::internal::RpcMethod rpcmethod_oram_access_;
-    const ::grpc::internal::RpcMethod rpcmethod_oram_init_;
     const ::grpc::internal::RpcMethod rpcmethod_read_bucket_;
     const ::grpc::internal::RpcMethod rpcmethod_write_bucket_;
     const ::grpc::internal::RpcMethod rpcmethod_set_capacity_;
+    const ::grpc::internal::RpcMethod rpcmethod_insert_handler_;
+    const ::grpc::internal::RpcMethod rpcmethod_select_handler_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -296,17 +267,17 @@ class Seal final {
    public:
     Service();
     virtual ~Service();
-    // Setup the remote server by initializing the oram blocks.
+    // Setup the remote database by the database name, username, password.
     virtual ::grpc::Status setup(::grpc::ServerContext* context, const ::SetupMessage* request, ::google::protobuf::Empty* response);
-    virtual ::grpc::Status search(::grpc::ServerContext* context, const ::SearchMessage* request, ::SearchResponse* response);
-    // *
-    // @deprecated.
-    virtual ::grpc::Status oram_access(::grpc::ServerContext* context, const ::OramAccessMessage* request, ::OramAccessResponse* response);
-    // Init the oram block.
-    virtual ::grpc::Status oram_init(::grpc::ServerContext* context, const ::OramInitMessage* request, ::google::protobuf::Empty* response);
+    // Read a bucket from the ORAM pool.
     virtual ::grpc::Status read_bucket(::grpc::ServerContext* context, const ::BucketReadMessage* request, ::BucketReadResponse* response);
+    // Write a bucket to the ORAM pool.
     virtual ::grpc::Status write_bucket(::grpc::ServerContext* context, const ::BucketWriteMessage* request, ::google::protobuf::Empty* response);
+    // When an ORAM access controller is initialized, the capacity of the bucket is set.
     virtual ::grpc::Status set_capacity(::grpc::ServerContext* context, const ::BucketSetMessage* request, ::google::protobuf::Empty* response);
+    // Handles communication with the relational database.
+    virtual ::grpc::Status insert_handler(::grpc::ServerContext* context, const ::InsertMessage* request, ::google::protobuf::Empty* response);
+    virtual ::grpc::Status select_handler(::grpc::ServerContext* context, const ::SelectMessage* request, ::SelectResult* response);
   };
   template <class BaseClass>
   class WithAsyncMethod_setup : public BaseClass {
@@ -329,72 +300,12 @@ class Seal final {
     }
   };
   template <class BaseClass>
-  class WithAsyncMethod_search : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithAsyncMethod_search() {
-      ::grpc::Service::MarkMethodAsync(1);
-    }
-    ~WithAsyncMethod_search() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status search(::grpc::ServerContext* /*context*/, const ::SearchMessage* /*request*/, ::SearchResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    void Requestsearch(::grpc::ServerContext* context, ::SearchMessage* request, ::grpc::ServerAsyncResponseWriter< ::SearchResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
-    }
-  };
-  template <class BaseClass>
-  class WithAsyncMethod_oram_access : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithAsyncMethod_oram_access() {
-      ::grpc::Service::MarkMethodAsync(2);
-    }
-    ~WithAsyncMethod_oram_access() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status oram_access(::grpc::ServerContext* /*context*/, const ::OramAccessMessage* /*request*/, ::OramAccessResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    void Requestoram_access(::grpc::ServerContext* context, ::OramAccessMessage* request, ::grpc::ServerAsyncResponseWriter< ::OramAccessResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
-    }
-  };
-  template <class BaseClass>
-  class WithAsyncMethod_oram_init : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithAsyncMethod_oram_init() {
-      ::grpc::Service::MarkMethodAsync(3);
-    }
-    ~WithAsyncMethod_oram_init() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status oram_init(::grpc::ServerContext* /*context*/, const ::OramInitMessage* /*request*/, ::google::protobuf::Empty* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    void Requestoram_init(::grpc::ServerContext* context, ::OramInitMessage* request, ::grpc::ServerAsyncResponseWriter< ::google::protobuf::Empty>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
-    }
-  };
-  template <class BaseClass>
   class WithAsyncMethod_read_bucket : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_read_bucket() {
-      ::grpc::Service::MarkMethodAsync(4);
+      ::grpc::Service::MarkMethodAsync(1);
     }
     ~WithAsyncMethod_read_bucket() override {
       BaseClassMustBeDerivedFromService(this);
@@ -405,7 +316,7 @@ class Seal final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void Requestread_bucket(::grpc::ServerContext* context, ::BucketReadMessage* request, ::grpc::ServerAsyncResponseWriter< ::BucketReadResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -414,7 +325,7 @@ class Seal final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_write_bucket() {
-      ::grpc::Service::MarkMethodAsync(5);
+      ::grpc::Service::MarkMethodAsync(2);
     }
     ~WithAsyncMethod_write_bucket() override {
       BaseClassMustBeDerivedFromService(this);
@@ -425,7 +336,7 @@ class Seal final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void Requestwrite_bucket(::grpc::ServerContext* context, ::BucketWriteMessage* request, ::grpc::ServerAsyncResponseWriter< ::google::protobuf::Empty>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -434,7 +345,7 @@ class Seal final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_set_capacity() {
-      ::grpc::Service::MarkMethodAsync(6);
+      ::grpc::Service::MarkMethodAsync(3);
     }
     ~WithAsyncMethod_set_capacity() override {
       BaseClassMustBeDerivedFromService(this);
@@ -445,10 +356,50 @@ class Seal final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void Requestset_capacity(::grpc::ServerContext* context, ::BucketSetMessage* request, ::grpc::ServerAsyncResponseWriter< ::google::protobuf::Empty>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(6, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_setup<WithAsyncMethod_search<WithAsyncMethod_oram_access<WithAsyncMethod_oram_init<WithAsyncMethod_read_bucket<WithAsyncMethod_write_bucket<WithAsyncMethod_set_capacity<Service > > > > > > > AsyncService;
+  template <class BaseClass>
+  class WithAsyncMethod_insert_handler : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_insert_handler() {
+      ::grpc::Service::MarkMethodAsync(4);
+    }
+    ~WithAsyncMethod_insert_handler() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status insert_handler(::grpc::ServerContext* /*context*/, const ::InsertMessage* /*request*/, ::google::protobuf::Empty* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void Requestinsert_handler(::grpc::ServerContext* context, ::InsertMessage* request, ::grpc::ServerAsyncResponseWriter< ::google::protobuf::Empty>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithAsyncMethod_select_handler : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_select_handler() {
+      ::grpc::Service::MarkMethodAsync(5);
+    }
+    ~WithAsyncMethod_select_handler() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status select_handler(::grpc::ServerContext* /*context*/, const ::SelectMessage* /*request*/, ::SelectResult* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void Requestselect_handler(::grpc::ServerContext* context, ::SelectMessage* request, ::grpc::ServerAsyncResponseWriter< ::SelectResult>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  typedef WithAsyncMethod_setup<WithAsyncMethod_read_bucket<WithAsyncMethod_write_bucket<WithAsyncMethod_set_capacity<WithAsyncMethod_insert_handler<WithAsyncMethod_select_handler<Service > > > > > > AsyncService;
   template <class BaseClass>
   class ExperimentalWithCallbackMethod_setup : public BaseClass {
    private:
@@ -497,147 +448,6 @@ class Seal final {
       { return nullptr; }
   };
   template <class BaseClass>
-  class ExperimentalWithCallbackMethod_search : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    ExperimentalWithCallbackMethod_search() {
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::Service::
-    #else
-      ::grpc::Service::experimental().
-    #endif
-        MarkMethodCallback(1,
-          new ::grpc::internal::CallbackUnaryHandler< ::SearchMessage, ::SearchResponse>(
-            [this](
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-                   ::grpc::CallbackServerContext*
-    #else
-                   ::grpc::experimental::CallbackServerContext*
-    #endif
-                     context, const ::SearchMessage* request, ::SearchResponse* response) { return this->search(context, request, response); }));}
-    void SetMessageAllocatorFor_search(
-        ::grpc::experimental::MessageAllocator< ::SearchMessage, ::SearchResponse>* allocator) {
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(1);
-    #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(1);
-    #endif
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::SearchMessage, ::SearchResponse>*>(handler)
-              ->SetMessageAllocator(allocator);
-    }
-    ~ExperimentalWithCallbackMethod_search() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status search(::grpc::ServerContext* /*context*/, const ::SearchMessage* /*request*/, ::SearchResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-    virtual ::grpc::ServerUnaryReactor* search(
-      ::grpc::CallbackServerContext* /*context*/, const ::SearchMessage* /*request*/, ::SearchResponse* /*response*/)
-    #else
-    virtual ::grpc::experimental::ServerUnaryReactor* search(
-      ::grpc::experimental::CallbackServerContext* /*context*/, const ::SearchMessage* /*request*/, ::SearchResponse* /*response*/)
-    #endif
-      { return nullptr; }
-  };
-  template <class BaseClass>
-  class ExperimentalWithCallbackMethod_oram_access : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    ExperimentalWithCallbackMethod_oram_access() {
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::Service::
-    #else
-      ::grpc::Service::experimental().
-    #endif
-        MarkMethodCallback(2,
-          new ::grpc::internal::CallbackUnaryHandler< ::OramAccessMessage, ::OramAccessResponse>(
-            [this](
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-                   ::grpc::CallbackServerContext*
-    #else
-                   ::grpc::experimental::CallbackServerContext*
-    #endif
-                     context, const ::OramAccessMessage* request, ::OramAccessResponse* response) { return this->oram_access(context, request, response); }));}
-    void SetMessageAllocatorFor_oram_access(
-        ::grpc::experimental::MessageAllocator< ::OramAccessMessage, ::OramAccessResponse>* allocator) {
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(2);
-    #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(2);
-    #endif
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::OramAccessMessage, ::OramAccessResponse>*>(handler)
-              ->SetMessageAllocator(allocator);
-    }
-    ~ExperimentalWithCallbackMethod_oram_access() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status oram_access(::grpc::ServerContext* /*context*/, const ::OramAccessMessage* /*request*/, ::OramAccessResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-    virtual ::grpc::ServerUnaryReactor* oram_access(
-      ::grpc::CallbackServerContext* /*context*/, const ::OramAccessMessage* /*request*/, ::OramAccessResponse* /*response*/)
-    #else
-    virtual ::grpc::experimental::ServerUnaryReactor* oram_access(
-      ::grpc::experimental::CallbackServerContext* /*context*/, const ::OramAccessMessage* /*request*/, ::OramAccessResponse* /*response*/)
-    #endif
-      { return nullptr; }
-  };
-  template <class BaseClass>
-  class ExperimentalWithCallbackMethod_oram_init : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    ExperimentalWithCallbackMethod_oram_init() {
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::Service::
-    #else
-      ::grpc::Service::experimental().
-    #endif
-        MarkMethodCallback(3,
-          new ::grpc::internal::CallbackUnaryHandler< ::OramInitMessage, ::google::protobuf::Empty>(
-            [this](
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-                   ::grpc::CallbackServerContext*
-    #else
-                   ::grpc::experimental::CallbackServerContext*
-    #endif
-                     context, const ::OramInitMessage* request, ::google::protobuf::Empty* response) { return this->oram_init(context, request, response); }));}
-    void SetMessageAllocatorFor_oram_init(
-        ::grpc::experimental::MessageAllocator< ::OramInitMessage, ::google::protobuf::Empty>* allocator) {
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(3);
-    #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(3);
-    #endif
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::OramInitMessage, ::google::protobuf::Empty>*>(handler)
-              ->SetMessageAllocator(allocator);
-    }
-    ~ExperimentalWithCallbackMethod_oram_init() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status oram_init(::grpc::ServerContext* /*context*/, const ::OramInitMessage* /*request*/, ::google::protobuf::Empty* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-    virtual ::grpc::ServerUnaryReactor* oram_init(
-      ::grpc::CallbackServerContext* /*context*/, const ::OramInitMessage* /*request*/, ::google::protobuf::Empty* /*response*/)
-    #else
-    virtual ::grpc::experimental::ServerUnaryReactor* oram_init(
-      ::grpc::experimental::CallbackServerContext* /*context*/, const ::OramInitMessage* /*request*/, ::google::protobuf::Empty* /*response*/)
-    #endif
-      { return nullptr; }
-  };
-  template <class BaseClass>
   class ExperimentalWithCallbackMethod_read_bucket : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
@@ -648,7 +458,7 @@ class Seal final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(4,
+        MarkMethodCallback(1,
           new ::grpc::internal::CallbackUnaryHandler< ::BucketReadMessage, ::BucketReadResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -660,9 +470,9 @@ class Seal final {
     void SetMessageAllocatorFor_read_bucket(
         ::grpc::experimental::MessageAllocator< ::BucketReadMessage, ::BucketReadResponse>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(4);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(1);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(4);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(1);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::BucketReadMessage, ::BucketReadResponse>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -695,7 +505,7 @@ class Seal final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(5,
+        MarkMethodCallback(2,
           new ::grpc::internal::CallbackUnaryHandler< ::BucketWriteMessage, ::google::protobuf::Empty>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -707,9 +517,9 @@ class Seal final {
     void SetMessageAllocatorFor_write_bucket(
         ::grpc::experimental::MessageAllocator< ::BucketWriteMessage, ::google::protobuf::Empty>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(5);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(2);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(5);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(2);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::BucketWriteMessage, ::google::protobuf::Empty>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -742,7 +552,7 @@ class Seal final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(6,
+        MarkMethodCallback(3,
           new ::grpc::internal::CallbackUnaryHandler< ::BucketSetMessage, ::google::protobuf::Empty>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -754,9 +564,9 @@ class Seal final {
     void SetMessageAllocatorFor_set_capacity(
         ::grpc::experimental::MessageAllocator< ::BucketSetMessage, ::google::protobuf::Empty>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(6);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(3);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(6);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(3);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::BucketSetMessage, ::google::protobuf::Empty>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -778,11 +588,105 @@ class Seal final {
     #endif
       { return nullptr; }
   };
+  template <class BaseClass>
+  class ExperimentalWithCallbackMethod_insert_handler : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithCallbackMethod_insert_handler() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(4,
+          new ::grpc::internal::CallbackUnaryHandler< ::InsertMessage, ::google::protobuf::Empty>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::InsertMessage* request, ::google::protobuf::Empty* response) { return this->insert_handler(context, request, response); }));}
+    void SetMessageAllocatorFor_insert_handler(
+        ::grpc::experimental::MessageAllocator< ::InsertMessage, ::google::protobuf::Empty>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(4);
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(4);
+    #endif
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::InsertMessage, ::google::protobuf::Empty>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~ExperimentalWithCallbackMethod_insert_handler() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status insert_handler(::grpc::ServerContext* /*context*/, const ::InsertMessage* /*request*/, ::google::protobuf::Empty* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* insert_handler(
+      ::grpc::CallbackServerContext* /*context*/, const ::InsertMessage* /*request*/, ::google::protobuf::Empty* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* insert_handler(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::InsertMessage* /*request*/, ::google::protobuf::Empty* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
+  class ExperimentalWithCallbackMethod_select_handler : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithCallbackMethod_select_handler() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(5,
+          new ::grpc::internal::CallbackUnaryHandler< ::SelectMessage, ::SelectResult>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::SelectMessage* request, ::SelectResult* response) { return this->select_handler(context, request, response); }));}
+    void SetMessageAllocatorFor_select_handler(
+        ::grpc::experimental::MessageAllocator< ::SelectMessage, ::SelectResult>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(5);
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(5);
+    #endif
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::SelectMessage, ::SelectResult>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~ExperimentalWithCallbackMethod_select_handler() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status select_handler(::grpc::ServerContext* /*context*/, const ::SelectMessage* /*request*/, ::SelectResult* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* select_handler(
+      ::grpc::CallbackServerContext* /*context*/, const ::SelectMessage* /*request*/, ::SelectResult* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* select_handler(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::SelectMessage* /*request*/, ::SelectResult* /*response*/)
+    #endif
+      { return nullptr; }
+  };
   #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-  typedef ExperimentalWithCallbackMethod_setup<ExperimentalWithCallbackMethod_search<ExperimentalWithCallbackMethod_oram_access<ExperimentalWithCallbackMethod_oram_init<ExperimentalWithCallbackMethod_read_bucket<ExperimentalWithCallbackMethod_write_bucket<ExperimentalWithCallbackMethod_set_capacity<Service > > > > > > > CallbackService;
+  typedef ExperimentalWithCallbackMethod_setup<ExperimentalWithCallbackMethod_read_bucket<ExperimentalWithCallbackMethod_write_bucket<ExperimentalWithCallbackMethod_set_capacity<ExperimentalWithCallbackMethod_insert_handler<ExperimentalWithCallbackMethod_select_handler<Service > > > > > > CallbackService;
   #endif
 
-  typedef ExperimentalWithCallbackMethod_setup<ExperimentalWithCallbackMethod_search<ExperimentalWithCallbackMethod_oram_access<ExperimentalWithCallbackMethod_oram_init<ExperimentalWithCallbackMethod_read_bucket<ExperimentalWithCallbackMethod_write_bucket<ExperimentalWithCallbackMethod_set_capacity<Service > > > > > > > ExperimentalCallbackService;
+  typedef ExperimentalWithCallbackMethod_setup<ExperimentalWithCallbackMethod_read_bucket<ExperimentalWithCallbackMethod_write_bucket<ExperimentalWithCallbackMethod_set_capacity<ExperimentalWithCallbackMethod_insert_handler<ExperimentalWithCallbackMethod_select_handler<Service > > > > > > ExperimentalCallbackService;
   template <class BaseClass>
   class WithGenericMethod_setup : public BaseClass {
    private:
@@ -801,63 +705,12 @@ class Seal final {
     }
   };
   template <class BaseClass>
-  class WithGenericMethod_search : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithGenericMethod_search() {
-      ::grpc::Service::MarkMethodGeneric(1);
-    }
-    ~WithGenericMethod_search() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status search(::grpc::ServerContext* /*context*/, const ::SearchMessage* /*request*/, ::SearchResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-  };
-  template <class BaseClass>
-  class WithGenericMethod_oram_access : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithGenericMethod_oram_access() {
-      ::grpc::Service::MarkMethodGeneric(2);
-    }
-    ~WithGenericMethod_oram_access() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status oram_access(::grpc::ServerContext* /*context*/, const ::OramAccessMessage* /*request*/, ::OramAccessResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-  };
-  template <class BaseClass>
-  class WithGenericMethod_oram_init : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithGenericMethod_oram_init() {
-      ::grpc::Service::MarkMethodGeneric(3);
-    }
-    ~WithGenericMethod_oram_init() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status oram_init(::grpc::ServerContext* /*context*/, const ::OramInitMessage* /*request*/, ::google::protobuf::Empty* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-  };
-  template <class BaseClass>
   class WithGenericMethod_read_bucket : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_read_bucket() {
-      ::grpc::Service::MarkMethodGeneric(4);
+      ::grpc::Service::MarkMethodGeneric(1);
     }
     ~WithGenericMethod_read_bucket() override {
       BaseClassMustBeDerivedFromService(this);
@@ -874,7 +727,7 @@ class Seal final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_write_bucket() {
-      ::grpc::Service::MarkMethodGeneric(5);
+      ::grpc::Service::MarkMethodGeneric(2);
     }
     ~WithGenericMethod_write_bucket() override {
       BaseClassMustBeDerivedFromService(this);
@@ -891,13 +744,47 @@ class Seal final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_set_capacity() {
-      ::grpc::Service::MarkMethodGeneric(6);
+      ::grpc::Service::MarkMethodGeneric(3);
     }
     ~WithGenericMethod_set_capacity() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
     ::grpc::Status set_capacity(::grpc::ServerContext* /*context*/, const ::BucketSetMessage* /*request*/, ::google::protobuf::Empty* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_insert_handler : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_insert_handler() {
+      ::grpc::Service::MarkMethodGeneric(4);
+    }
+    ~WithGenericMethod_insert_handler() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status insert_handler(::grpc::ServerContext* /*context*/, const ::InsertMessage* /*request*/, ::google::protobuf::Empty* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_select_handler : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_select_handler() {
+      ::grpc::Service::MarkMethodGeneric(5);
+    }
+    ~WithGenericMethod_select_handler() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status select_handler(::grpc::ServerContext* /*context*/, const ::SelectMessage* /*request*/, ::SelectResult* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -923,72 +810,12 @@ class Seal final {
     }
   };
   template <class BaseClass>
-  class WithRawMethod_search : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithRawMethod_search() {
-      ::grpc::Service::MarkMethodRaw(1);
-    }
-    ~WithRawMethod_search() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status search(::grpc::ServerContext* /*context*/, const ::SearchMessage* /*request*/, ::SearchResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    void Requestsearch(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
-    }
-  };
-  template <class BaseClass>
-  class WithRawMethod_oram_access : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithRawMethod_oram_access() {
-      ::grpc::Service::MarkMethodRaw(2);
-    }
-    ~WithRawMethod_oram_access() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status oram_access(::grpc::ServerContext* /*context*/, const ::OramAccessMessage* /*request*/, ::OramAccessResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    void Requestoram_access(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
-    }
-  };
-  template <class BaseClass>
-  class WithRawMethod_oram_init : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithRawMethod_oram_init() {
-      ::grpc::Service::MarkMethodRaw(3);
-    }
-    ~WithRawMethod_oram_init() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status oram_init(::grpc::ServerContext* /*context*/, const ::OramInitMessage* /*request*/, ::google::protobuf::Empty* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    void Requestoram_init(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
-    }
-  };
-  template <class BaseClass>
   class WithRawMethod_read_bucket : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_read_bucket() {
-      ::grpc::Service::MarkMethodRaw(4);
+      ::grpc::Service::MarkMethodRaw(1);
     }
     ~WithRawMethod_read_bucket() override {
       BaseClassMustBeDerivedFromService(this);
@@ -999,7 +826,7 @@ class Seal final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void Requestread_bucket(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1008,7 +835,7 @@ class Seal final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_write_bucket() {
-      ::grpc::Service::MarkMethodRaw(5);
+      ::grpc::Service::MarkMethodRaw(2);
     }
     ~WithRawMethod_write_bucket() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1019,7 +846,7 @@ class Seal final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void Requestwrite_bucket(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1028,7 +855,7 @@ class Seal final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_set_capacity() {
-      ::grpc::Service::MarkMethodRaw(6);
+      ::grpc::Service::MarkMethodRaw(3);
     }
     ~WithRawMethod_set_capacity() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1039,7 +866,47 @@ class Seal final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void Requestset_capacity(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(6, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithRawMethod_insert_handler : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_insert_handler() {
+      ::grpc::Service::MarkMethodRaw(4);
+    }
+    ~WithRawMethod_insert_handler() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status insert_handler(::grpc::ServerContext* /*context*/, const ::InsertMessage* /*request*/, ::google::protobuf::Empty* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void Requestinsert_handler(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithRawMethod_select_handler : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_select_handler() {
+      ::grpc::Service::MarkMethodRaw(5);
+    }
+    ~WithRawMethod_select_handler() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status select_handler(::grpc::ServerContext* /*context*/, const ::SelectMessage* /*request*/, ::SelectResult* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void Requestselect_handler(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1081,120 +948,6 @@ class Seal final {
       { return nullptr; }
   };
   template <class BaseClass>
-  class ExperimentalWithRawCallbackMethod_search : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    ExperimentalWithRawCallbackMethod_search() {
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::Service::
-    #else
-      ::grpc::Service::experimental().
-    #endif
-        MarkMethodRawCallback(1,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
-            [this](
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-                   ::grpc::CallbackServerContext*
-    #else
-                   ::grpc::experimental::CallbackServerContext*
-    #endif
-                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->search(context, request, response); }));
-    }
-    ~ExperimentalWithRawCallbackMethod_search() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status search(::grpc::ServerContext* /*context*/, const ::SearchMessage* /*request*/, ::SearchResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-    virtual ::grpc::ServerUnaryReactor* search(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
-    #else
-    virtual ::grpc::experimental::ServerUnaryReactor* search(
-      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
-    #endif
-      { return nullptr; }
-  };
-  template <class BaseClass>
-  class ExperimentalWithRawCallbackMethod_oram_access : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    ExperimentalWithRawCallbackMethod_oram_access() {
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::Service::
-    #else
-      ::grpc::Service::experimental().
-    #endif
-        MarkMethodRawCallback(2,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
-            [this](
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-                   ::grpc::CallbackServerContext*
-    #else
-                   ::grpc::experimental::CallbackServerContext*
-    #endif
-                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->oram_access(context, request, response); }));
-    }
-    ~ExperimentalWithRawCallbackMethod_oram_access() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status oram_access(::grpc::ServerContext* /*context*/, const ::OramAccessMessage* /*request*/, ::OramAccessResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-    virtual ::grpc::ServerUnaryReactor* oram_access(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
-    #else
-    virtual ::grpc::experimental::ServerUnaryReactor* oram_access(
-      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
-    #endif
-      { return nullptr; }
-  };
-  template <class BaseClass>
-  class ExperimentalWithRawCallbackMethod_oram_init : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    ExperimentalWithRawCallbackMethod_oram_init() {
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::Service::
-    #else
-      ::grpc::Service::experimental().
-    #endif
-        MarkMethodRawCallback(3,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
-            [this](
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-                   ::grpc::CallbackServerContext*
-    #else
-                   ::grpc::experimental::CallbackServerContext*
-    #endif
-                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->oram_init(context, request, response); }));
-    }
-    ~ExperimentalWithRawCallbackMethod_oram_init() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable synchronous version of this method
-    ::grpc::Status oram_init(::grpc::ServerContext* /*context*/, const ::OramInitMessage* /*request*/, ::google::protobuf::Empty* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-    virtual ::grpc::ServerUnaryReactor* oram_init(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
-    #else
-    virtual ::grpc::experimental::ServerUnaryReactor* oram_init(
-      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
-    #endif
-      { return nullptr; }
-  };
-  template <class BaseClass>
   class ExperimentalWithRawCallbackMethod_read_bucket : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
@@ -1205,7 +958,7 @@ class Seal final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(4,
+        MarkMethodRawCallback(1,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -1243,7 +996,7 @@ class Seal final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(5,
+        MarkMethodRawCallback(2,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -1281,7 +1034,7 @@ class Seal final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(6,
+        MarkMethodRawCallback(3,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -1304,6 +1057,82 @@ class Seal final {
       ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
     #else
     virtual ::grpc::experimental::ServerUnaryReactor* set_capacity(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
+  class ExperimentalWithRawCallbackMethod_insert_handler : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithRawCallbackMethod_insert_handler() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(4,
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->insert_handler(context, request, response); }));
+    }
+    ~ExperimentalWithRawCallbackMethod_insert_handler() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status insert_handler(::grpc::ServerContext* /*context*/, const ::InsertMessage* /*request*/, ::google::protobuf::Empty* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* insert_handler(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* insert_handler(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
+  class ExperimentalWithRawCallbackMethod_select_handler : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithRawCallbackMethod_select_handler() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(5,
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->select_handler(context, request, response); }));
+    }
+    ~ExperimentalWithRawCallbackMethod_select_handler() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status select_handler(::grpc::ServerContext* /*context*/, const ::SelectMessage* /*request*/, ::SelectResult* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* select_handler(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* select_handler(
       ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
     #endif
       { return nullptr; }
@@ -1336,93 +1165,12 @@ class Seal final {
     virtual ::grpc::Status Streamedsetup(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::SetupMessage,::google::protobuf::Empty>* server_unary_streamer) = 0;
   };
   template <class BaseClass>
-  class WithStreamedUnaryMethod_search : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithStreamedUnaryMethod_search() {
-      ::grpc::Service::MarkMethodStreamed(1,
-        new ::grpc::internal::StreamedUnaryHandler<
-          ::SearchMessage, ::SearchResponse>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
-                     ::SearchMessage, ::SearchResponse>* streamer) {
-                       return this->Streamedsearch(context,
-                         streamer);
-                  }));
-    }
-    ~WithStreamedUnaryMethod_search() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable regular version of this method
-    ::grpc::Status search(::grpc::ServerContext* /*context*/, const ::SearchMessage* /*request*/, ::SearchResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    // replace default version of method with streamed unary
-    virtual ::grpc::Status Streamedsearch(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::SearchMessage,::SearchResponse>* server_unary_streamer) = 0;
-  };
-  template <class BaseClass>
-  class WithStreamedUnaryMethod_oram_access : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithStreamedUnaryMethod_oram_access() {
-      ::grpc::Service::MarkMethodStreamed(2,
-        new ::grpc::internal::StreamedUnaryHandler<
-          ::OramAccessMessage, ::OramAccessResponse>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
-                     ::OramAccessMessage, ::OramAccessResponse>* streamer) {
-                       return this->Streamedoram_access(context,
-                         streamer);
-                  }));
-    }
-    ~WithStreamedUnaryMethod_oram_access() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable regular version of this method
-    ::grpc::Status oram_access(::grpc::ServerContext* /*context*/, const ::OramAccessMessage* /*request*/, ::OramAccessResponse* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    // replace default version of method with streamed unary
-    virtual ::grpc::Status Streamedoram_access(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::OramAccessMessage,::OramAccessResponse>* server_unary_streamer) = 0;
-  };
-  template <class BaseClass>
-  class WithStreamedUnaryMethod_oram_init : public BaseClass {
-   private:
-    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
-   public:
-    WithStreamedUnaryMethod_oram_init() {
-      ::grpc::Service::MarkMethodStreamed(3,
-        new ::grpc::internal::StreamedUnaryHandler<
-          ::OramInitMessage, ::google::protobuf::Empty>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
-                     ::OramInitMessage, ::google::protobuf::Empty>* streamer) {
-                       return this->Streamedoram_init(context,
-                         streamer);
-                  }));
-    }
-    ~WithStreamedUnaryMethod_oram_init() override {
-      BaseClassMustBeDerivedFromService(this);
-    }
-    // disable regular version of this method
-    ::grpc::Status oram_init(::grpc::ServerContext* /*context*/, const ::OramInitMessage* /*request*/, ::google::protobuf::Empty* /*response*/) override {
-      abort();
-      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-    }
-    // replace default version of method with streamed unary
-    virtual ::grpc::Status Streamedoram_init(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::OramInitMessage,::google::protobuf::Empty>* server_unary_streamer) = 0;
-  };
-  template <class BaseClass>
   class WithStreamedUnaryMethod_read_bucket : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_read_bucket() {
-      ::grpc::Service::MarkMethodStreamed(4,
+      ::grpc::Service::MarkMethodStreamed(1,
         new ::grpc::internal::StreamedUnaryHandler<
           ::BucketReadMessage, ::BucketReadResponse>(
             [this](::grpc::ServerContext* context,
@@ -1449,7 +1197,7 @@ class Seal final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_write_bucket() {
-      ::grpc::Service::MarkMethodStreamed(5,
+      ::grpc::Service::MarkMethodStreamed(2,
         new ::grpc::internal::StreamedUnaryHandler<
           ::BucketWriteMessage, ::google::protobuf::Empty>(
             [this](::grpc::ServerContext* context,
@@ -1476,7 +1224,7 @@ class Seal final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_set_capacity() {
-      ::grpc::Service::MarkMethodStreamed(6,
+      ::grpc::Service::MarkMethodStreamed(3,
         new ::grpc::internal::StreamedUnaryHandler<
           ::BucketSetMessage, ::google::protobuf::Empty>(
             [this](::grpc::ServerContext* context,
@@ -1497,9 +1245,63 @@ class Seal final {
     // replace default version of method with streamed unary
     virtual ::grpc::Status Streamedset_capacity(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::BucketSetMessage,::google::protobuf::Empty>* server_unary_streamer) = 0;
   };
-  typedef WithStreamedUnaryMethod_setup<WithStreamedUnaryMethod_search<WithStreamedUnaryMethod_oram_access<WithStreamedUnaryMethod_oram_init<WithStreamedUnaryMethod_read_bucket<WithStreamedUnaryMethod_write_bucket<WithStreamedUnaryMethod_set_capacity<Service > > > > > > > StreamedUnaryService;
+  template <class BaseClass>
+  class WithStreamedUnaryMethod_insert_handler : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_insert_handler() {
+      ::grpc::Service::MarkMethodStreamed(4,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::InsertMessage, ::google::protobuf::Empty>(
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
+                     ::InsertMessage, ::google::protobuf::Empty>* streamer) {
+                       return this->Streamedinsert_handler(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_insert_handler() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status insert_handler(::grpc::ServerContext* /*context*/, const ::InsertMessage* /*request*/, ::google::protobuf::Empty* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status Streamedinsert_handler(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::InsertMessage,::google::protobuf::Empty>* server_unary_streamer) = 0;
+  };
+  template <class BaseClass>
+  class WithStreamedUnaryMethod_select_handler : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_select_handler() {
+      ::grpc::Service::MarkMethodStreamed(5,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::SelectMessage, ::SelectResult>(
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
+                     ::SelectMessage, ::SelectResult>* streamer) {
+                       return this->Streamedselect_handler(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_select_handler() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status select_handler(::grpc::ServerContext* /*context*/, const ::SelectMessage* /*request*/, ::SelectResult* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status Streamedselect_handler(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::SelectMessage,::SelectResult>* server_unary_streamer) = 0;
+  };
+  typedef WithStreamedUnaryMethod_setup<WithStreamedUnaryMethod_read_bucket<WithStreamedUnaryMethod_write_bucket<WithStreamedUnaryMethod_set_capacity<WithStreamedUnaryMethod_insert_handler<WithStreamedUnaryMethod_select_handler<Service > > > > > > StreamedUnaryService;
   typedef Service SplitStreamedService;
-  typedef WithStreamedUnaryMethod_setup<WithStreamedUnaryMethod_search<WithStreamedUnaryMethod_oram_access<WithStreamedUnaryMethod_oram_init<WithStreamedUnaryMethod_read_bucket<WithStreamedUnaryMethod_write_bucket<WithStreamedUnaryMethod_set_capacity<Service > > > > > > > StreamedService;
+  typedef WithStreamedUnaryMethod_setup<WithStreamedUnaryMethod_read_bucket<WithStreamedUnaryMethod_write_bucket<WithStreamedUnaryMethod_set_capacity<WithStreamedUnaryMethod_insert_handler<WithStreamedUnaryMethod_select_handler<Service > > > > > > StreamedService;
 };
 
 

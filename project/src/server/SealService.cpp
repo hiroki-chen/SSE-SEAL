@@ -23,11 +23,8 @@
 #include <server/SealService.h>
 #include <utils.h>
 
-SealService::SealService(std::string_view connection_info)
+SealService::SealService()
 {
-    /* Create a new connector to the database. */
-    connector = std::make_unique<SEAL::Connector>(connection_info);
-    PLOG_(1, plog::info) << "Server starts.";
 }
 
 SealService::~SealService()
@@ -37,9 +34,25 @@ SealService::~SealService()
 grpc::Status
 SealService::setup(
     grpc::ServerContext* context,
-    const SetupMessage* request,
+    const SetupMessage* message,
     google::protobuf::Empty* e)
 {
+    const std::string connection_info = message->connection_information();
+    const std::string table_name = message->table_name();
+    const int column_size = message->column_names_size();
+    std::vector<std::string> column_names;
+    for (int i = 0; i < column_size; i++) {
+        column_names.push_back(message->column_names(i));
+    }
+
+    try {
+        /* Create a new connector to the database. */
+        connector = std::make_unique<SEAL::Connector>(connection_info);
+        connector.get()->create_table_handler(table_name, column_names);
+    } catch (const pqxx::sql_error& e) {
+        const std::string error_message = "The connection information is not correct.";
+        return grpc::Status(grpc::FAILED_PRECONDITION, error_message);
+    }
     return grpc::Status::OK;
 }
 
@@ -118,6 +131,53 @@ SealService::write_bucket(
     } catch (const std::exception& e) {
         PLOG_(1, plog::error) << e.what();
         std::cout << e.what() << std::endl;
+    }
+
+    return grpc::Status::OK;
+}
+
+grpc::Status
+SealService::insert_handler(
+    grpc::ServerContext* context,
+    const InsertMessage* message,
+    google::protobuf::Empty* e)
+{
+    const std::string table = message->table();
+    const int value_size = message->values_size();
+
+    std::vector<std::string> values;
+    for (int i = 0; i < value_size; i++) {
+        values.push_back(message->values(i));
+    }
+
+    try {
+        connector.get()->insert_handler(table, values);
+    } catch (const pqxx::sql_error& e) {
+        return grpc::Status(grpc::FAILED_PRECONDITION, e.what());
+    }
+
+    return grpc::Status::OK;
+}
+
+grpc::Status
+SealService::select_handler(
+    grpc::ServerContext* context,
+    const SelectMessage* message,
+    SelectResult* reponse)
+{
+    const std::string table = message->table();
+    const std::string where = message->document_id();
+    const int column_size = message->columns_size();
+    std::vector<std::string> columns;
+
+    for (int i = 0; i < column_size; i++) {
+        columns.push_back(message->columns(i));
+    }
+
+    try {
+        connector.get()->select_handler(table, where, columns);
+    } catch (pqxx::sql_error& e) {
+        return grpc::Status(grpc::FAILED_PRECONDITION, e.what());
     }
 
     return grpc::Status::OK;

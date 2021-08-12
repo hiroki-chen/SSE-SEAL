@@ -22,12 +22,11 @@
 
 static const char* Seal_method_names[] = {
   "/Seal/setup",
-  "/Seal/search",
-  "/Seal/oram_access",
-  "/Seal/oram_init",
   "/Seal/read_bucket",
   "/Seal/write_bucket",
   "/Seal/set_capacity",
+  "/Seal/insert_handler",
+  "/Seal/select_handler",
 };
 
 std::unique_ptr< Seal::Stub> Seal::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
@@ -38,12 +37,11 @@ std::unique_ptr< Seal::Stub> Seal::NewStub(const std::shared_ptr< ::grpc::Channe
 
 Seal::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options)
   : channel_(channel), rpcmethod_setup_(Seal_method_names[0], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_search_(Seal_method_names[1], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_oram_access_(Seal_method_names[2], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_oram_init_(Seal_method_names[3], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_read_bucket_(Seal_method_names[4], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_write_bucket_(Seal_method_names[5], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_set_capacity_(Seal_method_names[6], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_read_bucket_(Seal_method_names[1], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_write_bucket_(Seal_method_names[2], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_set_capacity_(Seal_method_names[3], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_insert_handler_(Seal_method_names[4], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_select_handler_(Seal_method_names[5], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
 ::grpc::Status Seal::Stub::setup(::grpc::ClientContext* context, const ::SetupMessage& request, ::google::protobuf::Empty* response) {
@@ -65,75 +63,6 @@ void Seal::Stub::experimental_async::setup(::grpc::ClientContext* context, const
 ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* Seal::Stub::AsyncsetupRaw(::grpc::ClientContext* context, const ::SetupMessage& request, ::grpc::CompletionQueue* cq) {
   auto* result =
     this->PrepareAsyncsetupRaw(context, request, cq);
-  result->StartCall();
-  return result;
-}
-
-::grpc::Status Seal::Stub::search(::grpc::ClientContext* context, const ::SearchMessage& request, ::SearchResponse* response) {
-  return ::grpc::internal::BlockingUnaryCall< ::SearchMessage, ::SearchResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_search_, context, request, response);
-}
-
-void Seal::Stub::experimental_async::search(::grpc::ClientContext* context, const ::SearchMessage* request, ::SearchResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc::internal::CallbackUnaryCall< ::SearchMessage, ::SearchResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_search_, context, request, response, std::move(f));
-}
-
-void Seal::Stub::experimental_async::search(::grpc::ClientContext* context, const ::SearchMessage* request, ::SearchResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_search_, context, request, response, reactor);
-}
-
-::grpc::ClientAsyncResponseReader< ::SearchResponse>* Seal::Stub::PrepareAsyncsearchRaw(::grpc::ClientContext* context, const ::SearchMessage& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::SearchResponse, ::SearchMessage, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_search_, context, request);
-}
-
-::grpc::ClientAsyncResponseReader< ::SearchResponse>* Seal::Stub::AsyncsearchRaw(::grpc::ClientContext* context, const ::SearchMessage& request, ::grpc::CompletionQueue* cq) {
-  auto* result =
-    this->PrepareAsyncsearchRaw(context, request, cq);
-  result->StartCall();
-  return result;
-}
-
-::grpc::Status Seal::Stub::oram_access(::grpc::ClientContext* context, const ::OramAccessMessage& request, ::OramAccessResponse* response) {
-  return ::grpc::internal::BlockingUnaryCall< ::OramAccessMessage, ::OramAccessResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_oram_access_, context, request, response);
-}
-
-void Seal::Stub::experimental_async::oram_access(::grpc::ClientContext* context, const ::OramAccessMessage* request, ::OramAccessResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc::internal::CallbackUnaryCall< ::OramAccessMessage, ::OramAccessResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_oram_access_, context, request, response, std::move(f));
-}
-
-void Seal::Stub::experimental_async::oram_access(::grpc::ClientContext* context, const ::OramAccessMessage* request, ::OramAccessResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_oram_access_, context, request, response, reactor);
-}
-
-::grpc::ClientAsyncResponseReader< ::OramAccessResponse>* Seal::Stub::PrepareAsyncoram_accessRaw(::grpc::ClientContext* context, const ::OramAccessMessage& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::OramAccessResponse, ::OramAccessMessage, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_oram_access_, context, request);
-}
-
-::grpc::ClientAsyncResponseReader< ::OramAccessResponse>* Seal::Stub::Asyncoram_accessRaw(::grpc::ClientContext* context, const ::OramAccessMessage& request, ::grpc::CompletionQueue* cq) {
-  auto* result =
-    this->PrepareAsyncoram_accessRaw(context, request, cq);
-  result->StartCall();
-  return result;
-}
-
-::grpc::Status Seal::Stub::oram_init(::grpc::ClientContext* context, const ::OramInitMessage& request, ::google::protobuf::Empty* response) {
-  return ::grpc::internal::BlockingUnaryCall< ::OramInitMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_oram_init_, context, request, response);
-}
-
-void Seal::Stub::experimental_async::oram_init(::grpc::ClientContext* context, const ::OramInitMessage* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)> f) {
-  ::grpc::internal::CallbackUnaryCall< ::OramInitMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_oram_init_, context, request, response, std::move(f));
-}
-
-void Seal::Stub::experimental_async::oram_init(::grpc::ClientContext* context, const ::OramInitMessage* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_oram_init_, context, request, response, reactor);
-}
-
-::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* Seal::Stub::PrepareAsyncoram_initRaw(::grpc::ClientContext* context, const ::OramInitMessage& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::google::protobuf::Empty, ::OramInitMessage, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_oram_init_, context, request);
-}
-
-::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* Seal::Stub::Asyncoram_initRaw(::grpc::ClientContext* context, const ::OramInitMessage& request, ::grpc::CompletionQueue* cq) {
-  auto* result =
-    this->PrepareAsyncoram_initRaw(context, request, cq);
   result->StartCall();
   return result;
 }
@@ -207,6 +136,52 @@ void Seal::Stub::experimental_async::set_capacity(::grpc::ClientContext* context
   return result;
 }
 
+::grpc::Status Seal::Stub::insert_handler(::grpc::ClientContext* context, const ::InsertMessage& request, ::google::protobuf::Empty* response) {
+  return ::grpc::internal::BlockingUnaryCall< ::InsertMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_insert_handler_, context, request, response);
+}
+
+void Seal::Stub::experimental_async::insert_handler(::grpc::ClientContext* context, const ::InsertMessage* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::InsertMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_insert_handler_, context, request, response, std::move(f));
+}
+
+void Seal::Stub::experimental_async::insert_handler(::grpc::ClientContext* context, const ::InsertMessage* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_insert_handler_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* Seal::Stub::PrepareAsyncinsert_handlerRaw(::grpc::ClientContext* context, const ::InsertMessage& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::google::protobuf::Empty, ::InsertMessage, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_insert_handler_, context, request);
+}
+
+::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* Seal::Stub::Asyncinsert_handlerRaw(::grpc::ClientContext* context, const ::InsertMessage& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncinsert_handlerRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
+::grpc::Status Seal::Stub::select_handler(::grpc::ClientContext* context, const ::SelectMessage& request, ::SelectResult* response) {
+  return ::grpc::internal::BlockingUnaryCall< ::SelectMessage, ::SelectResult, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_select_handler_, context, request, response);
+}
+
+void Seal::Stub::experimental_async::select_handler(::grpc::ClientContext* context, const ::SelectMessage* request, ::SelectResult* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::SelectMessage, ::SelectResult, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_select_handler_, context, request, response, std::move(f));
+}
+
+void Seal::Stub::experimental_async::select_handler(::grpc::ClientContext* context, const ::SelectMessage* request, ::SelectResult* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_select_handler_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::SelectResult>* Seal::Stub::PrepareAsyncselect_handlerRaw(::grpc::ClientContext* context, const ::SelectMessage& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::SelectResult, ::SelectMessage, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_select_handler_, context, request);
+}
+
+::grpc::ClientAsyncResponseReader< ::SelectResult>* Seal::Stub::Asyncselect_handlerRaw(::grpc::ClientContext* context, const ::SelectMessage& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncselect_handlerRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
 Seal::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Seal_method_names[0],
@@ -221,36 +196,6 @@ Seal::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       Seal_method_names[1],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
-      new ::grpc::internal::RpcMethodHandler< Seal::Service, ::SearchMessage, ::SearchResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
-          [](Seal::Service* service,
-             ::grpc::ServerContext* ctx,
-             const ::SearchMessage* req,
-             ::SearchResponse* resp) {
-               return service->search(ctx, req, resp);
-             }, this)));
-  AddMethod(new ::grpc::internal::RpcServiceMethod(
-      Seal_method_names[2],
-      ::grpc::internal::RpcMethod::NORMAL_RPC,
-      new ::grpc::internal::RpcMethodHandler< Seal::Service, ::OramAccessMessage, ::OramAccessResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
-          [](Seal::Service* service,
-             ::grpc::ServerContext* ctx,
-             const ::OramAccessMessage* req,
-             ::OramAccessResponse* resp) {
-               return service->oram_access(ctx, req, resp);
-             }, this)));
-  AddMethod(new ::grpc::internal::RpcServiceMethod(
-      Seal_method_names[3],
-      ::grpc::internal::RpcMethod::NORMAL_RPC,
-      new ::grpc::internal::RpcMethodHandler< Seal::Service, ::OramInitMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
-          [](Seal::Service* service,
-             ::grpc::ServerContext* ctx,
-             const ::OramInitMessage* req,
-             ::google::protobuf::Empty* resp) {
-               return service->oram_init(ctx, req, resp);
-             }, this)));
-  AddMethod(new ::grpc::internal::RpcServiceMethod(
-      Seal_method_names[4],
-      ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Seal::Service, ::BucketReadMessage, ::BucketReadResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
           [](Seal::Service* service,
              ::grpc::ServerContext* ctx,
@@ -259,7 +204,7 @@ Seal::Service::Service() {
                return service->read_bucket(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      Seal_method_names[5],
+      Seal_method_names[2],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Seal::Service, ::BucketWriteMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
           [](Seal::Service* service,
@@ -269,7 +214,7 @@ Seal::Service::Service() {
                return service->write_bucket(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      Seal_method_names[6],
+      Seal_method_names[3],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< Seal::Service, ::BucketSetMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
           [](Seal::Service* service,
@@ -278,33 +223,32 @@ Seal::Service::Service() {
              ::google::protobuf::Empty* resp) {
                return service->set_capacity(ctx, req, resp);
              }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      Seal_method_names[4],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< Seal::Service, ::InsertMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+          [](Seal::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::InsertMessage* req,
+             ::google::protobuf::Empty* resp) {
+               return service->insert_handler(ctx, req, resp);
+             }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      Seal_method_names[5],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< Seal::Service, ::SelectMessage, ::SelectResult, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+          [](Seal::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::SelectMessage* req,
+             ::SelectResult* resp) {
+               return service->select_handler(ctx, req, resp);
+             }, this)));
 }
 
 Seal::Service::~Service() {
 }
 
 ::grpc::Status Seal::Service::setup(::grpc::ServerContext* context, const ::SetupMessage* request, ::google::protobuf::Empty* response) {
-  (void) context;
-  (void) request;
-  (void) response;
-  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-}
-
-::grpc::Status Seal::Service::search(::grpc::ServerContext* context, const ::SearchMessage* request, ::SearchResponse* response) {
-  (void) context;
-  (void) request;
-  (void) response;
-  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-}
-
-::grpc::Status Seal::Service::oram_access(::grpc::ServerContext* context, const ::OramAccessMessage* request, ::OramAccessResponse* response) {
-  (void) context;
-  (void) request;
-  (void) response;
-  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
-}
-
-::grpc::Status Seal::Service::oram_init(::grpc::ServerContext* context, const ::OramInitMessage* request, ::google::protobuf::Empty* response) {
   (void) context;
   (void) request;
   (void) response;
@@ -326,6 +270,20 @@ Seal::Service::~Service() {
 }
 
 ::grpc::Status Seal::Service::set_capacity(::grpc::ServerContext* context, const ::BucketSetMessage* request, ::google::protobuf::Empty* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status Seal::Service::insert_handler(::grpc::ServerContext* context, const ::InsertMessage* request, ::google::protobuf::Empty* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status Seal::Service::select_handler(::grpc::ServerContext* context, const ::SelectMessage* request, ::SelectResult* response) {
   (void) context;
   (void) request;
   (void) response;

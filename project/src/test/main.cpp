@@ -22,7 +22,7 @@
  */
 int main(int argc, const char** args)
 {
-    std::unique_ptr<Seal::Stub> stub_ = Seal::NewStub(std::shared_ptr<grpc::Channel>(grpc::CreateChannel("127.0.0.1:4567", grpc::InsecureChannelCredentials())));
+    //std::unique_ptr<Seal::Stub> stub_ = Seal::NewStub(std::shared_ptr<grpc::Channel>(grpc::CreateChannel("127.0.0.1:4567", grpc::InsecureChannelCredentials())));
     // Every time the client will sample a new key from the password.
     /*
     try {
@@ -41,7 +41,7 @@ int main(int argc, const char** args)
     */
    
     try {
-        ClientRunner client(256, 256, sizeof(ODict::Node), 1024, INT_MAX, 2, 2, "123456789", PSQL_CONNECTION_INFORMATION, sizeof(unsigned int), "localhost:4567");
+        ClientRunner client(256, 256, sizeof(ODict::Node), 1024, INT_MAX, 2, 2, "123456789", PSQL_CONNECTION_INFORMATION, sizeof(unsigned int), 6, "test", "localhost:4567");
         client.test_adj("input/test.txt");
         std::vector<std::string> ans = client.search("beautiful");
         for (auto item : ans) {

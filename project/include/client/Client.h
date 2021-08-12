@@ -88,9 +88,6 @@ private:
 
     size_t memory_size;
 
-    /*==================== Connection to Relational Database (PostgreSQL based openGauss) =====================*/
-    std::unique_ptr<SEAL::Connector> connector;
-
     /*==================== Functions =====================*/
     /**
      * @brief Initialize the client cache.
@@ -341,7 +338,7 @@ public:
         const int& block_size, const int& odict_size,
         const size_t& max_size, const unsigned int& alpha,
         const unsigned int& x, std::string_view password,
-        std::string_view connection_info, Seal::Stub* stub_);
+        Seal::Stub* stub_);
 
     /**
      * @brief A test function.
@@ -360,13 +357,6 @@ public:
      * @param file_path the input dataset
      */
     void test_adj(std::string_view file_path);
-
-    /**
-     * @brief Test the database connection.
-     * 
-     * @param sql
-     */
-    void test_sql(std::string_view sql);
 
     /**
      * @brief Get the odict controller.

@@ -27,6 +27,30 @@ SEAL::Connector::Connector(std::string_view connection_information)
     PLOG(plog::info) << "Connection to PostgreSQL established with code " << connection.get()->is_open();
 }
 
+bool SEAL::Connector::create_table_handler(
+    std::string_view table,
+    const std::vector<std::string>& column_names) const
+{
+    const std::string drop_table_command = ((std::string) "DROP TABLE IF EXISTS ").append(table);
+    transaction.get()->exec0(drop_table_command);
+    transaction.get()->commit();
+    std::stringstream create_table_command("CREATE TABLE IF NOT EXISTS ");
+    create_table_command << table << "(";
+
+    for (unsigned int i = 0; i < column_names.size(); i++) {
+        create_table_command << column_names[i] << " VARCHAR(128)";
+        if (i == column_names.size() - 1) {
+            create_table_command << ", ";
+        } else {
+            create_table_command << ")";
+        }
+    }
+
+    transaction.get()->exec0(create_table_command.str());
+    transaction.get()->commit();
+    return true;
+}
+
 bool SEAL::Connector::insert_handler(std::string_view sql) const
 {
     try {
@@ -41,4 +65,45 @@ bool SEAL::Connector::insert_handler(std::string_view sql) const
         transaction.get()->commit();
         return false;
     }
+}
+
+bool SEAL::Connector::insert_handler(
+    std::string_view table,
+    const std::vector<std::string>& values) const
+{
+    // Build insert statement by stringstream for convenience.
+    std::stringstream insert_command("INSERT INTO ");
+    insert_command << table << " VALUES(";
+    for (unsigned int i = 0; i < values.size(); i++) {
+        insert_command << "\'" << values[i - 1] << "\'";
+        if (i == values.size() - 1) {
+            insert_command << ")";
+        } else {
+            insert_command << ", ";
+        }
+    }
+
+    transaction.get()->exec0(insert_command.str());
+    transaction.get()->commit();
+    return true;
+}
+
+pqxx::result
+SEAL::Connector::select_handler(
+    std::string_view table,
+    std::string_view where,
+    const std::vector<std::string>& columns) const
+{
+    std::stringstream select_command("SELECT ");
+    for (unsigned int i = 0; i < columns.size(); i++) {
+        select_command << columns[i];
+        if (i == columns.size() - 1) {
+            select_command << columns[i];
+        } else {
+            select_command << columns[i] << ", ";
+        }
+    }
+    select_command << " FROM " << table << "WHERE document_id = " << where;
+
+    return transaction.get()->exec(select_command.str());
 }
