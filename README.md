@@ -106,6 +106,18 @@ make client;
 make server;
 ```
 
+# SSL Key Generation
+If there is need to generate the ssl key by custom, one can execute the following commands (make sure that openssl is correctly installed):
+```shell
+export mypass=<password>;
+openssl genrsa -passout pass:$pass -des3 -out server.key 4096;
+openssl req -passin pass:$mypass -new -key server.key -out server.csr -subj  "/C=US/ST=CA/L=SanFrancisco/O=Google/OU=youtube/CN=localhost";
+openssl x509 -req -passin pass:$mypass -days 365 -in server.csr -signkey server.key -set_serial 01 -out server.crt;
+openssl rsa -passin pass:$mypass -in server.key -out server.key
+rm -rf server.csr;
+mv server.crt server.key keys;
+```
+
 # Notice
 * The implementation codes are still under construction.
 * Robustness for the project is not guaranteed: use with care!
