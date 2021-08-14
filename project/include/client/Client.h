@@ -270,7 +270,7 @@ private:
      * @param count the count of the keyword. (Assume that keywords do not repeat in one document)
      */
     void adj_padding(
-        std::vector<std::pair<std::string, unsigned int>>& memory,
+        std::vector<std::pair<std::string, SEAL::Document>>& memory,
         std::map<std::string, unsigned int>& count);
 
     /**
@@ -285,14 +285,14 @@ private:
      * 
      * @param memory
      */
-    void adj_oram_init(const std::vector<std::pair<std::string, unsigned int>>& memory);
+    void adj_oram_init(const std::vector<std::pair<std::string, SEAL::Document>>& memory);
 
     /**
      * @brief Initialize each oram controller.
      * 
      * @param sub_array plain memory blocks
      */
-    void adj_oram_init_helper(const std::vector<std::vector<unsigned int>>& sub_arrays);
+    void adj_oram_init_helper(const std::vector<std::vector<SEAL::Document>>& sub_arrays);
 
     /**
      * @brief Build the secret index on input documents.
@@ -301,7 +301,7 @@ private:
      * @param first_occurrence stores the position where a keyword w first appears in memory.
      * @param count the count table.
      */
-    void adj_insert(const std::vector<std::pair<std::string, unsigned int>>& memory,
+    void adj_insert(const std::vector<std::pair<std::string, SEAL::Document>>& memory,
         const std::map<std::string, unsigned int>& first_occurrence,
         const std::map<std::string, unsigned int>& count);
 
@@ -372,9 +372,9 @@ public:
      * @brief Search the document id by a keyword.
      * 
      * @param keyword
-     * @return the document ids
+     * @return the documents
      */
-    std::vector<std::string>
+    std::vector<SEAL::Document>
     search(std::string_view keyword);
 };
 }

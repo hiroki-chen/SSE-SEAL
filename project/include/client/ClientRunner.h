@@ -54,7 +54,7 @@ public:
 
     void test_adj(std::string_view file_path);
 
-    std::vector<std::string> search(std::string_view keyword);
+    std::vector<SEAL::Document> search(std::string_view keyword);
 };
 
 #endif

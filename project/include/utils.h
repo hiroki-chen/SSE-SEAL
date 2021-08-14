@@ -59,8 +59,14 @@ int get_height(const ODict::Node* const node);
 std::string
 random_string(const int& length, std::string_view secret_key);
 
+std::string
+random_string(const int& length);
+
 std::vector<std::string>
 split(const std::string& input, const std::string& regex);
+
+std::string
+read_keycert(std::string_view file_path);
 
 /**
  * @brief A secure PRP.

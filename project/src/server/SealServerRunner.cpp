@@ -15,9 +15,12 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <server/SealServerRunner.h>
-#include <plog/Log.h>
 #include <plog/Initializers/RollingFileInitializer.h>
+#include <plog/Log.h>
+#include <server/SealServerRunner.h>
+#include <utils.h>
+
+#include <grpc++/security/server_credentials.h>
 
 void SealServerRunner::sig_handler(int t)
 {
@@ -30,7 +33,18 @@ void SealServerRunner::run(const std::string& address)
     plog::init(plog::error, "log/server.txt");
     service = std::make_unique<SealService>();
     grpc::ServerBuilder server_builder;
-    server_builder.AddListeningPort(address, grpc::InsecureServerCredentials());
+    const std::string servercert = read_keycert("keys/server.crt");
+    const std::string serverkey = read_keycert("keys/server.key");
+
+    grpc::SslServerCredentialsOptions::PemKeyCertPair pkcp;
+    pkcp.private_key = serverkey;
+    pkcp.cert_chain = servercert;
+    grpc::SslServerCredentialsOptions ssl_options;
+    ssl_options.pem_root_certs = "";
+    ssl_options.pem_key_cert_pairs.push_back(pkcp);
+    std::shared_ptr<grpc::ServerCredentials> credentials = grpc::SslServerCredentials(ssl_options);
+
+    server_builder.AddListeningPort(address, credentials);
     server_builder.RegisterService(service.get());
     server = server_builder.BuildAndStart();
 

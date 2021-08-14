@@ -19,8 +19,11 @@
 
 #include <cmath>
 #include <cstring>
+#include <fstream>
+#include <iostream>
 #include <regex>
 #include <sodium.h>
+#include <sstream>
 #include <stdexcept>
 
 void copy(ODict::Node* const dst, const ODict::Node* const src)
@@ -30,6 +33,22 @@ void copy(ODict::Node* const dst, const ODict::Node* const src)
 int get_height(const ODict::Node* const node)
 {
     return node == nullptr ? 0 : MAX(node->left_height, node->right_height) + 1;
+}
+
+std::string random_string(const int& len)
+{
+    std::string tmp_s;
+    std::string alphanum = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+    unsigned int random_value[len];
+    randombytes_buf_deterministic(random_value, sizeof(random_value), (unsigned char*)std::to_string(randombytes_random()).c_str());
+
+    tmp_s.reserve(len);
+
+    for (int i = 0; i < len; ++i)
+        tmp_s += alphanum[random_value[i] % alphanum.size()];
+
+    return tmp_s;
 }
 
 std::string random_string(const int& len, std::string_view secret_key)
@@ -109,6 +128,25 @@ get_bits(const unsigned int& base, const unsigned int& number, const unsigned in
     unsigned int most = number >> (base - alpha);
     unsigned int rest = number & (unsigned int)(pow(2, base - alpha) - 1);
     return { most, rest };
+}
+
+std::string
+read_keycert(std::string_view file_path)
+{
+    try {
+        std::fstream file(file_path.data(), std::ios::in);
+
+        std::stringstream ret;
+        std::copy(std::istreambuf_iterator<char>(file),
+            std::istreambuf_iterator<char>(),
+            std::ostreambuf_iterator<char>(ret));
+
+        return ret.str();
+    } catch (const std::invalid_argument& e) {
+        std::cout << e.what() << std::endl;
+    }
+
+    return "";
 }
 
 /*

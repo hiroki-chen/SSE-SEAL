@@ -42,10 +42,11 @@ int main(int argc, const char** args)
    
     try {
         ClientRunner client(256, 256, sizeof(ODict::Node), 1024, INT_MAX, 2, 2, "123456789", PSQL_CONNECTION_INFORMATION, sizeof(unsigned int), 6, "test", "localhost:4567");
-        client.test_adj("input/test.txt");
-        std::vector<std::string> ans = client.search("beautiful");
+        client.test_adj("input/test.csv");
+        // Currently the keyword is defined as <file_path>_<column_name>_<value>...
+        std::vector<SEAL::Document> ans = client.search("input/test.csvkwd1test");
         for (auto item : ans) {
-            std::cout << item << std::endl;
+            std::cout << item.id << std::endl;
         }
         std::cout << (long long)(&client) << std::endl;
     } catch (const std::runtime_error& e) {

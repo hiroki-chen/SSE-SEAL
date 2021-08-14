@@ -17,6 +17,7 @@
 
 #include <client/Client.h>
 #include <crypto/sm4.h>
+#include <parser/rapidcsv.h>
 #include <plog/Log.h>
 #include <utils.h>
 
@@ -620,7 +621,7 @@ table to pad the document; to filter out those not needed, we can generate the d
 I.e., we generate id that exceeds the maximum one, which denotes such an id is invalid.
 */
 void SEAL::Client::adj_padding(
-    std::vector<std::pair<std::string, unsigned int>>& memory,
+    std::vector<std::pair<std::string, SEAL::Document>>& memory,
     std::map<std::string, unsigned int>& count)
 {
     for (auto iter = count.begin(); iter != count.end(); iter++) {
@@ -628,9 +629,11 @@ void SEAL::Client::adj_padding(
         const unsigned int size = (unsigned int)pow(x, power);
 
         // Pad the document
-        for (unsigned int i = iter->second ; i <= size; i++) {
+        for (unsigned int i = iter->second; i <= size; i++) {
+            std::vector<std::string> keywords = { "ok", "but"};
+            SEAL::Document dummy(randombytes_uniform(0xfffffff0 - memory.size()) + memory.size(), keywords);
             memory.push_back(
-                std::make_pair(iter->first, randombytes_uniform(0xfffffff0 - memory.size()) + memory.size()));
+                std::make_pair(iter->first, dummy));
         }
         iter->second = size;
     }
@@ -638,7 +641,9 @@ void SEAL::Client::adj_padding(
     const size_t memory_size = memory.size();
     /* Pad the document to x * N */
     for (unsigned int i = memory_size; i <= x * memory_size; i++) {
-        memory.push_back(std::make_pair(random_string(16, secret_key), randombytes_uniform(UINT_MAX)));
+        std::vector<std::string> keywords = { random_string(16), random_string(16), random_string(16)};
+        SEAL::Document dummy(randombytes_uniform(0xfffffff0 - memory.size()) + memory.size(), keywords);
+        memory.push_back(std::make_pair(random_string(16, secret_key), dummy));
         count[memory.back().first]++;
     }
 }
@@ -646,25 +651,21 @@ void SEAL::Client::adj_padding(
 void SEAL::Client::adj_data_in(std::string_view file_path)
 {
     try {
-        if (stat(file_path.data(), NULL) == 0) {
-            throw std::invalid_argument(
-                "Not an invalid file on disk or not a valid relative file path!\n");
-        }
-        std::ifstream file(file_path.data(), std::ios::in);
+        PLOG(plog::debug) << "Reading data...";
+        std::vector<std::pair<std::string, SEAL::Document>> memory;
+        rapidcsv::Document doc(file_path.data(), rapidcsv::LabelParams(0, 0));
+        const size_t column_count = doc.GetColumnCount();
+        const std::vector<std::string> column_names = doc.GetColumnNames();
 
-        std::vector<std::pair<std::string, unsigned int>> memory;
-        // Read the file by lines.
-        while (!file.eof()) {
-            std::string line;
-            std::getline(file, line);
-            // Split the string by comma.
-            std::vector<std::string> tokens = split(line, "(\\s*),(\\s*)");
+        for (unsigned int i = 0; i < column_count; i++) {
+            const std::vector<std::string> data_frame = doc.GetColumn<std::string>(i);
+            const std::string column_name = column_names[i];
 
-            unsigned int id = std::stoul(tokens[0]);
-
-            // build (keyword, id) tuples.
-            for (unsigned int i = 1; i < tokens.size(); i++) {
-                std::pair<std::string, unsigned int> tuple = std::make_pair(tokens[i], id);
+            for (unsigned int j = 0; j < data_frame.size(); j++) {
+                const std::vector<std::string> tokens = doc.GetRow<std::string>(j);
+                SEAL::Document document(j, tokens);
+                const std::string keyword = ((std::string)(file_path)).append(column_name).append(data_frame[j]);
+                const std::pair<std::string, SEAL::Document> tuple = std::make_pair(keyword, document);
                 memory.push_back(tuple);
             }
         }
@@ -678,8 +679,8 @@ void SEAL::Client::adj_data_in(std::string_view file_path)
         adj_padding(memory, count);
         // Sort the keyword in lexicographical order.
         auto lambda_cmp =
-            [](const std::pair<std::string, unsigned int>& lhs,
-                const std::pair<std::string, unsigned int>& rhs) -> bool {
+            [](const std::pair<std::string, SEAL::Document>& lhs,
+                const std::pair<std::string, SEAL::Document>& rhs) -> bool {
             return lhs.first < rhs.first;
         };
         std::sort(memory.begin(), memory.end(), lambda_cmp);
@@ -693,17 +694,14 @@ void SEAL::Client::adj_data_in(std::string_view file_path)
         }
 
         adj_insert(memory, first_occurrence, count);
-
-        file.close();
     } catch (const std::invalid_argument& e) {
-        PLOG(plog::error) << "The file " << file_path
-                          << " is not found on the disk";
+        PLOG(plog::error) << e.what();
         std::cerr << e.what();
     }
 }
 
 void SEAL::Client::adj_insert(
-    const std::vector<std::pair<std::string, unsigned int>>& memory,
+    const std::vector<std::pair<std::string, SEAL::Document>>& memory,
     const std::map<std::string, unsigned int>& first_occurrence,
     const std::map<std::string, unsigned int>& count)
 {
@@ -728,7 +726,7 @@ void SEAL::Client::adj_insert(
 }
 
 void SEAL::Client::adj_oram_init_helper(
-    const std::vector<std::vector<unsigned int>>& sub_arrays)
+    const std::vector<std::vector<SEAL::Document>>& sub_arrays)
 {
     try {
         for (unsigned int i = 0; i < sub_arrays.size(); i++) {
@@ -737,7 +735,7 @@ void SEAL::Client::adj_oram_init_helper(
                 new OramAccessController(bucket_size, block_number, sizeof(unsigned int), i, false, stub_));
 
             for (unsigned int j = 0; j < sub_arrays[i].size(); j++) {
-                std::string data = encrypt_SM4_EBC(std::to_string(sub_arrays[i][j]), secret_key);
+                std::string data = encrypt_SM4_EBC(serialize<SEAL::Document>(sub_arrays[i][j]), secret_key);
                 adj_oramAccessControllers[i].get()->oblivious_access(
                     OramAccessOp::ORAM_ACCESS_WRITE, j, data);
             }
@@ -751,14 +749,14 @@ void SEAL::Client::adj_oram_init_helper(
  * TODO: Before calling adj_oram_init, the client should first do INSERT INTO. 
  */
 void SEAL::Client::adj_oram_init(
-    const std::vector<std::pair<std::string, unsigned int>>& memory)
+    const std::vector<std::pair<std::string, SEAL::Document>>& memory)
 {
     size_t mu = pow(2, alpha);
     size_t base = std::ceil((log(memory.size()) / log(2)));
     size_t array_size = std::ceil(pow(2, base) / mu);
 
-    std::vector<std::vector<unsigned int>> sub_arrays(
-        mu, std::vector<unsigned int>(array_size, randombytes_uniform(UINT_MAX)));
+    std::vector<std::vector<SEAL::Document>> sub_arrays(
+        mu, std::vector<SEAL::Document>(array_size));
 
     std::vector<unsigned int> prp = pseudo_random_permutation(memory_size, secret_key);
 
@@ -766,7 +764,7 @@ void SEAL::Client::adj_oram_init(
         unsigned int value = prp[i];
         std::pair<unsigned int, unsigned int> bits = get_bits(base, value, alpha);
 
-        PLOG(plog::info) << "ORAM BLOCK " << bits.first << ", INDEX " << bits.second << ": " << memory[i].second;
+        PLOG(plog::info) << "ORAM BLOCK " << bits.first << ", INDEX " << bits.second << ": " << memory[i].second.id;
         sub_arrays[bits.first][bits.second] = memory[i].second;
     }
 
@@ -774,12 +772,16 @@ void SEAL::Client::adj_oram_init(
     adj_oram_init_helper(sub_arrays);
 }
 
-std::vector<std::string>
+std::vector<SEAL::Document>
 SEAL::Client::search(std::string_view keyword)
 {
     auto begin = std::chrono::high_resolution_clock::now();
 
     const ODict::Node* const node = find(keyword);
+
+    if (node == nullptr) {
+        return {};
+    }
     const std::string index_value = node->data;
     const std::vector<std::string> res = split(index_value, "_");
     const unsigned int iw = std::stoul(res[0]);
@@ -788,7 +790,7 @@ SEAL::Client::search(std::string_view keyword)
     PLOG(plog::debug) << "In search: " << iw << ", " << countw << std::endl;
     const size_t base = std::ceil((log(memory_size) / log(2)));
 
-    std::vector<std::string> ans;
+    std::vector<SEAL::Document> ans;
 
     const std::vector<unsigned int> prp = pseudo_random_permutation(memory_size, secret_key);
     for (unsigned int i = iw; i <= iw + countw; i++) {
@@ -799,9 +801,10 @@ SEAL::Client::search(std::string_view keyword)
         adj_oramAccessControllers[bits.first].get()->oblivious_access(
             OramAccessOp::ORAM_ACCESS_READ, bits.second, res);
         res = decrypt_SM4_EBC(res, secret_key);
+        SEAL::Document doc = deserialize<SEAL::Document>(res);
         /* Filter out dummy records. */
-        if (std::stoul(res) < memory_size) {
-            ans.push_back(res);
+        if (doc.id < memory_size) {
+            ans.push_back(doc);
         }
     }
 

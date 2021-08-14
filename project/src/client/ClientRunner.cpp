@@ -17,6 +17,7 @@
 
 #include <client/ClientRunner.h>
 #include <oram/RandomForOram.h>
+#include <utils.h>
 
 #include <grpc++/client_context.h>
 #include <grpc++/create_channel.h>
@@ -24,9 +25,6 @@
 #include <grpc/grpc.h>
 
 ClientRunner::ClientRunner(const std::string& address)
-    : stub_(Seal::NewStub(
-        std::shared_ptr<grpc::Channel>(
-            grpc::CreateChannel(address, grpc::SslCredentials(grpc::SslCredentialsOptions())))))
 {
 }
 
@@ -37,15 +35,23 @@ ClientRunner::ClientRunner(const int& bucket_size, const int& block_number,
     std::string_view connection_info, const int& oram_block_size,
     const size_t& column_number, std::string_view table_name,
     const char* address)
-    : stub_(Seal::NewStub(std::shared_ptr<grpc::Channel>(grpc::CreateChannel(address,
-        grpc::SslCredentials(grpc::SslCredentialsOptions())))))
-    , client(std::make_unique<SEAL::Client>(bucket_size, block_number, block_size,
-          odict_size, max_size, alpha, x,
-          password, stub_.get()))
 {
     std::cout << "In ClientRunner!" << std::endl;
-    setup(connection_info, table_name, column_number);
-    client.get()->set_stub(stub_);
+    // setup(connection_info, table_name, column_number);
+
+    const std::string cacert = read_keycert("keys/server.crt");
+    grpc::SslCredentialsOptions ssl_opts;
+    ssl_opts.pem_root_certs = cacert;
+
+    std::shared_ptr<grpc::ChannelCredentials> ssl_creds = grpc::SslCredentials(ssl_opts);
+    stub_ = Seal::NewStub(
+        std::shared_ptr<grpc::Channel>(
+            grpc::CreateChannel(address, ssl_creds)));
+
+    client = std::make_unique<SEAL::Client>(
+        bucket_size, block_number, block_size,
+        odict_size, max_size, alpha, x,
+        password, stub_.get());
     client.get()->init_dummy_data();
 }
 
@@ -86,7 +92,7 @@ void ClientRunner::test_adj(std::string_view file_path)
     client.get()->test_adj(file_path);
 }
 
-std::vector<std::string>
+std::vector<SEAL::Document>
 ClientRunner::search(std::string_view keyword)
 {
     return client.get()->search(keyword);

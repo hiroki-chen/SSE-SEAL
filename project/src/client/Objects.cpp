@@ -51,3 +51,9 @@ ODict::ChildrenPos::ChildrenPos(const int& id, const int& pos_tag)
     , pos_tag(pos_tag)
 {
 }
+
+SEAL::Document::Document(const unsigned int& id, const std::vector<std::string>& keywords)
+    : id(id)
+    , keywords(keywords.begin() + 1, keywords.end())
+{
+}

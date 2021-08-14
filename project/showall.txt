@@ -1,0 +1,10 @@
+clang++ -std=c++17 -g -O3 -fPIE -I./include -I./include/proto -Wall -Wmissing-declarations -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wswitch -Wsign-compare -Wformat -Wtype-limits -Wno-undef -Werror -c -o build/client/Client.o src/client/Client.cpp
+clang++ -std=c++17 -g -O3 -fPIE -I./include -I./include/proto -Wall -Wmissing-declarations -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wswitch -Wsign-compare -Wformat -Wtype-limits -Wno-undef -Werror -c -o build/client/ClientRunner.o src/client/ClientRunner.cpp
+src/client/ClientRunner.cpp:32:21: error: template argument for template type parameter must be a type
+    std::shared_ptr<grpc::SslCredentials> ssl_creds = grpc::SslCredentials(ssl_opts);
+                    ^~~~~~~~~~~~~~~~~~~~
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1/memory:4034:21: note: template parameter is declared here
+    template <class _Up> friend class _LIBCPP_TEMPLATE_VIS shared_ptr;
+                    ^
+1 error generated.
+make: *** [build/client/ClientRunner.o] Error 1

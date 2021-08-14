@@ -20,6 +20,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 #include <oram/PathORAM.h>
 #include <cereal/access.hpp>
@@ -96,5 +97,24 @@ public:
     Operation(const int& id, const std::string& data, OramAccessOp op);
 };
 }
+
+namespace SEAL
+{
+struct Document {
+    friend class cereal::access;
+    template<typename Archive>
+    void serialize(Archive& ar)
+    {
+        ar(id, keywords);
+    }
+public:
+    unsigned int id;
+    std::vector<std::string> keywords;
+
+    Document() = default;
+
+    Document(const unsigned int& id, const std::vector<std::string>& keywords);
+};
+} // namespace SEAL
 
 #endif

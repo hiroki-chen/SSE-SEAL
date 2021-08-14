@@ -30,6 +30,7 @@ CXXFLAGS = -std=c++17 -g -O3 -fPIE -I$(INCLUDE_DIR) -I$(INCLUDE_PROTO) -Wall \
 		-Wtype-limits \
 		-Wno-undef \
 		-Werror
+		-ferror-limit=10
 
 LD = -L/usr/local/lib `pkg-config --libs protobuf grpc++`\
            -pthread\
