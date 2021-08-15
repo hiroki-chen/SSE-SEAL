@@ -4973,3 +4973,517 @@
 2021-08-14 16:03:35.837 DEBUG [6839071] [SEAL::Client::search@790] In search: 9, 1
 
 2021-08-14 16:03:35.843 INFO  [6839071] [SEAL::Client::search@813] Search finished, time consumed: 0.0396559 s
+2021-08-15 11:03:28.727 INFO  [8916849] [OramAccessController::OramAccessController@46] Warming up OramAccessController...
+
+2021-08-15 11:03:28.728 INFO  [8916849] [ServerStorage::ServerStorage@36] The server storage interface class is initialized.
+2021-08-15 11:03:34.874 INFO  [8917581] [OramAccessController::OramAccessController@46] Warming up OramAccessController...
+
+2021-08-15 11:03:34.875 INFO  [8917581] [ServerStorage::ServerStorage@36] The server storage interface class is initialized.
+2021-08-15 11:03:35.008 INFO  [8917581] [SEAL::Cache<ODict::Node>::Cache@105] Client Cache started.
+2021-08-15 11:03:35.008 INFO  [8917581] [SEAL::Client::init_key@68] Initializing secret key...
+2021-08-15 11:03:35.102 INFO  [8917581] [SEAL::Client::init_key@85] Key sampled: Lol|N∆=‹˜¢}·PBì‰PÀÏ‘‚ÓOıé´®â
+2021-08-15 11:03:35.103 INFO  [8917581] [SEAL::Client::Client@862] Client initialized
+
+2021-08-15 11:03:35.103 INFO  [8917581] [SEAL::Client::init_dummy_data@58] Initializing dummy data!
+2021-08-15 11:03:35.106 DEBUG [8917581] [SEAL::Client::adj_data_in@654] Reading data...
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::insert@299] Inserting 1
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@165] Insert a new node 1 into cache
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::insert@299] Inserting 2
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 1 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 1
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@165] Insert a new node 2 into cache
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 1 to the Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 1
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 1 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 1
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::insert@299] Inserting 3
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 1 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 1
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 2 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 2
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@165] Insert a new node 3 into cache
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 2 to the Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 2
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 2 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 2
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 1 to the Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 1
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 1 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 1
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 2 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 2
+2021-08-15 11:03:35.108 INFO  [8917581] [*SEAL::Client::left_rotate@395] Doing left rotating
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 1 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 1
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 2 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 2
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 1 to the Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 1
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 2 to the Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 2
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::insert@299] Inserting 4
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 2 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 2
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 3 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 3
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@165] Insert a new node 4 into cache
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 3 to the Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 3
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 3 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 3
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 2 to the Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 2
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 2 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 2
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::insert@299] Inserting 5
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 2 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 2
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 3 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 3
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@165] Insert a new node 5 into cache
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 4 to the Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 4
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 3 to the Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 3
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 3 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 3
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.108 INFO  [8917581] [*SEAL::Client::left_rotate@395] Doing left rotating
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 3 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 3
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 3 to the Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 3
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 4 to the Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 4
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 2 to the Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 2
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 2 from Oblivious Data Structure
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 2
+2021-08-15 11:03:35.108 INFO  [8917581] [SEAL::Client::insert@299] Inserting 6
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 2 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 2
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 5 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 5
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@165] Insert a new node 6 into cache
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 5 to the Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 5
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 5 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 5
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 4 to the Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 4
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 2 to the Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 2
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 2 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 2
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.109 INFO  [8917581] [*SEAL::Client::left_rotate@395] Doing left rotating
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 2 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 2
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 2 to the Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 2
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 4 to the Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 4
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::insert@299] Inserting 7
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 5 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 5
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 6 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 6
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 6 to the Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 6
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 6 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 6
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 5 to the Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 5
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 5 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 5
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 4 to the Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 4
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::insert@299] Inserting 8
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 5 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 5
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 6 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 6
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@165] Insert a new node 8 into cache
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 6 to the Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 6
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 6 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 6
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 5 to the Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 5
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 5 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 5
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 6 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 6
+2021-08-15 11:03:35.109 INFO  [8917581] [*SEAL::Client::left_rotate@395] Doing left rotating
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 5 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 5
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 6 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 6
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 5 to the Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 5
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 6 to the Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 6
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 4 to the Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 4
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::insert@299] Inserting 9
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 6 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 6
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 8 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 8
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 8 to the Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 8
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 8 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 8
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 6 to the Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 6
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 6 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 6
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 4 to the Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 4
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::insert@299] Inserting 10
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 6 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 6
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 8 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 8
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@165] Insert a new node 10 into cache
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 8 to the Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 8
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 8 from Oblivious Data Structure
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 8
+2021-08-15 11:03:35.109 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 6 to the Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 6
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 6 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 6
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 4 to the Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 4
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::insert@299] Inserting 11
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 6 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 6
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 8 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 8
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 10
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 10 to the Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 10
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 10
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 8 to the Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 8
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 8 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 8
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 6 to the Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 6
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 6 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 6
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 4 to the Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 4
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::insert@299] Inserting 12
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 6 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 6
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 8 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 8
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 10
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@165] Insert a new node 12 into cache
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 10 to the Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 10
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 10
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 8 to the Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 8
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 8 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 8
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 10
+2021-08-15 11:03:35.110 INFO  [8917581] [*SEAL::Client::left_rotate@395] Doing left rotating
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 8 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 8
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 10
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 8 to the Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 8
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 10 to the Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 10
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 6 to the Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 6
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 6 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 6
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 4 to the Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 4
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::insert@299] Inserting 13
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 6 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 6
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 10
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 12 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 12
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 12 to the Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 12
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 12 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 12
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 10 to the Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 10
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 10
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 6 to the Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 6
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 6 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 6
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 4 to the Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 4
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::insert@299] Inserting 14
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 6 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 6
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 10
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 12 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 12
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@165] Insert a new node 14 into cache
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 12 to the Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 12
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 12 from Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 12
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 10 to the Oblivious Data Structure
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 10
+2021-08-15 11:03:35.110 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 10
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 6 to the Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 6
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 6 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 6
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 10
+2021-08-15 11:03:35.111 INFO  [8917581] [*SEAL::Client::left_rotate@395] Doing left rotating
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 6 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 6
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 10
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 6 to the Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 6
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 10 to the Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 10
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 4 to the Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 4
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::insert@299] Inserting 15
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 10
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 12 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 12
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 14 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 14
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@165] Insert a new node 15 into cache
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 14 to the Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 14
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 14 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 14
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 12 to the Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 12
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 12 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 12
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 14 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 14
+2021-08-15 11:03:35.111 INFO  [8917581] [*SEAL::Client::left_rotate@395] Doing left rotating
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 12 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 12
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 14 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 14
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 12 to the Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 12
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 14 to the Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 14
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 10 to the Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 10
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 10
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 4 to the Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 4
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::insert@299] Inserting 16
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 10
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 14 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 14
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 15 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 15
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@165] Insert a new node 16 into cache
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 15 to the Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 15
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 15 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 15
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 14 to the Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 14
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 14 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 14
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 10 to the Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 10
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 10
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 4 to the Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 4
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 10
+2021-08-15 11:03:35.111 INFO  [8917581] [*SEAL::Client::left_rotate@395] Doing left rotating
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 4
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 10
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 4 to the Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 4
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 10 to the Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 10
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::insert@299] Inserting 17
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 10
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 14 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 14
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 15 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 15
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 16 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 16
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@165] Insert a new node 17 into cache
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 16 to the Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 16
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 16 from Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 16
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 15 to the Oblivious Data Structure
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 15
+2021-08-15 11:03:35.111 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 15 from Oblivious Data Structure
+2021-08-15 11:03:35.112 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 15
+2021-08-15 11:03:35.112 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 16 from Oblivious Data Structure
+2021-08-15 11:03:35.112 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 16
+2021-08-15 11:03:35.112 INFO  [8917581] [*SEAL::Client::left_rotate@395] Doing left rotating
+2021-08-15 11:03:35.112 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 15 from Oblivious Data Structure
+2021-08-15 11:03:35.112 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 15
+2021-08-15 11:03:35.112 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 16 from Oblivious Data Structure
+2021-08-15 11:03:35.112 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 16
+2021-08-15 11:03:35.112 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 15 to the Oblivious Data Structure
+2021-08-15 11:03:35.112 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 15
+2021-08-15 11:03:35.112 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 16 to the Oblivious Data Structure
+2021-08-15 11:03:35.112 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 16
+2021-08-15 11:03:35.112 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 14 to the Oblivious Data Structure
+2021-08-15 11:03:35.112 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 14
+2021-08-15 11:03:35.112 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 14 from Oblivious Data Structure
+2021-08-15 11:03:35.112 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 14
+2021-08-15 11:03:35.112 INFO  [8917581] [SEAL::Client::ODS_access@131] Write node 10 to the Oblivious Data Structure
+2021-08-15 11:03:35.112 INFO  [8917581] [SEAL::Client::ODS_access@137] Found node in cache: 10
+2021-08-15 11:03:35.112 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:35.112 INFO  [8917581] [SEAL::Client::ODS_access@116] Found node in cache: 10
+2021-08-15 11:03:35.491 DEBUG [8917581] [SEAL::Client::ODS_finalize@216] evicting 10with data AyaaFbAFcgeRqacu1OQpmg== key = vBKolChgQCEkIRjh5j3vZvyJWzIJ+/gsnfY5KaUBH0M=
+2021-08-15 11:03:35.494 DEBUG [8917581] [SEAL::Client::ODS_finalize@216] evicting 14with data LO+7o7RsmJT2p3bYHGDjrA== key = Uie/zlXYoRkaviS01oLvoVSsCJG83kfAXNExFeHZUMI=
+2021-08-15 11:03:35.497 DEBUG [8917581] [SEAL::Client::ODS_finalize@216] evicting 16with data csUqUPkim/JcLpNpGp8yvQ== key = axM/SsAtc0B4lYgpbxAt9VSsCJG83kfAXNExFeHZUMI=
+2021-08-15 11:03:35.500 DEBUG [8917581] [SEAL::Client::ODS_finalize@216] evicting 15with data G5nI/NuXyF4RN1BlQazwnQ== key = r2twYWtwos80VFY0Lx9xGVSsCJG83kfAXNExFeHZUMI=
+2021-08-15 11:03:35.503 DEBUG [8917581] [SEAL::Client::ODS_finalize@216] evicting 17with data kqDPwhU2ZmQjwgws5RWcSA== key = 0dzbhgwob2u9WJi3C+0i6FSsCJG83kfAXNExFeHZUMI=
+2021-08-15 11:03:35.506 DEBUG [8917581] [SEAL::Client::ODS_finalize@216] evicting 4with data 7cWODODUoVymxHRgQLkAdg== key = M1vOYIZJovmjpvVD7NcRT1SsCJG83kfAXNExFeHZUMI=
+2021-08-15 11:03:35.509 DEBUG [8917581] [SEAL::Client::ODS_finalize@216] evicting 6with data UPTcs+7AVHdkzhHB3fmk2g== key = vBKolChgQCEkIRjh5j3vZk4bwCsaDmfZ7z0tHxi/498=
+2021-08-15 11:03:35.512 DEBUG [8917581] [SEAL::Client::ODS_finalize@216] evicting 8with data HH/atzLalFfnjxusC6fXxA== key = vBKolChgQCEkIRjh5j3vZgwgi6y7C6Hkgw1LeNz6pQA=
+2021-08-15 11:03:35.515 DEBUG [8917581] [SEAL::Client::ODS_finalize@216] evicting 5with data 0jgetsas8FMWGQeoSWLnCQ== key = uJSHVtrKkNwFvRyhj86M2VSsCJG83kfAXNExFeHZUMI=
+2021-08-15 11:03:35.518 DEBUG [8917581] [SEAL::Client::ODS_finalize@216] evicting 2with data kxrZdzvdYstAumNMIQJECg== key = jNykeEcBssRS90biCYw+r1SsCJG83kfAXNExFeHZUMI=
+2021-08-15 11:03:35.520 DEBUG [8917581] [SEAL::Client::ODS_finalize@216] evicting 3with data iUCVAwD+oWbW6vpmDP96Ew== key = Of75s4OVjhOboa6ydatfa1SsCJG83kfAXNExFeHZUMI=
+2021-08-15 11:03:35.523 DEBUG [8917581] [SEAL::Client::ODS_finalize@216] evicting 12with data qA0vCYIa0nIkToBct4F7GA== key = vBKolChgQCEkIRjh5j3vZrNi2cgmRyf073VSoULeaCg=
+2021-08-15 11:03:35.526 DEBUG [8917581] [SEAL::Client::ODS_finalize@216] evicting 1with data 6X6nnqqTp8FMr2ko4UWGsQ== key = NlfT9T6p+7jthiBkEt0g7FSsCJG83kfAXNExFeHZUMI=
+2021-08-15 11:03:35.529 DEBUG [8917581] [SEAL::Client::ODS_finalize@221] Eviction finished.
+2021-08-15 11:03:35.732 DEBUG [8917581] [SEAL::Client::ODS_finalize@233] ODS_finalize finished.
+2021-08-15 11:03:35.732 INFO  [8917581] [SEAL::Client::adj_oram_init@767] ORAM BLOCK 0, INDEX 3: 2472132973
+2021-08-15 11:03:35.732 INFO  [8917581] [SEAL::Client::adj_oram_init@767] ORAM BLOCK 2, INDEX 7: 3087081160
+2021-08-15 11:03:35.732 INFO  [8917581] [SEAL::Client::adj_oram_init@767] ORAM BLOCK 3, INDEX 7: 1967359357
+2021-08-15 11:03:35.732 INFO  [8917581] [SEAL::Client::adj_oram_init@767] ORAM BLOCK 0, INDEX 2: 602132122
+2021-08-15 11:03:35.732 INFO  [8917581] [SEAL::Client::adj_oram_init@767] ORAM BLOCK 3, INDEX 5: 2768969287
+2021-08-15 11:03:35.732 INFO  [8917581] [SEAL::Client::adj_oram_init@767] ORAM BLOCK 3, INDEX 3: 1
+2021-08-15 11:03:35.732 INFO  [8917581] [SEAL::Client::adj_oram_init@767] ORAM BLOCK 1, INDEX 3: 1668649331
+2021-08-15 11:03:35.732 INFO  [8917581] [SEAL::Client::adj_oram_init@767] ORAM BLOCK 3, INDEX 1: 0
+2021-08-15 11:03:35.732 INFO  [8917581] [SEAL::Client::adj_oram_init@767] ORAM BLOCK 1, INDEX 2: 258369977
+2021-08-15 11:03:35.732 INFO  [8917581] [SEAL::Client::adj_oram_init@767] ORAM BLOCK 3, INDEX 6: 1
+2021-08-15 11:03:35.732 INFO  [8917581] [SEAL::Client::adj_oram_init@767] ORAM BLOCK 2, INDEX 2: 1336150478
+2021-08-15 11:03:35.732 INFO  [8917581] [SEAL::Client::adj_oram_init@767] ORAM BLOCK 0, INDEX 5: 0
+2021-08-15 11:03:35.732 INFO  [8917581] [SEAL::Client::adj_oram_init@767] ORAM BLOCK 1, INDEX 1: 3379260484
+2021-08-15 11:03:35.732 INFO  [8917581] [SEAL::Client::adj_oram_init@767] ORAM BLOCK 2, INDEX 6: 184596046
+2021-08-15 11:03:35.732 INFO  [8917581] [SEAL::Client::adj_oram_init@767] ORAM BLOCK 1, INDEX 7: 3530628724
+2021-08-15 11:03:35.732 INFO  [8917581] [SEAL::Client::adj_oram_init@767] ORAM BLOCK 2, INDEX 4: 1519337166
+2021-08-15 11:03:35.732 INFO  [8917581] [SEAL::Client::adj_oram_init@767] ORAM BLOCK 0, INDEX 0: 180477718
+2021-08-15 11:03:35.732 INFO  [8917581] [OramAccessController::OramAccessController@46] Warming up OramAccessController...
+
+2021-08-15 11:03:35.732 INFO  [8917581] [ServerStorage::ServerStorage@36] The server storage interface class is initialized.
+2021-08-15 11:03:35.852 INFO  [8917581] [OramAccessController::OramAccessController@46] Warming up OramAccessController...
+
+2021-08-15 11:03:35.852 INFO  [8917581] [ServerStorage::ServerStorage@36] The server storage interface class is initialized.
+2021-08-15 11:03:36.086 INFO  [8917581] [OramAccessController::OramAccessController@46] Warming up OramAccessController...
+
+2021-08-15 11:03:36.086 INFO  [8917581] [ServerStorage::ServerStorage@36] The server storage interface class is initialized.
+2021-08-15 11:03:36.198 INFO  [8917581] [OramAccessController::OramAccessController@46] Warming up OramAccessController...
+
+2021-08-15 11:03:36.198 INFO  [8917581] [ServerStorage::ServerStorage@36] The server storage interface class is initialized.
+2021-08-15 11:03:36.309 INFO  [8917581] [SEAL::Client::adj_insert@725] SUB ORAMS INITIALIZED.
+2021-08-15 11:03:36.309 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 10 from Oblivious Data Structure
+2021-08-15 11:03:36.309 INFO  [8917581] [SEAL::Client::ODS_access@119] Node not found in cache! Fetch from ORAM
+2021-08-15 11:03:36.309 INFO  [8917581] [SEAL::Client::find_pos_by_id@94] Finding position_tag for 10
+2021-08-15 11:03:36.312 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 4 from Oblivious Data Structure
+2021-08-15 11:03:36.312 INFO  [8917581] [SEAL::Client::ODS_access@119] Node not found in cache! Fetch from ORAM
+2021-08-15 11:03:36.312 INFO  [8917581] [SEAL::Client::find_pos_by_id@94] Finding position_tag for 4
+2021-08-15 11:03:36.315 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 6 from Oblivious Data Structure
+2021-08-15 11:03:36.315 INFO  [8917581] [SEAL::Client::ODS_access@119] Node not found in cache! Fetch from ORAM
+2021-08-15 11:03:36.315 INFO  [8917581] [SEAL::Client::find_pos_by_id@94] Finding position_tag for 6
+2021-08-15 11:03:36.318 INFO  [8917581] [SEAL::Client::ODS_access@111] Read node 8 from Oblivious Data Structure
+2021-08-15 11:03:36.318 INFO  [8917581] [SEAL::Client::ODS_access@119] Node not found in cache! Fetch from ORAM
+2021-08-15 11:03:36.318 INFO  [8917581] [SEAL::Client::find_pos_by_id@94] Finding position_tag for 8
+2021-08-15 11:03:36.334 DEBUG [8917581] [SEAL::Client::ODS_finalize@216] evicting 8with data HH/atzLalFfnjxusC6fXxA== key = vBKolChgQCEkIRjh5j3vZgwgi6y7C6Hkgw1LeNz6pQA=
+2021-08-15 11:03:36.337 DEBUG [8917581] [SEAL::Client::ODS_finalize@216] evicting 6with data UPTcs+7AVHdkzhHB3fmk2g== key = vBKolChgQCEkIRjh5j3vZk4bwCsaDmfZ7z0tHxi/498=
+2021-08-15 11:03:36.340 DEBUG [8917581] [SEAL::Client::ODS_finalize@216] evicting 4with data 7cWODODUoVymxHRgQLkAdg== key = M1vOYIZJovmjpvVD7NcRT1SsCJG83kfAXNExFeHZUMI=
+2021-08-15 11:03:36.343 DEBUG [8917581] [SEAL::Client::ODS_finalize@216] evicting 10with data AyaaFbAFcgeRqacu1OQpmg== key = vBKolChgQCEkIRjh5j3vZvyJWzIJ+/gsnfY5KaUBH0M=
+2021-08-15 11:03:36.346 DEBUG [8917581] [SEAL::Client::ODS_finalize@221] Eviction finished.
+2021-08-15 11:03:36.349 DEBUG [8917581] [SEAL::Client::ODS_finalize@233] ODS_finalize finished.
+2021-08-15 11:03:36.349 DEBUG [8917581] [SEAL::Client::search@790] In search: 7, 1
+
+2021-08-15 11:03:36.354 INFO  [8917581] [SEAL::Client::search@813] Search finished, time consumed: 0.0452849 s

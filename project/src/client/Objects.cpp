@@ -57,3 +57,9 @@ SEAL::Document::Document(const unsigned int& id, const std::vector<std::string>&
     , keywords(keywords.begin() + 1, keywords.end())
 {
 }
+
+Range::Node::Node(const int& lhs, const int& rhs)
+    : range_cover(std::make_pair(lhs, rhs))
+    , id(counter++)
+{
+}

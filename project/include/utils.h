@@ -68,6 +68,10 @@ split(const std::string& input, const std::string& regex);
 std::string
 read_keycert(std::string_view file_path);
 
+std::vector<unsigned int>
+find_all(const std::vector<std::pair<std::string, unsigned int>>& memory, const std::string& value);
+
+
 /**
  * @brief A secure PRP.
  */
@@ -78,6 +82,17 @@ std::pair<unsigned int, unsigned int> get_bits(const unsigned int& base, const u
 std::string encrypt_message(std::string_view key, std::string_view message, const unsigned char* nonce);
 
 std::string decrypt_message(std::string_view key, std::string_view ciphertext, const unsigned char* nonce, const size_t& raw_length);
+
+Range::Node*
+build_tree_t1(
+    const int& lhs, const int& rhs,
+    const std::vector<std::pair<std::string, unsigned int>>& memory);
+
+Range::Node*
+add_internal_nodes_for_tree_t1(Range::Node* const root);
+
+Range::Node*
+single_range_cover(Range::Node* const root, const int& lhs, const int& rhs);
 
 template <typename Object>
 std::string serialize(const Object& obj)

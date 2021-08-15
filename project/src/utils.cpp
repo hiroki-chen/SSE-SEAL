@@ -21,10 +21,13 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <queue>
 #include <regex>
 #include <sodium.h>
 #include <sstream>
 #include <stdexcept>
+
+unsigned int Range::Node::counter = 0;
 
 void copy(ODict::Node* const dst, const ODict::Node* const src)
 {
@@ -149,6 +152,115 @@ read_keycert(std::string_view file_path)
     return "";
 }
 
+std::vector<unsigned int>
+find_all(const std::vector<std::pair<std::string, unsigned int>>& memory, const std::string& value)
+{
+    std::vector<unsigned int> matches;
+    std::vector<std::pair<std::string, unsigned int>>::const_iterator i = memory.begin();
+    auto lambda = [value](const std::pair<std::string, unsigned int>& item) {
+        return item.first == value;
+    };
+    while (true) {
+        i = std::find_if(i, memory.end(), lambda);
+        if (i == memory.end())
+            break;
+        matches.push_back((*i).second);
+    }
+
+    return matches;
+}
+
+Range::Node*
+build_tree_t1(
+    const int& lhs, const int& rhs,
+    const std::vector<std::pair<std::string, unsigned int>>& memory)
+{
+    // lhs >= rhs means that we reach the leaf level.
+    if (lhs >= rhs) {
+        Range::Node* node = new Range::Node(lhs, rhs);
+        const std::vector<unsigned int> matches = find_all(memory, std::to_string(lhs));
+        node->documents.assign(matches.begin(), matches.end());
+        return node;
+    } else {
+        const int mid = (lhs + rhs) >> 1;
+        Range::Node* const left = build_tree_t1(lhs, mid, memory);
+        Range::Node* const right = build_tree_t1(mid + 1, rhs, memory);
+        Range::Node* node = new Range::Node(lhs, rhs);
+        node->documents.assign(left->documents.begin(), right->documents.end());
+        node->documents.insert(node->documents.end(), right->documents.begin(), right->documents.end());
+        return node;
+    }
+}
+
+// Level-traverse
+Range::Node*
+add_internal_nodes_for_tree_t1(Range::Node* const root)
+{
+    std::queue<Range::Node*> q;
+    // Stores the nodes of each level.
+    std::vector<std::vector<Range::Node*>> level_result;
+
+    q.push(root);
+    while (!q.empty()) {
+        const size_t cur_size = q.size();
+        const size_t level = level_result.size();
+        for (unsigned int i = 0; i < cur_size; i++) {
+            Range::Node* const front = q.front();
+            q.pop();
+            level_result[level].push_back(front);
+
+            if (root->left != nullptr) {
+                q.push(root->left);
+            }
+            if (root->right != nullptr) {
+                q.push(root->right);
+            }
+        }
+    }
+
+    /*
+       Add internal nodes to the tree.
+       Only nodes with odd subscripts will be added with a parent node along with its neighbor.
+     */
+    for (auto nodes : level_result) {
+        for (unsigned int i = 1; i < nodes.size() - 1; i += 2) {
+            Range::Node* const left = nodes[i];
+            Range::Node* const right = nodes[i + 1];
+
+            Range::Node* parent = new Range::Node(left->range_cover.first, right->range_cover.second);
+            parent->documents.assign(left->documents.begin(), left->documents.end());
+            parent->documents.insert(parent->documents.end(), right->documents.begin(), right->documents.end());
+            left->parent = right->parent = parent;
+        }
+    }
+
+    return root;
+}
+
+Range::Node*
+single_range_cover(Range::Node* const root, const int& lhs, const int& rhs)
+{
+    const int cur_lhs = root->range_cover.first;
+    const int cur_rhs = root->range_cover.second;
+    const int cur_mid = (cur_lhs + cur_rhs) >> 1;
+
+    if (lhs > cur_mid) {
+        return root->right;
+    } else if (rhs <= cur_mid) {
+        return root->left;
+    } else {
+        Range::Node* const left = single_range_cover(root->left, lhs, cur_mid);
+        Range::Node* const right = single_range_cover(root->right, cur_mid + 1, rhs);
+
+        if (left->parent != nullptr
+            && right->parent != nullptr
+            && left->parent->id == right->parent->id) {
+            return left->parent;
+        } else {
+            return root;
+        }
+    }
+}
 /*
 std::string encrypt_message(std::string_view key,
     std::string_view message,

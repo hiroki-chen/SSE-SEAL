@@ -88,6 +88,13 @@ private:
 
     size_t memory_size;
 
+    /*==================== Nodes used for range-query ====================*/
+    /**
+     * @brief Mapps from table.column to the search tree T1.
+     * 
+     */
+    std::map<std::string, Range::Node*> root_t1;
+
     /*==================== Functions =====================*/
     /**
      * @brief Initialize the client cache.
