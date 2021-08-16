@@ -392,10 +392,25 @@ class BucketReadMessage final :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kMapKeyFieldNumber = 4,
     kIsOdictFieldNumber = 1,
     kPositionFieldNumber = 2,
     kOramIdFieldNumber = 3,
   };
+  // bytes map_key = 4;
+  void clear_map_key();
+  const std::string& map_key() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_map_key(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_map_key();
+  PROTOBUF_MUST_USE_RESULT std::string* release_map_key();
+  void set_allocated_map_key(std::string* map_key);
+  private:
+  const std::string& _internal_map_key() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_map_key(const std::string& value);
+  std::string* _internal_mutable_map_key();
+  public:
+
   // bool is_odict = 1;
   void clear_is_odict();
   bool is_odict() const;
@@ -430,6 +445,7 @@ class BucketReadMessage final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr map_key_;
   bool is_odict_;
   ::PROTOBUF_NAMESPACE_ID::int32 position_;
   ::PROTOBUF_NAMESPACE_ID::int32 oram_id_;
@@ -698,6 +714,7 @@ class BucketWriteMessage final :
 
   enum : int {
     kBufferFieldNumber = 3,
+    kMapKeyFieldNumber = 5,
     kIsOdictFieldNumber = 1,
     kPositionFieldNumber = 2,
     kOramIdFieldNumber = 4,
@@ -714,6 +731,20 @@ class BucketWriteMessage final :
   const std::string& _internal_buffer() const;
   inline PROTOBUF_ALWAYS_INLINE void _internal_set_buffer(const std::string& value);
   std::string* _internal_mutable_buffer();
+  public:
+
+  // bytes map_key = 5;
+  void clear_map_key();
+  const std::string& map_key() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_map_key(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_map_key();
+  PROTOBUF_MUST_USE_RESULT std::string* release_map_key();
+  void set_allocated_map_key(std::string* map_key);
+  private:
+  const std::string& _internal_map_key() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_map_key(const std::string& value);
+  std::string* _internal_mutable_map_key();
   public:
 
   // bool is_odict = 1;
@@ -751,6 +782,7 @@ class BucketWriteMessage final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr buffer_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr map_key_;
   bool is_odict_;
   ::PROTOBUF_NAMESPACE_ID::int32 position_;
   ::PROTOBUF_NAMESPACE_ID::int32 oram_id_;
@@ -874,10 +906,25 @@ class BucketSetMessage final :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kMapKeyFieldNumber = 4,
     kIsOdictFieldNumber = 1,
     kNumberOfBucketsFieldNumber = 2,
     kOramIdFieldNumber = 3,
   };
+  // bytes map_key = 4;
+  void clear_map_key();
+  const std::string& map_key() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_map_key(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_map_key();
+  PROTOBUF_MUST_USE_RESULT std::string* release_map_key();
+  void set_allocated_map_key(std::string* map_key);
+  private:
+  const std::string& _internal_map_key() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_map_key(const std::string& value);
+  std::string* _internal_mutable_map_key();
+  public:
+
   // bool is_odict = 1;
   void clear_is_odict();
   bool is_odict() const;
@@ -912,6 +959,7 @@ class BucketSetMessage final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr map_key_;
   bool is_odict_;
   ::PROTOBUF_NAMESPACE_ID::int32 number_of_buckets_;
   ::PROTOBUF_NAMESPACE_ID::int32 oram_id_;
@@ -1660,6 +1708,52 @@ inline void BucketReadMessage::set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value)
   // @@protoc_insertion_point(field_set:BucketReadMessage.oram_id)
 }
 
+// bytes map_key = 4;
+inline void BucketReadMessage::clear_map_key() {
+  map_key_.ClearToEmpty();
+}
+inline const std::string& BucketReadMessage::map_key() const {
+  // @@protoc_insertion_point(field_get:BucketReadMessage.map_key)
+  return _internal_map_key();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void BucketReadMessage::set_map_key(ArgT0&& arg0, ArgT... args) {
+ 
+ map_key_.SetBytes(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:BucketReadMessage.map_key)
+}
+inline std::string* BucketReadMessage::mutable_map_key() {
+  std::string* _s = _internal_mutable_map_key();
+  // @@protoc_insertion_point(field_mutable:BucketReadMessage.map_key)
+  return _s;
+}
+inline const std::string& BucketReadMessage::_internal_map_key() const {
+  return map_key_.Get();
+}
+inline void BucketReadMessage::_internal_set_map_key(const std::string& value) {
+  
+  map_key_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* BucketReadMessage::_internal_mutable_map_key() {
+  
+  return map_key_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* BucketReadMessage::release_map_key() {
+  // @@protoc_insertion_point(field_release:BucketReadMessage.map_key)
+  return map_key_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void BucketReadMessage::set_allocated_map_key(std::string* map_key) {
+  if (map_key != nullptr) {
+    
+  } else {
+    
+  }
+  map_key_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), map_key,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:BucketReadMessage.map_key)
+}
+
 // -------------------------------------------------------------------
 
 // BucketReadResponse
@@ -1820,6 +1914,52 @@ inline void BucketWriteMessage::set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value
   // @@protoc_insertion_point(field_set:BucketWriteMessage.oram_id)
 }
 
+// bytes map_key = 5;
+inline void BucketWriteMessage::clear_map_key() {
+  map_key_.ClearToEmpty();
+}
+inline const std::string& BucketWriteMessage::map_key() const {
+  // @@protoc_insertion_point(field_get:BucketWriteMessage.map_key)
+  return _internal_map_key();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void BucketWriteMessage::set_map_key(ArgT0&& arg0, ArgT... args) {
+ 
+ map_key_.SetBytes(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:BucketWriteMessage.map_key)
+}
+inline std::string* BucketWriteMessage::mutable_map_key() {
+  std::string* _s = _internal_mutable_map_key();
+  // @@protoc_insertion_point(field_mutable:BucketWriteMessage.map_key)
+  return _s;
+}
+inline const std::string& BucketWriteMessage::_internal_map_key() const {
+  return map_key_.Get();
+}
+inline void BucketWriteMessage::_internal_set_map_key(const std::string& value) {
+  
+  map_key_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* BucketWriteMessage::_internal_mutable_map_key() {
+  
+  return map_key_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* BucketWriteMessage::release_map_key() {
+  // @@protoc_insertion_point(field_release:BucketWriteMessage.map_key)
+  return map_key_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void BucketWriteMessage::set_allocated_map_key(std::string* map_key) {
+  if (map_key != nullptr) {
+    
+  } else {
+    
+  }
+  map_key_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), map_key,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:BucketWriteMessage.map_key)
+}
+
 // -------------------------------------------------------------------
 
 // BucketSetMessage
@@ -1882,6 +2022,52 @@ inline void BucketSetMessage::_internal_set_oram_id(::PROTOBUF_NAMESPACE_ID::int
 inline void BucketSetMessage::set_oram_id(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_oram_id(value);
   // @@protoc_insertion_point(field_set:BucketSetMessage.oram_id)
+}
+
+// bytes map_key = 4;
+inline void BucketSetMessage::clear_map_key() {
+  map_key_.ClearToEmpty();
+}
+inline const std::string& BucketSetMessage::map_key() const {
+  // @@protoc_insertion_point(field_get:BucketSetMessage.map_key)
+  return _internal_map_key();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void BucketSetMessage::set_map_key(ArgT0&& arg0, ArgT... args) {
+ 
+ map_key_.SetBytes(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:BucketSetMessage.map_key)
+}
+inline std::string* BucketSetMessage::mutable_map_key() {
+  std::string* _s = _internal_mutable_map_key();
+  // @@protoc_insertion_point(field_mutable:BucketSetMessage.map_key)
+  return _s;
+}
+inline const std::string& BucketSetMessage::_internal_map_key() const {
+  return map_key_.Get();
+}
+inline void BucketSetMessage::_internal_set_map_key(const std::string& value) {
+  
+  map_key_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* BucketSetMessage::_internal_mutable_map_key() {
+  
+  return map_key_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* BucketSetMessage::release_map_key() {
+  // @@protoc_insertion_point(field_release:BucketSetMessage.map_key)
+  return map_key_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void BucketSetMessage::set_allocated_map_key(std::string* map_key) {
+  if (map_key != nullptr) {
+    
+  } else {
+    
+  }
+  map_key_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), map_key,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:BucketSetMessage.map_key)
 }
 
 // -------------------------------------------------------------------

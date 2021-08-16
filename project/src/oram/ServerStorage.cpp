@@ -28,10 +28,11 @@
 #include <grpc++/client_context.h>
 #include <grpc/grpc.h>
 
-ServerStorage::ServerStorage(const unsigned int& oram_id, const bool& is_odict, Seal::Stub* stub_)
+ServerStorage::ServerStorage(const unsigned int& oram_id, const bool& is_odict, const std::string& key, Seal::Stub* stub_)
     : stub_(stub_)
     , oram_id(oram_id)
     , is_odict(is_odict)
+    , key(key)
 {
     PLOG(plog::info) << "The server storage interface class is initialized.";
 }
@@ -46,6 +47,7 @@ void ServerStorage::setCapacity(const int& totalNumOfBuckets)
     message.set_is_odict(is_odict);
     message.set_oram_id(oram_id);
     message.set_number_of_buckets(totalNumOfBuckets);
+    message.set_map_key(key);
 
     grpc::Status status = stub_->set_capacity(&context, message, &e);
 
@@ -67,6 +69,7 @@ Bucket ServerStorage::ReadBucket(const int& position)
     message.set_is_odict(is_odict);
     message.set_oram_id(oram_id);
     message.set_position(position);
+    message.set_map_key(key);
 
     grpc::Status status = stub_->read_bucket(&context, message, &response);
     if (!status.ok()) {
@@ -90,6 +93,7 @@ void ServerStorage::WriteBucket(const int& position, const Bucket& bucket_to_wri
     message.set_oram_id(oram_id);
     message.set_position(position);
     message.set_buffer(serialize<Bucket>(bucket_to_write));
+    message.set_map_key(key);
 
     grpc::Status status = stub_->write_bucket(&context, message, &e);
     if (!status.ok()) {

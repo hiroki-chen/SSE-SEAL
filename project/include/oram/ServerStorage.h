@@ -51,6 +51,8 @@ private:
 
     const bool is_odict;
 
+    const std::string key;
+
 public:
 
     /**
@@ -58,9 +60,10 @@ public:
      * 
      * @param oram_id The id of the oram structure to which it belongs.
      * @param is_odict Oblivioud data structure is a little bit different.
+     * @param key Used to look up the storage on the server side.
      * @param stub_ Connection to the server.
      */
-    ServerStorage(const unsigned int& oram_id, const bool& is_odict, Seal::Stub * stub_);
+    ServerStorage(const unsigned int& oram_id, const bool& is_odict, const std::string& key, Seal::Stub * stub_);
 
     void setCapacity(const int& total_number_of_buckets);
 

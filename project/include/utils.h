@@ -86,10 +86,13 @@ std::string decrypt_message(std::string_view key, std::string_view ciphertext, c
 Range::Node*
 build_tree_t1(
     const int& lhs, const int& rhs,
-    const std::vector<std::pair<std::string, unsigned int>>& memory);
+    const std::vector<std::pair<std::string, unsigned int>>& memory,
+    const std::string& context);
 
 Range::Node*
 add_internal_nodes_for_tree_t1(Range::Node* const root);
+
+void print_tree(Range::Node* const root, const int& indent = 0);
 
 Range::Node*
 single_range_cover(Range::Node* const root, const int& lhs, const int& rhs);

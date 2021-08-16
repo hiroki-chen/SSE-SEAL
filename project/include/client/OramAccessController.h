@@ -109,11 +109,13 @@ public:
      * @param block_size sizeof(the data you want to manipulate)
      * @param oram_id The id of the oram block. Any value can be set if is_odict = true.
      * @param is_odict Is this oram served as oblivious dictionary.
+     * @param key Used to look up the storage on the server side.
      * @param stub_ Interfaces to the server.
      */
     OramAccessController(
         const int& bucket_size, const int& block_number, const int& block_size,
-        const int& oram_id, const bool& is_odict, Seal::Stub* stub_ = nullptr);
+        const int& oram_id, const bool& is_odict, const std::string& key,
+        Seal::Stub* stub_ = nullptr);
 
     void set_stub(Seal::Stub* stub_);
 };

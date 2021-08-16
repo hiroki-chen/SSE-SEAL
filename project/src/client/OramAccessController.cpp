@@ -32,6 +32,7 @@ OramAccessController::OramAccessController(
     const int& block_size,
     const int& oram_id,
     const bool& is_odict,
+    const std::string& key,
     Seal::Stub* stub_)
     : oram_id(oram_id)
     , block_size(block_size)
@@ -46,7 +47,7 @@ OramAccessController::OramAccessController(
     PLOG(plog::info) << "Warming up OramAccessController...\n";
     Bucket::setMaxSize(bucket_size);
 
-    storage = new ServerStorage(oram_id, is_odict, stub_);
+    storage = new ServerStorage(oram_id, is_odict, key, stub_);
     random = RandomForOram::get_instance();
     oram = new OramReadPathEviction(storage, random, bucket_size, block_number, block_size);
 }

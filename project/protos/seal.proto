@@ -33,6 +33,7 @@ message BucketReadMessage
     bool is_odict = 1;
     int32 position = 2;
     int32 oram_id = 3;
+    bytes map_key = 4;
 }
 
 message BucketReadResponse
@@ -46,6 +47,7 @@ message BucketWriteMessage
     int32 position = 2;
     bytes buffer = 3;
     int32 oram_id = 4;
+    bytes map_key = 5;
 }
 
 message BucketSetMessage
@@ -53,6 +55,7 @@ message BucketSetMessage
     bool is_odict = 1;
     int32 number_of_buckets = 2;
     int32 oram_id = 3;
+    bytes map_key = 4;
 }
 
 message InsertMessage

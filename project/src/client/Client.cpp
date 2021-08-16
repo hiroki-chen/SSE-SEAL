@@ -196,10 +196,10 @@ void SEAL::Client::ODS_finalize(const int& pad_val)
     root_pos = cache->update_pos(root_id);
 
     // Pad the operation_cache.
-
     for (int i = pad_val - read_count; i <= pad_val; i++) {
         // dummy operation.
         std::string data = "ok";
+
         oramAccessController.get()->oblivious_access(ORAM_ACCESS_READ, 0, data);
     }
 
@@ -630,7 +630,7 @@ void SEAL::Client::adj_padding(
 
         // Pad the document
         for (unsigned int i = iter->second; i <= size; i++) {
-            std::vector<std::string> keywords = { "ok", "but"};
+            std::vector<std::string> keywords = { "ok", "but" };
             SEAL::Document dummy(randombytes_uniform(0xfffffff0 - memory.size()) + memory.size(), keywords);
             memory.push_back(
                 std::make_pair(iter->first, dummy));
@@ -641,7 +641,7 @@ void SEAL::Client::adj_padding(
     const size_t memory_size = memory.size();
     /* Pad the document to x * N */
     for (unsigned int i = memory_size; i <= x * memory_size; i++) {
-        std::vector<std::string> keywords = { random_string(16), random_string(16), random_string(16)};
+        std::vector<std::string> keywords = { random_string(16), random_string(16), random_string(16) };
         SEAL::Document dummy(randombytes_uniform(0xfffffff0 - memory.size()) + memory.size(), keywords);
         memory.push_back(std::make_pair(random_string(16, secret_key), dummy));
         count[memory.back().first]++;
@@ -651,6 +651,11 @@ void SEAL::Client::adj_padding(
 void SEAL::Client::adj_data_in(std::string_view file_path)
 {
     try {
+        oramAccessController = std::make_unique<OramAccessController>(
+            bucket_size, block_number, block_size, -1, true, (std::string)file_path, stub_);
+        cache = new Cache<ODict::Node>(INT_MAX, oramAccessController.get());
+        init_dummy_data();
+
         PLOG(plog::debug) << "Reading data...";
         std::vector<std::pair<std::string, SEAL::Document>> memory;
         rapidcsv::Document doc(file_path.data(), rapidcsv::LabelParams(0, 0));
@@ -661,13 +666,55 @@ void SEAL::Client::adj_data_in(std::string_view file_path)
             const std::vector<std::string> data_frame = doc.GetColumn<std::string>(i);
             const std::string column_name = column_names[i];
 
+            std::vector<std::pair<std::string, SEAL::Document>> tmp;
+
             for (unsigned int j = 0; j < data_frame.size(); j++) {
                 const std::vector<std::string> tokens = doc.GetRow<std::string>(j);
                 SEAL::Document document(j, tokens);
                 const std::string keyword = ((std::string)(file_path)).append(column_name).append(data_frame[j]);
                 const std::pair<std::string, SEAL::Document> tuple = std::make_pair(keyword, document);
-                memory.push_back(tuple);
+                tmp.push_back(tuple);
             }
+            memory.insert(memory.end(), tmp.begin(), tmp.end());
+
+            std::vector<std::pair<std::string, SEAL::Document>> range_query_helper(tmp.begin(), tmp.end());
+            std::sort(
+                range_query_helper.begin(),
+                range_query_helper.end(),
+                [](const std::pair<std::string, SEAL::Document>& lhs,
+                    const std::pair<std::string, SEAL::Document>& rhs) -> bool {
+                    return lhs.first < rhs.first;
+                });
+
+            /*
+                There are two phases for building the range-query-supportive data structure.
+                First, we need to build Tree T1 by <keyword, document_id> vector.
+                Second, we need build Tree T2 in an oblivioud manner. For simplicity, we only insert leaf node
+                        into the oblivous ram. I.e., we store <subscript, document> pairs (where subscript is gotten
+                        from step 1).
+            */
+            std::vector<std::pair<std::string, unsigned int>> keyword_id_pairs;
+            std::transform(range_query_helper.begin(),
+                range_query_helper.end(),
+                std::back_inserter(keyword_id_pairs),
+                [](const std::pair<std::string, SEAL::Document>& item) {
+                    return std::make_pair(item.first, item.second.id);
+                });
+            const std::string map_key = ((std::string)file_path).append(column_name);
+            /*
+                For convenience, the range is pre-defined to 1 - 8.
+                In future, customized range should be supported.
+            */
+            root_t1[map_key] = add_internal_nodes_for_tree_t1(build_tree_t1(1, 8, keyword_id_pairs, map_key));
+
+            std::vector<SEAL::Document> sorted_doc;
+            std::transform(range_query_helper.begin(),
+                range_query_helper.end(),
+                std::back_inserter(sorted_doc),
+                [](const std::pair<std::string, SEAL::Document>& item) {
+                    return item.second;
+                });
+            adj_insert_range(sorted_doc, map_key);
         }
 
         std::map<std::string, unsigned int> count;
@@ -693,7 +740,8 @@ void SEAL::Client::adj_data_in(std::string_view file_path)
             }
         }
 
-        adj_insert(memory, first_occurrence, count);
+        const std::string map_key = ((std::string)file_path);
+        adj_insert(memory, first_occurrence, count, map_key);
     } catch (const std::invalid_argument& e) {
         PLOG(plog::error) << e.what();
         std::cerr << e.what();
@@ -703,7 +751,8 @@ void SEAL::Client::adj_data_in(std::string_view file_path)
 void SEAL::Client::adj_insert(
     const std::vector<std::pair<std::string, SEAL::Document>>& memory,
     const std::map<std::string, unsigned int>& first_occurrence,
-    const std::map<std::string, unsigned int>& count)
+    const std::map<std::string, unsigned int>& count,
+    const std::string& map_key)
 {
     std::vector<ODict::Node*> nodes;
     for (unsigned int i = 0; i < memory.size(); i++) {
@@ -719,20 +768,66 @@ void SEAL::Client::adj_insert(
 
         /* Insert into the remote database. */
     }
+
     insert(nodes);
 
-    adj_oram_init(memory);
+    adj_oram_init(memory, map_key);
     PLOG(plog::info) << "SUB ORAMS INITIALIZED.";
 }
 
+void SEAL::Client::adj_insert_range(const std::vector<SEAL::Document>& sorted_documents, const std::string& map_key)
+{
+    PLOG(plog::info) << "Inserting sorted documents";
+
+    const size_t mu = pow(2, alpha);
+    const size_t base = std::ceil((log(sorted_documents.size()) / log(2)));
+    const size_t array_size = std::ceil(pow(2, base) / mu);
+    std::vector<std::vector<SEAL::Document>> sub_arrays(
+        mu, std::vector<SEAL::Document>(array_size));
+
+    const std::vector<unsigned int> prp = pseudo_random_permutation(sorted_documents.size(), secret_key);
+    kwd_size[map_key] = sorted_documents.size();
+
+    for (unsigned int i = 0; i < sorted_documents.size(); i++) {
+        const unsigned int value = prp[i];
+        const std::pair<unsigned int, unsigned int> bits = get_bits(base, value, alpha);
+
+        sub_arrays[bits.first][bits.second] = sorted_documents[i];
+    }
+
+    adj_oram_init_helper_range(sub_arrays, map_key);
+}
+
+void SEAL::Client::adj_oram_init_helper_range(
+    const std::vector<std::vector<SEAL::Document>>& sub_arrays,
+    const std::string& map_key)
+{
+    try {
+        for (unsigned int i = 0; i < sub_arrays.size(); i++) {
+            /* Initialize local oram access controllers */
+            adj_oramAccessControllers_range[map_key].emplace_back(
+                new OramAccessController(bucket_size, block_number, sizeof(unsigned int), i, false, map_key, stub_));
+
+            for (unsigned int j = 0; j < sub_arrays[i].size(); j++) {
+                std::string data = encrypt_SM4_EBC(serialize<SEAL::Document>(sub_arrays[i][j]), secret_key);
+                adj_oramAccessControllers_range[map_key][i].get()->oblivious_access(
+                    OramAccessOp::ORAM_ACCESS_WRITE, j, data);
+            }
+        }
+    } catch (const std::runtime_error& e) {
+        PLOG(plog::error) << e.what();
+    }
+}
+
 void SEAL::Client::adj_oram_init_helper(
-    const std::vector<std::vector<SEAL::Document>>& sub_arrays)
+    const std::vector<std::vector<SEAL::Document>>& sub_arrays,
+    const std::string& map_key)
 {
     try {
         for (unsigned int i = 0; i < sub_arrays.size(); i++) {
             /* Initialize local oram access controllers */
             adj_oramAccessControllers.emplace_back(
-                new OramAccessController(bucket_size, block_number, sizeof(unsigned int), i, false, stub_));
+                new OramAccessController(bucket_size, block_number, sizeof(unsigned int), i, false, map_key, stub_));
 
             for (unsigned int j = 0; j < sub_arrays[i].size(); j++) {
                 std::string data = encrypt_SM4_EBC(serialize<SEAL::Document>(sub_arrays[i][j]), secret_key);
@@ -749,7 +844,8 @@ void SEAL::Client::adj_oram_init_helper(
  * TODO: Before calling adj_oram_init, the client should first do INSERT INTO. 
  */
 void SEAL::Client::adj_oram_init(
-    const std::vector<std::pair<std::string, SEAL::Document>>& memory)
+    const std::vector<std::pair<std::string, SEAL::Document>>& memory,
+    const std::string& map_key)
 {
     size_t mu = pow(2, alpha);
     size_t base = std::ceil((log(memory.size()) / log(2)));
@@ -769,7 +865,7 @@ void SEAL::Client::adj_oram_init(
     }
 
     std::cout << "OK" << std::endl;
-    adj_oram_init_helper(sub_arrays);
+    adj_oram_init_helper(sub_arrays, map_key);
 }
 
 std::vector<SEAL::Document>
@@ -815,6 +911,65 @@ SEAL::Client::search(std::string_view keyword)
     return ans;
 }
 
+std::vector<SEAL::Document>
+SEAL::Client::search_range(std::string_view map_key, std::string_view lower, std::string_view upper)
+{
+    const int lower_bound = std::stoi(lower.data());
+    const int upper_bound = std::stoi(upper.data());
+    const Range::Node* const single_node = single_range_cover(root_t1[map_key.data()], lower_bound, upper_bound);
+    if (single_node == nullptr) {
+        throw std::runtime_error("Cannot find the single node that satisfies the given range!");
+    }
+
+    std::map<int, std::vector<unsigned int>> kwd_doc_pairs(single_node->kwd_doc_pairs.begin(), single_node->kwd_doc_pairs.end());
+    /* 
+        Remove all the ids that do not satisfy the given range.
+    */
+    std::vector<unsigned int> doc_subscripts;
+    std::for_each(kwd_doc_pairs.begin(), kwd_doc_pairs.end(),
+        [&doc_subscripts, lower_bound, upper_bound](const std::pair<int, std::vector<unsigned int>>& item) {
+            if (lower_bound <= item.first && item.first <= upper_bound) {
+                doc_subscripts.insert(doc_subscripts.end(), item.second.begin(), item.second.end());
+            }
+        });
+
+    return search_range_helper(doc_subscripts, map_key);
+}
+
+std::vector<SEAL::Document>
+SEAL::Client::search_range_helper(
+    const std::vector<unsigned int>& doc_subscripts,
+    std::string_view map_key)
+{
+    /*
+        Since the volumn pattern and the access pattern are procted by the ORAM (which serves as the TDAG2),
+        there is no meaning to issue some "false positives" to the server?
+    */
+    std::vector<SEAL::Document> ans;
+    const size_t base = std::ceil((log(kwd_size[map_key.data()]) / log(2)));
+
+    auto begin = std::chrono::high_resolution_clock::now();
+    const std::vector<unsigned int> prp = pseudo_random_permutation(kwd_size[map_key.data()], secret_key);
+
+    for (unsigned int i = 0; i < doc_subscripts.size(); i++) {
+        const unsigned int value = prp[i];
+        const std::pair<unsigned int, unsigned int> bits = get_bits(base, value, alpha);
+
+        std::string res;
+        adj_oramAccessControllers_range[map_key.data()][bits.first].get()->oblivious_access(
+            OramAccessOp::ORAM_ACCESS_READ, bits.second, res);
+        res = decrypt_SM4_EBC(res, secret_key);
+        SEAL::Document doc = deserialize<SEAL::Document>(res);
+        ans.push_back(doc);
+    }
+
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = (begin - end);
+    PLOG(plog::info) << "Search range finished, time consumed: " << elapsed.count() << " s";
+
+    return ans;
+}
+
 std::vector<ODict::Node*>
 SEAL::Client::create_test_cases(const int& number)
 {
@@ -850,11 +1005,9 @@ SEAL::Client::Client(const int& bucket_size, const int& block_number,
     , root_id(0)
     , root_pos(-1)
     , stub_(stub_)
-    , oramAccessController(std::make_unique<OramAccessController>(bucket_size, block_number, block_size, -1, true, stub_))
     , node_count(1)
     , read_count(0)
     , write_count(0)
-    , cache(new Cache<ODict::Node>(max_size, oramAccessController.get()))
     , alpha(alpha)
     , x(x)
 {
@@ -874,4 +1027,10 @@ void SEAL::Client::set_stub(const std::unique_ptr<Seal::Stub>& stub)
 {
     stub_ = stub.get();
     oramAccessController.get()->set_stub(stub_);
+}
+
+Range::Node*
+SEAL::Client::get_t1_root(const std::string& map_key)
+{
+    return root_t1[map_key];
 }

@@ -52,7 +52,7 @@ ClientRunner::ClientRunner(const int& bucket_size, const int& block_number,
         bucket_size, block_number, block_size,
         odict_size, max_size, alpha, x,
         password, stub_.get());
-    client.get()->init_dummy_data();
+    // client.get()->init_dummy_data();
 }
 
 ClientRunner::~ClientRunner()
@@ -96,4 +96,16 @@ std::vector<SEAL::Document>
 ClientRunner::search(std::string_view keyword)
 {
     return client.get()->search(keyword);
+}
+
+Range::Node*
+ClientRunner::get_t1_root(const std::string& map_key)
+{
+    return client.get()->get_t1_root(map_key);
+}
+
+std::vector<SEAL::Document> 
+ClientRunner::search_range(std::string_view map_key, std::string_view lower, std::string_view upper)
+{
+    return client.get()->search_range(map_key, lower, upper);
 }

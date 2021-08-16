@@ -32,7 +32,8 @@ struct SetupMessageDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT SetupMessageDefaultTypeInternal _SetupMessage_default_instance_;
 constexpr BucketReadMessage::BucketReadMessage(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : is_odict_(false)
+  : map_key_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , is_odict_(false)
   , position_(0)
   , oram_id_(0){}
 struct BucketReadMessageDefaultTypeInternal {
@@ -59,6 +60,7 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT BucketReadResponseDefaultTypeIn
 constexpr BucketWriteMessage::BucketWriteMessage(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : buffer_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , map_key_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
   , is_odict_(false)
   , position_(0)
   , oram_id_(0){}
@@ -73,7 +75,8 @@ struct BucketWriteMessageDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT BucketWriteMessageDefaultTypeInternal _BucketWriteMessage_default_instance_;
 constexpr BucketSetMessage::BucketSetMessage(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : is_odict_(false)
+  : map_key_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , is_odict_(false)
   , number_of_buckets_(0)
   , oram_id_(0){}
 struct BucketSetMessageDefaultTypeInternal {
@@ -145,6 +148,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_seal_2eproto::offsets[] PROTOB
   PROTOBUF_FIELD_OFFSET(::BucketReadMessage, is_odict_),
   PROTOBUF_FIELD_OFFSET(::BucketReadMessage, position_),
   PROTOBUF_FIELD_OFFSET(::BucketReadMessage, oram_id_),
+  PROTOBUF_FIELD_OFFSET(::BucketReadMessage, map_key_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::BucketReadResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -160,6 +164,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_seal_2eproto::offsets[] PROTOB
   PROTOBUF_FIELD_OFFSET(::BucketWriteMessage, position_),
   PROTOBUF_FIELD_OFFSET(::BucketWriteMessage, buffer_),
   PROTOBUF_FIELD_OFFSET(::BucketWriteMessage, oram_id_),
+  PROTOBUF_FIELD_OFFSET(::BucketWriteMessage, map_key_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::BucketSetMessage, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -168,6 +173,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_seal_2eproto::offsets[] PROTOB
   PROTOBUF_FIELD_OFFSET(::BucketSetMessage, is_odict_),
   PROTOBUF_FIELD_OFFSET(::BucketSetMessage, number_of_buckets_),
   PROTOBUF_FIELD_OFFSET(::BucketSetMessage, oram_id_),
+  PROTOBUF_FIELD_OFFSET(::BucketSetMessage, map_key_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::InsertMessage, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -193,12 +199,12 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_seal_2eproto::offsets[] PROTOB
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::SetupMessage)},
   { 8, -1, sizeof(::BucketReadMessage)},
-  { 16, -1, sizeof(::BucketReadResponse)},
-  { 22, -1, sizeof(::BucketWriteMessage)},
-  { 31, -1, sizeof(::BucketSetMessage)},
-  { 39, -1, sizeof(::InsertMessage)},
-  { 46, -1, sizeof(::SelectMessage)},
-  { 54, -1, sizeof(::SelectResult)},
+  { 17, -1, sizeof(::BucketReadResponse)},
+  { 23, -1, sizeof(::BucketWriteMessage)},
+  { 33, -1, sizeof(::BucketSetMessage)},
+  { 42, -1, sizeof(::InsertMessage)},
+  { 49, -1, sizeof(::SelectMessage)},
+  { 57, -1, sizeof(::SelectResult)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -216,34 +222,35 @@ const char descriptor_table_protodef_seal_2eproto[] PROTOBUF_SECTION_VARIABLE(pr
   "\n\nseal.proto\032\033google/protobuf/empty.prot"
   "o\"X\n\014SetupMessage\022\036\n\026connection_informat"
   "ion\030\001 \001(\014\022\022\n\ntable_name\030\002 \001(\014\022\024\n\014column_"
-  "names\030\003 \003(\014\"H\n\021BucketReadMessage\022\020\n\010is_o"
+  "names\030\003 \003(\014\"Y\n\021BucketReadMessage\022\020\n\010is_o"
   "dict\030\001 \001(\010\022\020\n\010position\030\002 \001(\005\022\017\n\007oram_id\030"
-  "\003 \001(\005\"$\n\022BucketReadResponse\022\016\n\006buffer\030\001 "
-  "\001(\014\"Y\n\022BucketWriteMessage\022\020\n\010is_odict\030\001 "
-  "\001(\010\022\020\n\010position\030\002 \001(\005\022\016\n\006buffer\030\003 \001(\014\022\017\n"
-  "\007oram_id\030\004 \001(\005\"P\n\020BucketSetMessage\022\020\n\010is"
-  "_odict\030\001 \001(\010\022\031\n\021number_of_buckets\030\002 \001(\005\022"
-  "\017\n\007oram_id\030\003 \001(\005\".\n\rInsertMessage\022\r\n\005tab"
-  "le\030\001 \001(\014\022\016\n\006values\030\002 \003(\014\"D\n\rSelectMessag"
-  "e\022\r\n\005table\030\001 \001(\014\022\017\n\007columns\030\002 \003(\014\022\023\n\013doc"
-  "ument_id\030\003 \001(\014\"\"\n\014SelectResult\022\022\n\nresult"
-  "_set\030\001 \001(\0142\335\002\n\004Seal\0220\n\005setup\022\r.SetupMess"
-  "age\032\026.google.protobuf.Empty\"\000\0228\n\013read_bu"
-  "cket\022\022.BucketReadMessage\032\023.BucketReadRes"
-  "ponse\"\000\022=\n\014write_bucket\022\023.BucketWriteMes"
-  "sage\032\026.google.protobuf.Empty\"\000\022;\n\014set_ca"
-  "pacity\022\021.BucketSetMessage\032\026.google.proto"
-  "buf.Empty\"\000\022:\n\016insert_handler\022\016.InsertMe"
-  "ssage\032\026.google.protobuf.Empty\"\000\0221\n\016selec"
-  "t_handler\022\016.SelectMessage\032\r.SelectResult"
-  "\"\000b\006proto3"
+  "\003 \001(\005\022\017\n\007map_key\030\004 \001(\014\"$\n\022BucketReadResp"
+  "onse\022\016\n\006buffer\030\001 \001(\014\"j\n\022BucketWriteMessa"
+  "ge\022\020\n\010is_odict\030\001 \001(\010\022\020\n\010position\030\002 \001(\005\022\016"
+  "\n\006buffer\030\003 \001(\014\022\017\n\007oram_id\030\004 \001(\005\022\017\n\007map_k"
+  "ey\030\005 \001(\014\"a\n\020BucketSetMessage\022\020\n\010is_odict"
+  "\030\001 \001(\010\022\031\n\021number_of_buckets\030\002 \001(\005\022\017\n\007ora"
+  "m_id\030\003 \001(\005\022\017\n\007map_key\030\004 \001(\014\".\n\rInsertMes"
+  "sage\022\r\n\005table\030\001 \001(\014\022\016\n\006values\030\002 \003(\014\"D\n\rS"
+  "electMessage\022\r\n\005table\030\001 \001(\014\022\017\n\007columns\030\002"
+  " \003(\014\022\023\n\013document_id\030\003 \001(\014\"\"\n\014SelectResul"
+  "t\022\022\n\nresult_set\030\001 \001(\0142\335\002\n\004Seal\0220\n\005setup\022"
+  "\r.SetupMessage\032\026.google.protobuf.Empty\"\000"
+  "\0228\n\013read_bucket\022\022.BucketReadMessage\032\023.Bu"
+  "cketReadResponse\"\000\022=\n\014write_bucket\022\023.Buc"
+  "ketWriteMessage\032\026.google.protobuf.Empty\""
+  "\000\022;\n\014set_capacity\022\021.BucketSetMessage\032\026.g"
+  "oogle.protobuf.Empty\"\000\022:\n\016insert_handler"
+  "\022\016.InsertMessage\032\026.google.protobuf.Empty"
+  "\"\000\0221\n\016select_handler\022\016.SelectMessage\032\r.S"
+  "electResult\"\000b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_seal_2eproto_deps[1] = {
   &::descriptor_table_google_2fprotobuf_2fempty_2eproto,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_seal_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_seal_2eproto = {
-  false, false, 930, descriptor_table_protodef_seal_2eproto, "seal.proto", 
+  false, false, 981, descriptor_table_protodef_seal_2eproto, "seal.proto", 
   &descriptor_table_seal_2eproto_once, descriptor_table_seal_2eproto_deps, 1, 8,
   schemas, file_default_instances, TableStruct_seal_2eproto::offsets,
   file_level_metadata_seal_2eproto, file_level_enum_descriptors_seal_2eproto, file_level_service_descriptors_seal_2eproto,
@@ -537,6 +544,11 @@ BucketReadMessage::BucketReadMessage(::PROTOBUF_NAMESPACE_ID::Arena* arena,
 BucketReadMessage::BucketReadMessage(const BucketReadMessage& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  map_key_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_map_key().empty()) {
+    map_key_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_map_key(), 
+      GetArenaForAllocation());
+  }
   ::memcpy(&is_odict_, &from.is_odict_,
     static_cast<size_t>(reinterpret_cast<char*>(&oram_id_) -
     reinterpret_cast<char*>(&is_odict_)) + sizeof(oram_id_));
@@ -544,6 +556,7 @@ BucketReadMessage::BucketReadMessage(const BucketReadMessage& from)
 }
 
 inline void BucketReadMessage::SharedCtor() {
+map_key_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&is_odict_) - reinterpret_cast<char*>(this)),
     0, static_cast<size_t>(reinterpret_cast<char*>(&oram_id_) -
@@ -559,6 +572,7 @@ BucketReadMessage::~BucketReadMessage() {
 
 inline void BucketReadMessage::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  map_key_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 void BucketReadMessage::ArenaDtor(void* object) {
@@ -577,6 +591,7 @@ void BucketReadMessage::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  map_key_.ClearToEmpty();
   ::memset(&is_odict_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&oram_id_) -
       reinterpret_cast<char*>(&is_odict_)) + sizeof(oram_id_));
@@ -607,6 +622,14 @@ const char* BucketReadMessage::_InternalParse(const char* ptr, ::PROTOBUF_NAMESP
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
           oram_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // bytes map_key = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
+          auto str = _internal_mutable_map_key();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -657,6 +680,12 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(3, this->_internal_oram_id(), target);
   }
 
+  // bytes map_key = 4;
+  if (!this->_internal_map_key().empty()) {
+    target = stream->WriteBytesMaybeAliased(
+        4, this->_internal_map_key(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -672,6 +701,13 @@ size_t BucketReadMessage::ByteSizeLong() const {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
+
+  // bytes map_key = 4;
+  if (!this->_internal_map_key().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_map_key());
+  }
 
   // bool is_odict = 1;
   if (this->_internal_is_odict() != 0) {
@@ -720,6 +756,9 @@ void BucketReadMessage::MergeFrom(const BucketReadMessage& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  if (!from._internal_map_key().empty()) {
+    _internal_set_map_key(from._internal_map_key());
+  }
   if (from._internal_is_odict() != 0) {
     _internal_set_is_odict(from._internal_is_odict());
   }
@@ -746,6 +785,11 @@ bool BucketReadMessage::IsInitialized() const {
 void BucketReadMessage::InternalSwap(BucketReadMessage* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &map_key_, GetArenaForAllocation(),
+      &other->map_key_, other->GetArenaForAllocation()
+  );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
       PROTOBUF_FIELD_OFFSET(BucketReadMessage, oram_id_)
       + sizeof(BucketReadMessage::oram_id_)
@@ -978,6 +1022,11 @@ BucketWriteMessage::BucketWriteMessage(const BucketWriteMessage& from)
     buffer_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_buffer(), 
       GetArenaForAllocation());
   }
+  map_key_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_map_key().empty()) {
+    map_key_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_map_key(), 
+      GetArenaForAllocation());
+  }
   ::memcpy(&is_odict_, &from.is_odict_,
     static_cast<size_t>(reinterpret_cast<char*>(&oram_id_) -
     reinterpret_cast<char*>(&is_odict_)) + sizeof(oram_id_));
@@ -986,6 +1035,7 @@ BucketWriteMessage::BucketWriteMessage(const BucketWriteMessage& from)
 
 inline void BucketWriteMessage::SharedCtor() {
 buffer_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+map_key_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&is_odict_) - reinterpret_cast<char*>(this)),
     0, static_cast<size_t>(reinterpret_cast<char*>(&oram_id_) -
@@ -1002,6 +1052,7 @@ BucketWriteMessage::~BucketWriteMessage() {
 inline void BucketWriteMessage::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
   buffer_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  map_key_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 void BucketWriteMessage::ArenaDtor(void* object) {
@@ -1021,6 +1072,7 @@ void BucketWriteMessage::Clear() {
   (void) cached_has_bits;
 
   buffer_.ClearToEmpty();
+  map_key_.ClearToEmpty();
   ::memset(&is_odict_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&oram_id_) -
       reinterpret_cast<char*>(&is_odict_)) + sizeof(oram_id_));
@@ -1059,6 +1111,14 @@ const char* BucketWriteMessage::_InternalParse(const char* ptr, ::PROTOBUF_NAMES
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 32)) {
           oram_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // bytes map_key = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
+          auto str = _internal_mutable_map_key();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -1115,6 +1175,12 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(4, this->_internal_oram_id(), target);
   }
 
+  // bytes map_key = 5;
+  if (!this->_internal_map_key().empty()) {
+    target = stream->WriteBytesMaybeAliased(
+        5, this->_internal_map_key(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -1136,6 +1202,13 @@ size_t BucketWriteMessage::ByteSizeLong() const {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
         this->_internal_buffer());
+  }
+
+  // bytes map_key = 5;
+  if (!this->_internal_map_key().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_map_key());
   }
 
   // bool is_odict = 1;
@@ -1188,6 +1261,9 @@ void BucketWriteMessage::MergeFrom(const BucketWriteMessage& from) {
   if (!from._internal_buffer().empty()) {
     _internal_set_buffer(from._internal_buffer());
   }
+  if (!from._internal_map_key().empty()) {
+    _internal_set_map_key(from._internal_map_key());
+  }
   if (from._internal_is_odict() != 0) {
     _internal_set_is_odict(from._internal_is_odict());
   }
@@ -1218,6 +1294,11 @@ void BucketWriteMessage::InternalSwap(BucketWriteMessage* other) {
       &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       &buffer_, GetArenaForAllocation(),
       &other->buffer_, other->GetArenaForAllocation()
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &map_key_, GetArenaForAllocation(),
+      &other->map_key_, other->GetArenaForAllocation()
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
       PROTOBUF_FIELD_OFFSET(BucketWriteMessage, oram_id_)
@@ -1251,6 +1332,11 @@ BucketSetMessage::BucketSetMessage(::PROTOBUF_NAMESPACE_ID::Arena* arena,
 BucketSetMessage::BucketSetMessage(const BucketSetMessage& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  map_key_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_map_key().empty()) {
+    map_key_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_map_key(), 
+      GetArenaForAllocation());
+  }
   ::memcpy(&is_odict_, &from.is_odict_,
     static_cast<size_t>(reinterpret_cast<char*>(&oram_id_) -
     reinterpret_cast<char*>(&is_odict_)) + sizeof(oram_id_));
@@ -1258,6 +1344,7 @@ BucketSetMessage::BucketSetMessage(const BucketSetMessage& from)
 }
 
 inline void BucketSetMessage::SharedCtor() {
+map_key_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&is_odict_) - reinterpret_cast<char*>(this)),
     0, static_cast<size_t>(reinterpret_cast<char*>(&oram_id_) -
@@ -1273,6 +1360,7 @@ BucketSetMessage::~BucketSetMessage() {
 
 inline void BucketSetMessage::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  map_key_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
 void BucketSetMessage::ArenaDtor(void* object) {
@@ -1291,6 +1379,7 @@ void BucketSetMessage::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  map_key_.ClearToEmpty();
   ::memset(&is_odict_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&oram_id_) -
       reinterpret_cast<char*>(&is_odict_)) + sizeof(oram_id_));
@@ -1321,6 +1410,14 @@ const char* BucketSetMessage::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPA
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 24)) {
           oram_id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // bytes map_key = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
+          auto str = _internal_mutable_map_key();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -1371,6 +1468,12 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(3, this->_internal_oram_id(), target);
   }
 
+  // bytes map_key = 4;
+  if (!this->_internal_map_key().empty()) {
+    target = stream->WriteBytesMaybeAliased(
+        4, this->_internal_map_key(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -1386,6 +1489,13 @@ size_t BucketSetMessage::ByteSizeLong() const {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
+
+  // bytes map_key = 4;
+  if (!this->_internal_map_key().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
+        this->_internal_map_key());
+  }
 
   // bool is_odict = 1;
   if (this->_internal_is_odict() != 0) {
@@ -1434,6 +1544,9 @@ void BucketSetMessage::MergeFrom(const BucketSetMessage& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
+  if (!from._internal_map_key().empty()) {
+    _internal_set_map_key(from._internal_map_key());
+  }
   if (from._internal_is_odict() != 0) {
     _internal_set_is_odict(from._internal_is_odict());
   }
@@ -1460,6 +1573,11 @@ bool BucketSetMessage::IsInitialized() const {
 void BucketSetMessage::InternalSwap(BucketSetMessage* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &map_key_, GetArenaForAllocation(),
+      &other->map_key_, other->GetArenaForAllocation()
+  );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
       PROTOBUF_FIELD_OFFSET(BucketSetMessage, oram_id_)
       + sizeof(BucketSetMessage::oram_id_)

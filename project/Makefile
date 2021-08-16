@@ -42,7 +42,7 @@ LD = -L/usr/local/lib `pkg-config --libs protobuf grpc++`\
 
 BASE_SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp $(SRC_DIR)/oram/*.cpp $(SRC_DIR)/protos/*.cpp $(SRC_DIR)/crypto/*.cpp)
 CLIENT_SRC_FILES := $(BASE_SRC_FILES) $(wildcard $(SRC_DIR)/client/*.cpp) $(SRC_DIR)/test/main.cpp
-SERVER_SRC_FILES := $(BASE_SRC_FILES) $(wildcard $(SRC_DIR)/server/*.cpp) $(SRC_DIR)/test/test_server.cpp
+SERVER_SRC_FILES := $(BASE_SRC_FILES) $(wildcard $(SRC_DIR)/server/*.cpp) $(SRC_DIR)/test/test_server.cpp $(SRC_DIR)/client/Objects.cpp
 BASE_BUILD_FILES = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(BASE_SRC_FILES))
 CLIENT_BUILD_FILES := $(BASE_BUILD_FILES) $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(CLIENT_SRC_FILES))
 SERVER_BUILD_FILES := $(BASE_BUILD_FILES) $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SERVER_SRC_FILES))

@@ -54,7 +54,11 @@ public:
 
     void test_adj(std::string_view file_path);
 
+    Range::Node* get_t1_root(const std::string& map_key);
+
     std::vector<SEAL::Document> search(std::string_view keyword);
+
+    std::vector<SEAL::Document> search_range(std::string_view map_key, std::string_view lower, std::string_view upper);
 };
 
 #endif

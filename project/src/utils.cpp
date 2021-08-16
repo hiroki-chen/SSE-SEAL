@@ -20,12 +20,15 @@
 #include <cmath>
 #include <cstring>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <queue>
 #include <regex>
 #include <sodium.h>
 #include <sstream>
 #include <stdexcept>
+
+#include <plog/Log.h>
 
 unsigned int Range::Node::counter = 0;
 
@@ -156,38 +159,44 @@ std::vector<unsigned int>
 find_all(const std::vector<std::pair<std::string, unsigned int>>& memory, const std::string& value)
 {
     std::vector<unsigned int> matches;
-    std::vector<std::pair<std::string, unsigned int>>::const_iterator i = memory.begin();
-    auto lambda = [value](const std::pair<std::string, unsigned int>& item) {
-        return item.first == value;
-    };
-    while (true) {
-        i = std::find_if(i, memory.end(), lambda);
-        if (i == memory.end())
-            break;
-        matches.push_back((*i).second);
-    }
 
+    for (auto item : memory) {
+        if (item.first == value) {
+            matches.push_back(item.second);
+        }
+    }
     return matches;
 }
 
 Range::Node*
 build_tree_t1(
     const int& lhs, const int& rhs,
-    const std::vector<std::pair<std::string, unsigned int>>& memory)
+    const std::vector<std::pair<std::string, unsigned int>>& memory,
+    const std::string& context)
 {
     // lhs >= rhs means that we reach the leaf level.
     if (lhs >= rhs) {
-        Range::Node* node = new Range::Node(lhs, rhs);
-        const std::vector<unsigned int> matches = find_all(memory, std::to_string(lhs));
-        node->documents.assign(matches.begin(), matches.end());
-        return node;
+        const std::vector<unsigned int> matches = find_all(memory, context + (std::to_string(lhs)));
+        std::map<int, std::vector<unsigned int>> kwd_doc_pairs;
+        std::for_each(matches.begin(), matches.end(), [&kwd_doc_pairs, lhs](const unsigned int& id) {
+            kwd_doc_pairs[lhs].push_back(id);
+        });
+
+        return new Range::Node(lhs, rhs, kwd_doc_pairs);
     } else {
         const int mid = (lhs + rhs) >> 1;
-        Range::Node* const left = build_tree_t1(lhs, mid, memory);
-        Range::Node* const right = build_tree_t1(mid + 1, rhs, memory);
-        Range::Node* node = new Range::Node(lhs, rhs);
-        node->documents.assign(left->documents.begin(), right->documents.end());
-        node->documents.insert(node->documents.end(), right->documents.begin(), right->documents.end());
+        Range::Node* const left = build_tree_t1(lhs, mid, memory, context);
+        Range::Node* const right = build_tree_t1(mid + 1, rhs, memory, context);
+
+        std::map<int, std::vector<unsigned int>> kwd_doc_pairs = left->kwd_doc_pairs;
+        std::for_each(right->kwd_doc_pairs.begin(), right->kwd_doc_pairs.end(),
+            [&kwd_doc_pairs](const std::pair<int, std::vector<unsigned int>>& item) {
+                kwd_doc_pairs[item.first].insert(kwd_doc_pairs[item.first].end(), item.second.begin(), item.second.end());
+            });
+
+        Range::Node* node = new Range::Node(lhs, rhs, kwd_doc_pairs);
+        node->left = left;
+        node->right = right;
         return node;
     }
 }
@@ -203,19 +212,20 @@ add_internal_nodes_for_tree_t1(Range::Node* const root)
     q.push(root);
     while (!q.empty()) {
         const size_t cur_size = q.size();
-        const size_t level = level_result.size();
+        std::vector<Range::Node*> tmp;
         for (unsigned int i = 0; i < cur_size; i++) {
             Range::Node* const front = q.front();
             q.pop();
-            level_result[level].push_back(front);
+            tmp.push_back(front);
 
-            if (root->left != nullptr) {
-                q.push(root->left);
+            if (front->left != nullptr) {
+                q.push(front->left);
             }
-            if (root->right != nullptr) {
-                q.push(root->right);
+            if (front->right != nullptr) {
+                q.push(front->right);
             }
         }
+        level_result.push_back(tmp);
     }
 
     /*
@@ -227,9 +237,12 @@ add_internal_nodes_for_tree_t1(Range::Node* const root)
             Range::Node* const left = nodes[i];
             Range::Node* const right = nodes[i + 1];
 
-            Range::Node* parent = new Range::Node(left->range_cover.first, right->range_cover.second);
-            parent->documents.assign(left->documents.begin(), left->documents.end());
-            parent->documents.insert(parent->documents.end(), right->documents.begin(), right->documents.end());
+            std::map<int, std::vector<unsigned int>> kwd_doc_pairs = left->kwd_doc_pairs;
+            std::for_each(right->kwd_doc_pairs.begin(), right->kwd_doc_pairs.end(),
+                [&kwd_doc_pairs](const std::pair<int, std::vector<unsigned int>>& item) {
+                    kwd_doc_pairs[item.first].insert(kwd_doc_pairs[item.first].end(), item.second.begin(), item.second.end());
+                });
+            Range::Node* parent = new Range::Node(left->range_cover.first, right->range_cover.second, kwd_doc_pairs);
             left->parent = right->parent = parent;
         }
     }
@@ -240,15 +253,34 @@ add_internal_nodes_for_tree_t1(Range::Node* const root)
 Range::Node*
 single_range_cover(Range::Node* const root, const int& lhs, const int& rhs)
 {
+    /*
+        Get the range covered by the current root node;
+        Calculate the middle point of the root node.
+    */
     const int cur_lhs = root->range_cover.first;
     const int cur_rhs = root->range_cover.second;
     const int cur_mid = (cur_lhs + cur_rhs) >> 1;
 
+    /*
+        The bisection ensures that we can always find a node that completely covers the current range.
+        Note that this is only the end of the recursion, but may not be the final result.
+        Furthermore, because leaves are not a "range", so the the deepst level we need to search is the level
+            at which every node only covers two leaves.
+    */
+    if (cur_rhs - 1 == cur_lhs) {
+        return root;
+    }
+
     if (lhs > cur_mid) {
-        return root->right;
+        return single_range_cover(root->right, lhs, rhs);
     } else if (rhs <= cur_mid) {
-        return root->left;
+        return single_range_cover(root->left, lhs, rhs);
     } else {
+        /*
+            Merge the node if necessary.
+            Parent nodes are associated with each node in the building phase: 
+                if there are two nodes that have different parents, then add an extra node as their parent.
+        */
         Range::Node* const left = single_range_cover(root->left, lhs, cur_mid);
         Range::Node* const right = single_range_cover(root->right, cur_mid + 1, rhs);
 
@@ -261,31 +293,26 @@ single_range_cover(Range::Node* const root, const int& lhs, const int& rhs)
         }
     }
 }
-/*
-std::string encrypt_message(std::string_view key,
-    std::string_view message,
-    const unsigned char* nonce)
+
+void print_tree(Range::Node* const root, const int& indent)
 {
-    unsigned int ciphertext_length = crypto_secretbox_MACBYTES + message.size();
-    unsigned char ciphertext[ciphertext_length];
-    crypto_secretbox_easy(
-        ciphertext, (unsigned char*)message.data(), message.size(), nonce, (unsigned char*)key.data());
+    if (root != nullptr) {
+        if (root->right) {
+            print_tree(root->right, indent + 4);
+        }
+        if (indent != 0) {
+            std::cout << std::setw(indent) << ' ';
+        }
+        if (root->right) {
+            std::cout << " /\n"
+                      << std::setw(indent) << ' ';
+        }
 
-    return std::string((char*)(ciphertext), ciphertext_length);
+        std::cout << root->range_cover.first << ", " << root->range_cover.second << std::endl;
+
+        if (root->left) {
+            std::cout << std::setw(indent) << ' ' << " \\\n";
+            print_tree(root->left, indent + 4);
+        }
+    }
 }
-
-std::string decrypt_message(
-    std::string_view key,
-    std::string_view ciphertext,
-    const unsigned char* nonce,
-    const size_t& raw_length)
-{
-        unsigned int ciphertext_length = crypto_secretbox_MACBYTES + message.size();
-        unsigned char nonce[crypto_secretbox_NONCEBYTES];
-        unsigned char plaintext[raw_length];
-        crypto_secretbox_easy(
-            plaintext, (unsigned char*)ciphertext.data(), ciphertext.size(), nonce, (unsigned char*)key.data());
-
-        return std::string((char*)(plaintext), raw_length);
-}
-*/

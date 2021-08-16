@@ -26,6 +26,7 @@
 #include <cereal/types/string.hpp>
 #include <cereal/types/utility.hpp>
 #include <cereal/types/vector.hpp>
+#include <cereal/types/map.hpp>
 #include <oram/PathORAM.h>
 
 /**
@@ -155,16 +156,15 @@ struct Node {
     template <typename Archive>
     void serialize(Archive& ar)
     {
-        ar(documents, range_cover, id, left, right, parent);
+        ar(kwd_doc_pairs, range_cover, id, left, right, parent);
     }
 
 public:
-    /* For which document ids the node stands. 
-       This member only applies when the node is a leaf node.
-       For internal node, the document ids can be retrived
-       by its child nodes.
-    */
-    std::vector<unsigned int> documents;
+    /*
+        Stores <kwd, [start, end]> for each node.
+        See the original paper for more details.
+     */
+    std::map<int, std::vector<unsigned int>> kwd_doc_pairs;
 
     /* The range the node covers. E.g. [0,9] means that the child nodes cover 0 ~ 9. 
        The keyword for each node is the range covered by each node.
@@ -192,8 +192,11 @@ public:
      * 
      * @param lhs          The left range.
      * @param rhs          The right range.
+     * @param documents    The document ids.
      */
-    Node(const int& lhs, const int& rhs);
+    Node(
+        const int& lhs, const int& rhs,
+        const std::map<int, std::vector<unsigned int>>& kwd_doc_pairs);
 };
 } // namespace Range
 

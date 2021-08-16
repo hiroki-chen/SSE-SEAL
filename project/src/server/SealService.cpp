@@ -62,19 +62,21 @@ SealService::set_capacity(
     const BucketSetMessage* message,
     google::protobuf::Empty* e)
 {
-    std::cout << "The server is setting the capacity of oblivioud ram!" << std::endl;
+    std::cout << "The server is setting the capacity of oblivious ram!" << std::endl;
     const unsigned int total_number_of_buckets = message->number_of_buckets();
     const bool is_odict = message->is_odict();
+    const std::string map_key = message->map_key();
 
     if (is_odict == true) {
-        odict_storage.assign(total_number_of_buckets, Bucket());
+        std::cout << map_key << std::endl;
+        odict_storage[map_key].assign(total_number_of_buckets, Bucket());
     } else {
         const unsigned int oram_id = message->oram_id();
-        if (oram_id == oram_storage.size()) {
+        if (oram_id == oram_storage[map_key].size()) {
             std::vector<Bucket> new_storage(total_number_of_buckets, Bucket());
-            oram_storage.push_back(new_storage);
-        } else if (oram_id < oram_storage.size()) {
-            oram_storage[oram_id].assign(total_number_of_buckets, Bucket());
+            oram_storage[map_key].push_back(new_storage);
+        } else if (oram_id < oram_storage[map_key].size()) {
+            oram_storage[map_key][oram_id].assign(total_number_of_buckets, Bucket());
         } else {
             const std::string error_message = "The ORAM ID is not correct because"
                                               "it exceeds the maximum allowed bound!";
@@ -91,18 +93,19 @@ SealService::read_bucket(
     const BucketReadMessage* message,
     BucketReadResponse* response)
 {
-    PLOG_(1, plog::info) << "The server is reading the bucket!";
+    //std::cout << "The server is reading the bucket!\n";
 
     const unsigned int position = message->position();
     const unsigned int oram_id = message->oram_id();
     const bool is_odict = message->is_odict();
+    const std::string map_key = message->map_key();
 
     Bucket* bucket = nullptr;
 
     if (is_odict == true) {
-        bucket = &(odict_storage.at(position));
+        bucket = &(odict_storage.at(map_key).at(position));
     } else {
-        bucket = &(oram_storage[oram_id].at(position));
+        bucket = &(oram_storage.at(map_key).at(oram_id).at(position));
     }
 
     response->set_buffer(serialize<Bucket>(*bucket));
@@ -115,18 +118,17 @@ SealService::write_bucket(
     const BucketWriteMessage* message,
     google::protobuf::Empty* e)
 {
-    PLOG_(1, plog::info) << "The server is writing the bucket!";
-
     const unsigned int position = message->position();
     const unsigned int oram_id = message->oram_id();
     const bool is_odict = message->is_odict();
     const std::string buffer = message->buffer();
+    const std::string map_key = message->map_key();
 
     try {
         if (is_odict == true) {
-            odict_storage[position] = deserialize<Bucket>(buffer);
+            odict_storage[map_key][position] = deserialize<Bucket>(buffer);
         } else {
-            oram_storage[oram_id][position] = deserialize<Bucket>(buffer);
+            oram_storage[map_key][oram_id][position] = deserialize<Bucket>(buffer);
         }
     } catch (const std::exception& e) {
         PLOG_(1, plog::error) << e.what();
@@ -186,13 +188,17 @@ SealService::select_handler(
 void SealService::print_oram_blocks()
 {
     std::cout << "----------------- Oblivious Dictionary ----------------------" << std::endl;
-    for (unsigned int i = 0; i < odict_storage.size(); i++) {
-        odict_storage[i].printBlocks();
+    for (auto iter = odict_storage.begin(); iter != odict_storage.end(); iter++) {
+        for (unsigned int i = 0; i < iter->second.size(); i++) {
+            iter->second[i].printBlocks();
+        }
     }
     std::cout << "--------------------- Oblivious RAM -------------------------" << std::endl;
-    for (unsigned int i = 0; i < oram_storage.size(); i++) {
-        for (unsigned int j = 0; j < oram_storage[i].size(); j++) {
-            oram_storage[i][j].printBlocks();
+    for (auto iter = oram_storage.begin(); iter != oram_storage.end(); iter++) {
+        for (unsigned int i = 0; i < iter->second.size(); i++) {
+            for (unsigned int j = 0; j < iter->second[i].size(); j++) {
+                (iter->second)[i][j].printBlocks();
+            }
         }
     }
 }

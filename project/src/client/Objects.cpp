@@ -58,8 +58,15 @@ SEAL::Document::Document(const unsigned int& id, const std::vector<std::string>&
 {
 }
 
-Range::Node::Node(const int& lhs, const int& rhs)
-    : range_cover(std::make_pair(lhs, rhs))
+Range::Node::Node(
+    const int& lhs, const int& rhs,
+    const std::map<int, std::vector<unsigned int>>& kwd_doc_pairs)
+    : kwd_doc_pairs(kwd_doc_pairs.begin(), kwd_doc_pairs.end())
+    , range_cover(std::make_pair(lhs, rhs))
     , id(counter++)
+    , left(nullptr)
+    , right(nullptr)
+    , parent(nullptr)
+
 {
 }

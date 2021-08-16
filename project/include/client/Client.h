@@ -86,6 +86,8 @@ private:
 
     std::vector<std::unique_ptr<OramAccessController>> adj_oramAccessControllers;
 
+    std::map<std::string, std::vector<std::unique_ptr<OramAccessController>>> adj_oramAccessControllers_range;
+
     size_t memory_size;
 
     /*==================== Nodes used for range-query ====================*/
@@ -94,6 +96,8 @@ private:
      * 
      */
     std::map<std::string, Range::Node*> root_t1;
+
+    std::map<std::string, size_t> kwd_size;
 
     /*==================== Functions =====================*/
     /**
@@ -291,15 +295,30 @@ private:
      * @brief Initialize the oram block by block.
      * 
      * @param memory
+     * @param map_key
      */
-    void adj_oram_init(const std::vector<std::pair<std::string, SEAL::Document>>& memory);
+    void adj_oram_init(
+        const std::vector<std::pair<std::string, SEAL::Document>>& memory,
+        const std::string& map_key);
 
     /**
      * @brief Initialize each oram controller.
      * 
      * @param sub_array plain memory blocks
+     * @param map_key
      */
-    void adj_oram_init_helper(const std::vector<std::vector<SEAL::Document>>& sub_arrays);
+    void adj_oram_init_helper(
+        const std::vector<std::vector<SEAL::Document>>& sub_arrays,
+        const std::string& map_key);
+
+    /**
+     * @brief Initializes each oram controller for range-query.
+     * 
+     * @param sub_arrays 
+     */
+    void adj_oram_init_helper_range(
+        const std::vector<std::vector<SEAL::Document>>& sub_arrays,
+        const std::string& map_key);
 
     /**
      * @brief Build the secret index on input documents.
@@ -310,7 +329,18 @@ private:
      */
     void adj_insert(const std::vector<std::pair<std::string, SEAL::Document>>& memory,
         const std::map<std::string, unsigned int>& first_occurrence,
-        const std::map<std::string, unsigned int>& count);
+        const std::map<std::string, unsigned int>& count,
+        const std::string& map_key);
+
+    /**
+     * @brief The function builds LOGRITHMIC-SRC-i TREE T2 on the server side by treating subscript as the keywords.
+     * 
+     * @param sorted_documents Documents sorted on the attribute.
+     * @param map_key To initialize oram storage
+     */
+    void adj_insert_range(
+        const std::vector<SEAL::Document>& sorted_documents,
+        const std::string& map_key);
 
     //====================Util=====================//
     /**
@@ -383,6 +413,36 @@ public:
      */
     std::vector<SEAL::Document>
     search(std::string_view keyword);
+
+    /**
+     * @brief Search the document whose keywords are in the given range.
+     * 
+     * @param map_key Used to search for the root node.
+     * @param lower The lower bound of the range.
+     * @param upper The upper bound of the range.
+     * @return std::vector<SEAL::Document> 
+     */
+    std::vector<SEAL::Document>
+    search_range(std::string_view map_key, std::string_view lower, std::string_view upper);
+
+    /**
+     * @brief A helper that transforms range query to series of point query.
+     * 
+     * @param doc_subscripts
+     * @param map_key
+     * @return std::vector<SEAL::Document> 
+     */
+    std::vector<SEAL::Document>
+    search_range_helper(const std::vector<unsigned int>& doc_subscripts,std::string_view map_key);
+
+    /**
+     * @brief Get the t1 root object
+     * 
+     * @param map_key 
+     * @return Range::Node* 
+     */
+    Range::Node*
+    get_t1_root(const std::string& map_key);
 };
 }
 

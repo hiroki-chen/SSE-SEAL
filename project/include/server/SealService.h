@@ -37,7 +37,7 @@ private:
     /**
      * @brief The storage array provided by the server.
      */ 
-    std::vector<Bucket> odict_storage;
+    std::map<std::string, std::vector<Bucket>> odict_storage;
 
 
     /**
@@ -45,7 +45,7 @@ private:
      * 
      * @note This is a two-dimensional array. [oram_id][bucket_index]
      */ 
-    std::vector<std::vector<Bucket>> oram_storage;
+    std::map<std::string, std::vector<std::vector<Bucket>>> oram_storage;
 
 public:
     SealService();
