@@ -58,6 +58,14 @@ SEAL::Document::Document(const unsigned int& id, const std::vector<std::string>&
 {
 }
 
+void SEAL::Document::print() {
+    std::cout << id << ": ";
+    for (auto keyword : keywords) {
+        std::cout << keyword << ", ";
+    }
+    std::cout << std::endl;
+}
+
 Range::Node::Node(
     const int& lhs, const int& rhs,
     const std::map<int, std::vector<unsigned int>>& kwd_doc_pairs)

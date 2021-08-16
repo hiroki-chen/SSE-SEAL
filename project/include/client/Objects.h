@@ -125,6 +125,8 @@ public:
     Document() = default;
 
     Document(const unsigned int& id, const std::vector<std::string>& keywords);
+
+    void print();
 };
 } // namespace SEAL
 

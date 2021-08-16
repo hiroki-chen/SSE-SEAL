@@ -24,6 +24,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <iterator>
 #include <sstream>
 #include <string>
 
@@ -70,7 +71,6 @@ read_keycert(std::string_view file_path);
 
 std::vector<unsigned int>
 find_all(const std::vector<std::pair<std::string, unsigned int>>& memory, const std::string& value);
-
 
 /**
  * @brief A secure PRP.
@@ -120,6 +120,15 @@ Object deserialize(const std::string& serial_str)
     }
 
     return obj;
+}
+
+template <typename T>
+std::ostream& operator<<(std::ostream& out, const std::vector<T>& container)
+{
+    out << "Container dump begins: ";
+    std::copy(container.cbegin(), container.cend(), std::ostream_iterator<T>(out, " "));
+    out << "End.\n";
+    return out;
 }
 
 #endif

@@ -650,6 +650,7 @@ void SEAL::Client::adj_padding(
 
 void SEAL::Client::adj_data_in(std::string_view file_path)
 {
+    /*  */
     try {
         oramAccessController = std::make_unique<OramAccessController>(
             bucket_size, block_number, block_size, -1, true, (std::string)file_path, stub_);
@@ -658,7 +659,7 @@ void SEAL::Client::adj_data_in(std::string_view file_path)
 
         PLOG(plog::debug) << "Reading data...";
         std::vector<std::pair<std::string, SEAL::Document>> memory;
-        rapidcsv::Document doc(file_path.data(), rapidcsv::LabelParams(0, 0));
+        rapidcsv::Document doc(file_path.data(), rapidcsv::LabelParams(0, -1));
         const size_t column_count = doc.GetColumnCount();
         const std::vector<std::string> column_names = doc.GetColumnNames();
 
@@ -671,6 +672,7 @@ void SEAL::Client::adj_data_in(std::string_view file_path)
             for (unsigned int j = 0; j < data_frame.size(); j++) {
                 const std::vector<std::string> tokens = doc.GetRow<std::string>(j);
                 SEAL::Document document(j, tokens);
+
                 const std::string keyword = ((std::string)(file_path)).append(column_name).append(data_frame[j]);
                 const std::pair<std::string, SEAL::Document> tuple = std::make_pair(keyword, document);
                 tmp.push_back(tuple);
@@ -952,7 +954,7 @@ SEAL::Client::search_range_helper(
     const std::vector<unsigned int> prp = pseudo_random_permutation(kwd_size[map_key.data()], secret_key);
 
     for (unsigned int i = 0; i < doc_subscripts.size(); i++) {
-        const unsigned int value = prp[i];
+        const unsigned int value = prp[doc_subscripts[i]];
         const std::pair<unsigned int, unsigned int> bits = get_bits(base, value, alpha);
 
         std::string res;
