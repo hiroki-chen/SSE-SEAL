@@ -48,11 +48,11 @@ Seal::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, cons
   return ::grpc::internal::BlockingUnaryCall< ::SetupMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_setup_, context, request, response);
 }
 
-void Seal::Stub::experimental_async::setup(::grpc::ClientContext* context, const ::SetupMessage* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)> f) {
+void Seal::Stub::async::setup(::grpc::ClientContext* context, const ::SetupMessage* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)> f) {
   ::grpc::internal::CallbackUnaryCall< ::SetupMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_setup_, context, request, response, std::move(f));
 }
 
-void Seal::Stub::experimental_async::setup(::grpc::ClientContext* context, const ::SetupMessage* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+void Seal::Stub::async::setup(::grpc::ClientContext* context, const ::SetupMessage* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) {
   ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_setup_, context, request, response, reactor);
 }
 
@@ -71,11 +71,11 @@ void Seal::Stub::experimental_async::setup(::grpc::ClientContext* context, const
   return ::grpc::internal::BlockingUnaryCall< ::BucketReadMessage, ::BucketReadResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_read_bucket_, context, request, response);
 }
 
-void Seal::Stub::experimental_async::read_bucket(::grpc::ClientContext* context, const ::BucketReadMessage* request, ::BucketReadResponse* response, std::function<void(::grpc::Status)> f) {
+void Seal::Stub::async::read_bucket(::grpc::ClientContext* context, const ::BucketReadMessage* request, ::BucketReadResponse* response, std::function<void(::grpc::Status)> f) {
   ::grpc::internal::CallbackUnaryCall< ::BucketReadMessage, ::BucketReadResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_read_bucket_, context, request, response, std::move(f));
 }
 
-void Seal::Stub::experimental_async::read_bucket(::grpc::ClientContext* context, const ::BucketReadMessage* request, ::BucketReadResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+void Seal::Stub::async::read_bucket(::grpc::ClientContext* context, const ::BucketReadMessage* request, ::BucketReadResponse* response, ::grpc::ClientUnaryReactor* reactor) {
   ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_read_bucket_, context, request, response, reactor);
 }
 
@@ -94,11 +94,11 @@ void Seal::Stub::experimental_async::read_bucket(::grpc::ClientContext* context,
   return ::grpc::internal::BlockingUnaryCall< ::BucketWriteMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_write_bucket_, context, request, response);
 }
 
-void Seal::Stub::experimental_async::write_bucket(::grpc::ClientContext* context, const ::BucketWriteMessage* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)> f) {
+void Seal::Stub::async::write_bucket(::grpc::ClientContext* context, const ::BucketWriteMessage* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)> f) {
   ::grpc::internal::CallbackUnaryCall< ::BucketWriteMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_write_bucket_, context, request, response, std::move(f));
 }
 
-void Seal::Stub::experimental_async::write_bucket(::grpc::ClientContext* context, const ::BucketWriteMessage* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+void Seal::Stub::async::write_bucket(::grpc::ClientContext* context, const ::BucketWriteMessage* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) {
   ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_write_bucket_, context, request, response, reactor);
 }
 
@@ -117,11 +117,11 @@ void Seal::Stub::experimental_async::write_bucket(::grpc::ClientContext* context
   return ::grpc::internal::BlockingUnaryCall< ::BucketSetMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_set_capacity_, context, request, response);
 }
 
-void Seal::Stub::experimental_async::set_capacity(::grpc::ClientContext* context, const ::BucketSetMessage* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)> f) {
+void Seal::Stub::async::set_capacity(::grpc::ClientContext* context, const ::BucketSetMessage* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)> f) {
   ::grpc::internal::CallbackUnaryCall< ::BucketSetMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_set_capacity_, context, request, response, std::move(f));
 }
 
-void Seal::Stub::experimental_async::set_capacity(::grpc::ClientContext* context, const ::BucketSetMessage* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+void Seal::Stub::async::set_capacity(::grpc::ClientContext* context, const ::BucketSetMessage* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) {
   ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_set_capacity_, context, request, response, reactor);
 }
 
@@ -140,11 +140,11 @@ void Seal::Stub::experimental_async::set_capacity(::grpc::ClientContext* context
   return ::grpc::internal::BlockingUnaryCall< ::InsertMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_insert_handler_, context, request, response);
 }
 
-void Seal::Stub::experimental_async::insert_handler(::grpc::ClientContext* context, const ::InsertMessage* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)> f) {
+void Seal::Stub::async::insert_handler(::grpc::ClientContext* context, const ::InsertMessage* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)> f) {
   ::grpc::internal::CallbackUnaryCall< ::InsertMessage, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_insert_handler_, context, request, response, std::move(f));
 }
 
-void Seal::Stub::experimental_async::insert_handler(::grpc::ClientContext* context, const ::InsertMessage* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+void Seal::Stub::async::insert_handler(::grpc::ClientContext* context, const ::InsertMessage* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) {
   ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_insert_handler_, context, request, response, reactor);
 }
 
@@ -163,11 +163,11 @@ void Seal::Stub::experimental_async::insert_handler(::grpc::ClientContext* conte
   return ::grpc::internal::BlockingUnaryCall< ::SelectMessage, ::SelectResult, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_select_handler_, context, request, response);
 }
 
-void Seal::Stub::experimental_async::select_handler(::grpc::ClientContext* context, const ::SelectMessage* request, ::SelectResult* response, std::function<void(::grpc::Status)> f) {
+void Seal::Stub::async::select_handler(::grpc::ClientContext* context, const ::SelectMessage* request, ::SelectResult* response, std::function<void(::grpc::Status)> f) {
   ::grpc::internal::CallbackUnaryCall< ::SelectMessage, ::SelectResult, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_select_handler_, context, request, response, std::move(f));
 }
 
-void Seal::Stub::experimental_async::select_handler(::grpc::ClientContext* context, const ::SelectMessage* request, ::SelectResult* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+void Seal::Stub::async::select_handler(::grpc::ClientContext* context, const ::SelectMessage* request, ::SelectResult* response, ::grpc::ClientUnaryReactor* reactor) {
   ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_select_handler_, context, request, response, reactor);
 }
 

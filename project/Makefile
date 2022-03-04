@@ -12,7 +12,7 @@ ifeq ($(OS),Windows_NT)
 else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S), Linux)
-		CXX = g++
+		CXX = g++-10
 	endif
 	ifeq ($(UNAME_S), Darwin)
 		CXX = clang++
@@ -28,17 +28,15 @@ CXXFLAGS = -std=c++17 -g -O3 -fPIE -I$(INCLUDE_DIR) -I$(INCLUDE_PROTO) -Wall \
 		-Wsign-compare \
 		-Wformat \
 		-Wtype-limits \
-		-Wno-undef \
-		-Werror
-		-ferror-limit=10
+		-Wno-undef
 
 LD = -L/usr/local/lib `pkg-config --libs protobuf grpc++`\
            -pthread\
            -lgrpc++_reflection\
            -ldl\
-		   -lpqxx\
-		   -lpq\
-		   -lsodium
+				-lpqxx\
+				-lpq\
+				-lsodium
 
 BASE_SRC_FILES = $(wildcard $(SRC_DIR)/*.cpp $(SRC_DIR)/oram/*.cpp $(SRC_DIR)/protos/*.cpp $(SRC_DIR)/crypto/*.cpp)
 CLIENT_SRC_FILES := $(BASE_SRC_FILES) $(wildcard $(SRC_DIR)/client/*.cpp) $(SRC_DIR)/test/main.cpp
@@ -59,8 +57,7 @@ all: clean make_dir make_protos $(CLIENT) $(SERVER)
 
 .PHONY: clean make_dir make_protos test
 clean:
-	$(RM) -rf $(BUILD_DIR)/*
-	$(RM) -rf $(LOG_DIR)/*
+	$(RM) -rf $(BUILD)
 
 make_protos:
 	$(PROTOC) $(PROTO_FLAGS) $(PROTO_FILES)
