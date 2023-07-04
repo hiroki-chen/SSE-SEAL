@@ -1,69 +1,29 @@
 # SSE-SEAL
 Searchable Encryption with Adjustable Leakage
-<br>
-* The codes are implementation for the SEAL model proposed by Demertzis et al. [SEAL: Attack Mitigation for Encrypted Databases via Adjustable Leakage](https://www.usenix.org/system/files/sec20fall_demertzis_prepub.pdf). The model is based on the oblivious ram model called PathORAM and the oblivious data structures (oblivious dictionary). The codes contain the implementation for Oblivious Data Structures (AVL Tree-based Dictionary) as well as a oblivious access controller, serving as a wrapper.
-* <del>The codes will need to communicate with a relational database (e.g., MySQL, PostgreSQL, openGauss...) to see if such an SSE scheme could be used in real-world scenarios. For the connection to the remote database, please be sure the relevant libararies (e.g., mysql-connector libs) are installed correctly.</del>
 
-# The structure of the model
-For simplicity, this model is a single-client-single-server model. We construct a server which handles remote process call and also serves as the oblivious storage for the client. The server contains a relational database connector so the client could interact with the client. To search for an item, the client first looks up the position map locally and then sends the position and the bucket to the remote server (or fetch a bucket from the server).
+* This repo contains the code for the reference implementation of the paper [SEAL: Attack Mitigation for Encrypted Databases via Adjustable Leakage](https://www.usenix.org/system/files/sec20fall_demertzis_prepub.pdf). SEAL is a protocol of searchable encryption which is built atop the oblivious data structures (oblivious dictionary) proposed by Xiao Shaun Wang et al. at CCS'15. The codebase contains an Oblivious Data Structure (AVL Tree-based Dictionary) as well as a oblivious access controller, serving as a wrapper.
 
-# The structure of the project:
-```
-├── build                           Object files and binary executable files can be found here
-│   ├── client
-│   ├── crypto
-│   ├── executable
-│   ├── oram
-│   ├── protos
-│   ├── server
-│   └── test
-├── include
-│   ├── cereal
-│   ├── client
-│   ├── crypto
-│   ├── oram
-│   ├── plog
-│   ├── proto
-│   └── server
-├── input
-├── log
-├── protos                           Protobuf files can be found here.
-└── src                              Source files can be found here.
-    ├── client
-    ├── crypto
-    ├── oram
-    ├── protos
-    ├── server
-    └── test
-```
+## The layout of the implementation
+For simplicity, the code implements the single-client-single-server model. We construct a server which handles remote process call (RPC) and also serves as the oblivious storage for the client. To search for an element on the server, the client first looks up the position map locally and then sends the position and the bucket to the remote server (or fetch a bucket from the server).
 
-# Compatibility
-Codes are tested on macOS 10.14.6 High Sierra with `Apple LLVM version 10.0.1 (clang-1001.0.46.4)` and Ubuntu 20.04 LTS with `gcc 9.3.0-17-Ubuntu1-20.04`.
+## Compatibility
 
-# Usage and Prerequisites
-* GCC Compiler (or equivalent compilers) version 7.3.0 or higher;
-* The compiler must support C++ 2017 standard (to enable the use of `std::string_view`)
-* libcereal for object serialization to `std::string`; this is included in `include` directory. For more information, please refer to the [website](https://github.com/USCiLab/cereal)
+The code was tested on macOS 10.14.6 High Sierra with Clang 10 and Ubuntu 20.04 LTS with GCC 9.3.
 
-* libsodium(github page is [here](https://github.com/jedisct1/libsodium))
-  <br>
-  Sodium library provides with cryptographically secure random generators, and it also gives us some public-key or private-key encryption interfaces.
+## Prerequisites
+* GCC Compiler (or equivalent compilers) version 7.3.0 or higher that supports C++17;
+* libsodium (see [here](https://github.com/jedisct1/libsodium)). The library provides with cryptographically secure random generators, and it also gives us some public-key or private-key encryption interfaces. You can install via:
+
   ```shell
   ./configure;
   make && make check && sudo make install;
   ```
-* CMake for compilation of the gRPC library.
-```shell
-brew install cmake;
-```
-```shell
-sudo apt-get install cmake;
-```
-* gRPC for remote process call. This is for the communication with the remote database. (We first issue request to remote processes rather than the remote database directly.)
+* CMake:
+
   ```shell
-  brew install grpc;
+  sudo apt-get install cmake;
   ```
-  For Linux users, gRPC libarary should be installed via git clone.
+* gRPC for remote process call. It is recommended that gRPC is installed via git clone.
   ```shell
   git clone https://github.com/grpc/grpc.git;
   cd grpc;
@@ -73,33 +33,30 @@ sudo apt-get install cmake;
   cmake ../..;
   make && sudo make install;
   ```
-* Dependencies on which gRPC relies. These may include `autoconf`, `automake`, `openssl`, `libtool`, `pkg-config`, etc. For more information, please refer to gRPC's official website: https://grpc.io.
-* Make sure that gRPC plugin `grpc_cpp_plugin` for generating protobuf-based cpp files is correctly installed in the `usr/local/bin/` path. If your gRPC dirctory is different with the one specified in `Makefile`, you should modify it manually.
+* Dependencies for gRPC. These include `autoconf`, `automake`, `openssl`, `libtool`, `pkg-config`, etc. For more information, please refer to gRPC's official website: https://grpc.io.
+* Make sure that gRPC plugin `grpc_cpp_plugin` for generating protobuf-based cpp files is correctly installed in `$PATH`. If your gRPC dirctory is different with the one specified in `Makefile`, you should modify it manually.
 * Make sure that your `pkgconfig` directory (this may located in `/usr/local/lib` directory) contains these three pkgconfig files: `libcrypto.pc`, `libssl.pc` and `openssl.pc`. If not, link the original `.pc` file (can be found in openssl directory) to the path or manually export the path:
-```shell
-export PKG_CONFIG_PATH=/path/to/openssl/lib/pkgconfig;
-```
-For Ubuntu users, you can install ssl via `apt-get`:
-```shell
-sudo apt-get install libssl-dev;
-```
+  ```shell
+  export PKG_CONFIG_PATH=/path/to/openssl/lib/pkgconfig;
+  ```
+  For Ubuntu users, you can install ssl via `apt-get`:
+  ```shell
+  sudo apt-get install libssl-dev;
+  ```
 
-1. To compile the project, please first locate to the directory by
-```shell
-cd <path/to/SEAL/directory>;
-```
-2. Then make the project by
-```shell
-make all;
-```
-3. It will create the build directory, and object files and executable files are in the directory. You could run the server by
+# Compilation
+`make -j` should work. It will create the build directory, and object files and executable files are in the directory. You could run the server by
+
 ```shell
 ./build/executable/server;
 ```
+
 and run the client by
+
 ```shell
 ./build/executable/client;
 ```
+
 If you have any modification on the file, just remake the project:
 ```shell
 make client;
@@ -107,7 +64,7 @@ make server;
 ```
 
 # SSL Key Generation
-If there is need to generate the ssl key by custom, one can execute the following commands (make sure that openssl is correctly installed):
+If there is a need to generate the ssl key on your own, one can execute the following commands (make sure that openssl is correctly installed):
 ```shell
 export mypass=<password>;
 openssl genrsa -passout pass:$pass -des3 -out server.key 4096;
@@ -117,7 +74,3 @@ openssl rsa -passin pass:$mypass -in server.key -out server.key
 rm -rf server.csr;
 mv server.crt server.key keys;
 ```
-
-# Notice
-* The implementation codes are still under construction.
-* Robustness for the project is not guaranteed: use with care!
