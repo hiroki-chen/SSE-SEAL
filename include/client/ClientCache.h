@@ -133,12 +133,13 @@ inline T SEAL::Cache<T>::put(const int& id, const T& item)
 {
     auto iter = cache_items.find(id);
     auto it = std::find_if(lru_table.begin(), lru_table.end(), [id](const int& item_id) { return item_id == id; });
-    lru_table.push_front(id);
 
-    if (iter != cache_items.end() && it != lru_table.end()) {
+    if (it != lru_table.end() && iter != cache_items.end()) {
         cache_items.erase(iter);
         lru_table.erase(it);
     }
+
+    lru_table.push_front(id);
 
     cache_items[id] = item;
 
@@ -152,27 +153,6 @@ inline T SEAL::Cache<T>::put(const int& id, const T& item)
         cache_items.erase(iter);
 
         PLOG(plog::info) << "Cache is full! Evict one element " << back << " to ORAM server";
-
-        // Write to the oram.
-        /*ret->pos_tag = oramAccessController->random_new_pos();
-
-            std::cout << "ret->id " << ret->id << std::endl;
-
-            for (auto it = cache_items.begin(); it != cache_items.end(); it++)
-            {
-                if (it->second.left_id == ret->id)
-                {
-                    it->second.childrenPos[0].pos_tag = ret->pos_tag;
-                }
-                else if (it->second.right_id == ret->id)
-                {
-                    it->second.childrenPos[1].pos_tag = ret->pos_tag;
-                }
-            }
-
-            unsigned char *buffer = new unsigned char[sizeof(T)];
-            memcpy(buffer, ret, sizeof(T));
-            oramAccessController->oblivious_access_direct(ORAM_ACCESS_WRITE, buffer);*/
 
         return ret;
     }
